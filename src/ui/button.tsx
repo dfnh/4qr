@@ -15,11 +15,14 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'underline-offset-4 hover:underline text-primary',
         start: 'bg-emerald-700 text-primary-foreground hover:bg-emerald-500/90',
+        login:
+          'rounded-full bg-white/10 font-semibold text-white no-underline transition hover:bg-white/20',
       },
       size: {
         default: 'h-10 py-2 px-4',
         sm: 'h-9 px-3 rounded-md',
         lg: 'h-11 px-8 rounded-md',
+        none: '',
       },
     },
     defaultVariants: {

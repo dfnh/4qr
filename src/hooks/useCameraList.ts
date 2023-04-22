@@ -1,9 +1,8 @@
 import QrScanner from 'qr-scanner';
 import { useCallback, useEffect, useState } from 'react';
 
-function useCameraList() {
+const useCameraList = () => {
   const [cameras, setCameras] = useState<QrScanner.Camera[]>([]);
-  // const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
 
   const refresh = useCallback(async () => {
     const devices = await QrScanner.listCameras(false);
@@ -19,10 +18,10 @@ function useCameraList() {
 
   useEffect(() => {
     refresh().catch((e) => console.error(e));
-    console.log('yo');
+    // console.log('yo');
   }, [refresh]);
 
   return { cameras: cameras, refresh: askPerms };
-}
+};
 
 export { useCameraList };
