@@ -7,6 +7,8 @@ const useQrScanner = () => {
   const [active, setActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  const [deviceId, setDeviceId] = useState<string>();
+
   useEffect(() => {
     if (videoRef.current == null) return;
 
@@ -46,16 +48,29 @@ const useQrScanner = () => {
   };
 
   const start = useCallback(() => {
-    if (scanner) {
-      setActive(true);
-      scanner.start().catch((e) => console.error(e));
+    if (!scanner) return;
+    setActive(true);
+
+    if (deviceId) {
+      scanner.setCamera(deviceId).catch((e) => console.error(e));
     }
-  }, [scanner]);
+    scanner.start().catch((e) => console.error(e));
+  }, [deviceId, scanner]);
+
+  const changeCam = useCallback(
+    (id: string) => {
+      if (id === deviceId) return;
+      setDeviceId(id);
+      scanner?.setCamera(id).catch((e) => console.error(e));
+    },
+    [deviceId, scanner]
+  );
 
   return {
     camRef: videoRef,
     result: scannedData,
     start: start,
+    changeCam: changeCam,
     stop: restartScanner,
     active: active,
   };

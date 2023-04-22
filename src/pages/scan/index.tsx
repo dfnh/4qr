@@ -6,7 +6,7 @@ import QrScanner from 'qr-scanner';
 
 import { InputFile } from '~/components/InputFile';
 
-//todo decompose
+// todo decompose
 const ScanPage: NextPage = () => {
   const [im, setIm] = useState<string>('');
   const [data, setData] = useState<string>('data will be here');

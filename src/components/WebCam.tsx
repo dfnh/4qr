@@ -5,9 +5,10 @@ import { Camera } from '~/components/Camera';
 import { Button } from '~/ui/button';
 import { SelectCamera } from './SelectCamera';
 
+// todo decompose
 const WebCam = () => {
   const { cameras, refresh } = useCameraList();
-  const { result: data, start, stop, camRef, active } = useQrScanner();
+  const { result: data, start, stop, camRef, active, changeCam } = useQrScanner();
 
   const toggle = () => {
     if (active) {
@@ -35,8 +36,7 @@ const WebCam = () => {
         <SelectCamera
           cameras={cameras}
           onSelected={(e) => {
-            console.log('check ' + e);
-            // todo change camera
+            changeCam(e);
           }}
         />
 
