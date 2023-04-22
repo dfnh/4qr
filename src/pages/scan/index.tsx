@@ -8,8 +8,8 @@ import { InputFile } from '~/components/InputFile';
 
 //todo decompose
 const ScanPage: NextPage = () => {
-  const [im, setIm] = useState<string | null>(null);
-  const [data, setData] = useState<string | null>(null);
+  const [im, setIm] = useState<string>('');
+  const [data, setData] = useState<string>('data will be here');
 
   const handleImageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const f = event.target.files?.[0];
