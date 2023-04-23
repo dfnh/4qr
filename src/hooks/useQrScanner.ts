@@ -28,8 +28,8 @@ const useQrScanner = () => {
       newScanner.destroy();
     };
   }, []);
-
-  const restartScanner = () => {
+  //?
+  const restartScanner = useCallback(() => {
     if (videoRef.current == null) return;
 
     scanner?.destroy();
@@ -45,7 +45,7 @@ const useQrScanner = () => {
       { returnDetailedScanResult: true }
     );
     setScanner(newScanner);
-  };
+  }, [scanner]);
 
   const start = useCallback(() => {
     if (!scanner) return;
@@ -65,9 +65,18 @@ const useQrScanner = () => {
     },
     [deviceId, scanner]
   );
+  //?
+  const toggle = useCallback(() => {
+    if (active) {
+      restartScanner();
+      return;
+    }
+    start();
+  }, [active, restartScanner, start]);
 
   return {
     camRef: videoRef,
+    toggle: toggle,
     result: scannedData,
     start: start,
     changeCam: changeCam,

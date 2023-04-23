@@ -19,9 +19,13 @@ const server = z.object({
 });
 
 /* client-side environment variables schema. prefix - `NEXT_PUBLIC_` */
-const client = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
-});
+const client = z.object(
+  /** @satisfies {Record<`NEXT_PUBLIC_${string}`, import('zod').ZodType>} */ (
+    {
+      // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+    }
+  ),
+);
 
 /**
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}

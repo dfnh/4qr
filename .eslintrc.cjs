@@ -7,17 +7,17 @@ const config = {
     {
       extends: ['plugin:@typescript-eslint/recommended-requiring-type-checking'],
       files: ['*.ts', '*.tsx'],
-      parserOptions: {
-        project: path.join(__dirname, 'tsconfig.json'),
-      },
+      parserOptions: { project: path.join(__dirname, 'tsconfig.json') },
     },
   ],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: path.join(__dirname, 'tsconfig.json'),
-  },
-  plugins: ['@typescript-eslint'],
-  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended'],
+  parserOptions: { project: path.join(__dirname, 'tsconfig.json') },
+  plugins: ['@typescript-eslint'], //'react-hook-form'
+  extends: [
+    'next/core-web-vitals',
+    'plugin:@typescript-eslint/recommended',
+    // 'plugin:react-hook-form/recommended',
+  ],
   rules: {
     '@typescript-eslint/consistent-type-imports': [
       'warn',
@@ -27,6 +27,11 @@ const config = {
       },
     ],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    /** for react-hook-form */
+    '@typescript-eslint/no-misused-promises': [
+      2,
+      { checksVoidReturn: { attributes: false } },
+    ],
   },
 };
 

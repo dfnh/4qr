@@ -8,17 +8,15 @@ import { SelectCamera } from './SelectCamera';
 // todo decompose
 const WebCam = () => {
   const { cameras, refresh } = useCameraList();
-  const { result: data, start, stop, camRef, active, changeCam } = useQrScanner();
-
-  const toggle = () => {
-    if (active) {
-      stop();
-      return;
-    }
-    start();
-  };
+  const { result: data, toggle, camRef, active, changeCam } = useQrScanner();
 
   const checkCamFn = useCallback(() => void refresh(), [refresh]);
+  const onSelected = useCallback(
+    (id: string) => {
+      changeCam(id);
+    },
+    [changeCam]
+  );
 
   return (
     <>
@@ -33,12 +31,7 @@ const WebCam = () => {
             {active ? 'stop' : 'start'}
           </Button>
         )}
-        <SelectCamera
-          cameras={cameras}
-          onSelected={(e) => {
-            changeCam(e);
-          }}
-        />
+        <SelectCamera cameras={cameras} onSelected={onSelected} />
 
         <Camera ref={camRef} />
 
