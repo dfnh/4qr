@@ -5,6 +5,7 @@ import DisplayQr from '~/components/DisplayQr';
 
 // import { api } from '~/utils/api';
 
+// todo DisplayQr - position sticky
 const CreateQr: NextPage = () => {
   return (
     <>

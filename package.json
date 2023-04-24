@@ -24,6 +24,7 @@
     "@trpc/server": "^10.18.0",
     "class-variance-authority": "^0.5.2",
     "clsx": "^1.2.1",
+    "easyqrcodejs-nodejs": "^4.4.5",
     "lucide-react": "^0.171.0",
     "next": "^13.2.4",
     "next-auth": "^4.21.0",
