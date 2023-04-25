@@ -4,9 +4,9 @@ export type CameraProps = VideoHTMLAttributes<HTMLVideoElement>;
 
 const Camera = forwardRef<HTMLVideoElement | null, CameraProps>(({ ...props }, ref) => {
   return (
-    <div className="flex w-1/2 justify-center">
+    <div className="flex w-full max-w-md">
       <video
-        className="w-full border border-solid border-gray-300"
+        className="aspect-video w-full border border-solid border-gray-300"
         ref={ref}
         {...props}
       ></video>

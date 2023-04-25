@@ -5,12 +5,12 @@ const useQrScanner = () => {
   const [scanner, setScanner] = useState<QrScanner | null>(null);
   const [scannedData, setScannedData] = useState<string>('initial data');
   const [active, setActive] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
   const [deviceId, setDeviceId] = useState<string>();
 
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
   useEffect(() => {
-    if (videoRef.current == null) return;
+    if (!videoRef.current) return;
 
     const newScanner = new QrScanner(
       videoRef.current,
@@ -24,38 +24,25 @@ const useQrScanner = () => {
     setScanner(newScanner);
 
     return () => {
-      console.log('bb');
       newScanner.destroy();
+      setScanner(null);
     };
   }, []);
-  //?
-  const restartScanner = useCallback(() => {
-    if (videoRef.current == null) return;
-
-    scanner?.destroy();
-    setActive(false);
-
-    const newScanner = new QrScanner(
-      videoRef.current,
-      (result) => {
-        newScanner.stop();
-        setActive(false);
-        setScannedData(result.data);
-      },
-      { returnDetailedScanResult: true }
-    );
-    setScanner(newScanner);
-  }, [scanner]);
 
   const start = useCallback(() => {
     if (!scanner) return;
     setActive(true);
-
-    if (deviceId) {
+    if (!!deviceId) {
       scanner.setCamera(deviceId).catch((e) => console.error(e));
     }
     scanner.start().catch((e) => console.error(e));
   }, [deviceId, scanner]);
+
+  const stop = useCallback(() => {
+    if (!scanner) return;
+    setActive(false);
+    scanner.stop();
+  }, [scanner]);
 
   const changeCam = useCallback(
     (id: string) => {
@@ -65,23 +52,30 @@ const useQrScanner = () => {
     },
     [deviceId, scanner]
   );
-  //?
+
   const toggle = useCallback(() => {
     if (active) {
-      restartScanner();
+      stop();
       return;
     }
     start();
-  }, [active, restartScanner, start]);
+  }, [active, start, stop]);
+
+  const clean = useCallback(() => {
+    scanner?.stop();
+    scanner?.destroy();
+    setScanner(null);
+  }, [scanner]);
 
   return {
     camRef: videoRef,
-    toggle: toggle,
     result: scannedData,
     start: start,
+    stop: stop,
+    clean: clean,
     changeCam: changeCam,
-    stop: restartScanner,
     active: active,
+    toggle: toggle,
   };
 };
 
