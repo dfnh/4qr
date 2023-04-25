@@ -20,7 +20,7 @@ const WebCam = () => {
 
   return (
     <>
-      <div className="container flex flex-col items-center justify-center gap-10 px-8 py-8 ">
+      <div className="container flex flex-col items-center justify-center gap-10 pb-8 ">
         <h1 className="text-5xl font-bold tracking-tight text-white ">using web cam</h1>
         <WebCamButtons
           cameras={cameras}
