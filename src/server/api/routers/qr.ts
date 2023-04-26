@@ -1,4 +1,4 @@
-// import { z } from 'zod';
+import { z } from 'zod';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '~/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import QRCode from 'easyqrcodejs-nodejs';
@@ -9,9 +9,9 @@ import { hashPassword } from '~/utils/bcrypt';
 
 export const qrRouter = createTRPCRouter({
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
-    const qr = new QRCode(input);
+    const qr = new QRCode(input.text);
     //   const smth = qr.toSVGText()
-    const qr64 = qr.toDataURL() as string;
+    const qr64 = (await qr.toDataURL()) as string;
 
     const userid = ctx.session?.user.id;
 
@@ -33,7 +33,20 @@ export const qrRouter = createTRPCRouter({
     if (!code) {
       throw new TRPCError({ code: 'BAD_REQUEST' });
     }
+    console.log(code);
 
-    return { url: shorturl, qrcode: qr64 };
+    //todo return slink
+    return { url: shorturl, qrcode: qr64, id: code.id };
   }),
+
+  getQrById: publicProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const code = await ctx.prisma.code.findFirst({ where: { id: input.id } });
+      if (!code) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
+
+      return { qrUrl: code.map };
+    }),
 });
