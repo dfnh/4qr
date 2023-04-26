@@ -10,6 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Code {
+  id        String   @id @default(cuid())
+  info      String //? data
+  password  String?
+  shorturl  String?  @unique
+  map       String?  @db.Text
+  userId    String?
+  createdAt DateTime @default(now())
+
+  User          User?           @relation(fields: [userId], references: [id])
+  CodeStatistic CodeStatistic[]
+}
+
+model CodeStatistic {
+  id        String   @id @default(cuid())
+  codeId    String
+  createdAt DateTime @default(now())
+
+  Code Code @relation(fields: [codeId], references: [id])
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -19,6 +40,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  Code     Code[]
 }
 
 // Necessary for Next auth
