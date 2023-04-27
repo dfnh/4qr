@@ -38,6 +38,7 @@ const WebCam = () => {
     </>
   );
 };
+
 import type QrScanner from 'qr-scanner';
 
 const WebCamButtons = ({
@@ -65,6 +66,5 @@ const WebCamButtons = ({
     </Button>
   );
 };
-// WebCamButtons.displayName = 'WebCamButtons';
 
 export { WebCam };

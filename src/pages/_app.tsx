@@ -3,6 +3,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { api } from '~/utils/api';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Provider } from 'jotai';
 
 import '~/styles/globals.css';
 
@@ -11,11 +12,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <ReactQueryDevtools />
+    <Provider>
+      <SessionProvider session={session}>
+        <ReactQueryDevtools />
 
-      <Component {...pageProps} />
-    </SessionProvider>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </Provider>
   );
 };
 

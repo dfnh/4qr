@@ -18,9 +18,9 @@ const UserDropdown = ({
   image,
   logout,
 }: {
-  name: string | null | undefined;
-  email?: string | null | undefined;
-  image?: string | null | undefined;
+  name?: string;
+  email?: string;
+  image?: string;
   logout: () => void;
 }) => {
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);

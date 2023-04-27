@@ -55,4 +55,4 @@ const QrThingy = () => {
   );
 };
 
-export default DisplayQr;
+export { DisplayQr };

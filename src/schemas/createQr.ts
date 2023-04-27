@@ -11,7 +11,7 @@ enum QRCorrectLevel {
 const QRCorrectLevelEnum = z.nativeEnum(QRCorrectLevel);
 
 const createQrSchema = z.object({
-  text: z.string().min(2),
+  text: z.string().min(1),
   password: z.string().min(2).optional(),
   width: z.number().gte(1).default(256),
   height: z.number().gte(1).default(256),

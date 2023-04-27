@@ -1,6 +1,8 @@
-import { useAtom } from 'jotai';
-import { readQrIdAtom } from './atoms';
+import { useAtom, useSetAtom } from 'jotai';
+import { qrIdAtom, readQrIdAtom } from './atoms';
 
 const useReadQrIdAtom = () => useAtom(readQrIdAtom);
 
-export { useReadQrIdAtom };
+const useSetQrIdAtom = () => useSetAtom(qrIdAtom);
+
+export { useReadQrIdAtom, useSetQrIdAtom };

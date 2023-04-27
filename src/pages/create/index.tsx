@@ -1,9 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { CardCreate } from '~/components/CardCreate';
-import DisplayQr from '~/components/DisplayQr';
-
-// import { api } from '~/utils/api';
+import { DisplayQr } from '~/components/DisplayQr';
 
 // todo DisplayQr - position sticky
 const CreateQr: NextPage = () => {

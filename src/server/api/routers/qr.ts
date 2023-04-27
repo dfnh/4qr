@@ -1,8 +1,8 @@
+import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '~/server/api/trpc';
 import { TRPCError } from '@trpc/server';
-import QRCode from 'easyqrcodejs-nodejs';
 
+import QRCode from 'easyqrcodejs-nodejs';
 import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword } from '~/utils/bcrypt';
@@ -26,7 +26,7 @@ export const qrRouter = createTRPCRouter({
         info: input.text,
         userId: userid,
         password: hashedPassword,
-        map: qr64,
+        image: qr64,
         shorturl: shorturl,
       },
     });
@@ -47,6 +47,6 @@ export const qrRouter = createTRPCRouter({
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
 
-      return { qrUrl: code.map };
+      return { qrUrl: code.image };
     }),
 });

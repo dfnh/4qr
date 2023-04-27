@@ -15,7 +15,7 @@ model Code {
   info      String //? data
   password  String?
   shorturl  String?  @unique
-  map       String?  @db.Text
+  image     String?  @db.Text
   userId    String?
   createdAt DateTime @default(now())
 
