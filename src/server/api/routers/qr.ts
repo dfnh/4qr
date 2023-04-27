@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server';
 import QRCode from 'easyqrcodejs-nodejs';
 import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
-import { hashPassword } from '~/utils/bcrypt';
+import { hashPassword } from '~/helpers/bcrypt';
 
 export const qrRouter = createTRPCRouter({
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
@@ -15,7 +15,7 @@ export const qrRouter = createTRPCRouter({
 
     const userid = ctx.session?.user.id;
 
-    const shorturl = await nanoid();
+    const shorturl = input.slink ? await nanoid() : undefined;
 
     const hashedPassword = input.password
       ? await hashPassword(input.password)
@@ -43,6 +43,7 @@ export const qrRouter = createTRPCRouter({
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       const code = await ctx.prisma.code.findFirst({ where: { id: input.id } });
+      // code || ctx.session?.user.id === code?.userId
       if (!code) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }

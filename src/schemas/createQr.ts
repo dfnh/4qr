@@ -1,5 +1,6 @@
 // import QRCode from 'easyqrcodejs-nodejs';
 import { z } from 'zod';
+import { asOptionalField } from '~/helpers/asOptionalField';
 
 enum QRCorrectLevel {
   H,
@@ -10,9 +11,7 @@ enum QRCorrectLevel {
 
 const QRCorrectLevelEnum = z.nativeEnum(QRCorrectLevel);
 
-const createQrSchema = z.object({
-  text: z.string().min(1),
-  password: z.string().min(2).optional(),
+const qrPart = z.object({
   width: z.number().gte(1).default(256),
   height: z.number().gte(1).default(256),
   colorDark: z.string().min(4).max(9).regex(/^#/).default('#000000'),
@@ -33,6 +32,12 @@ const createQrSchema = z.object({
     })
     .partial()
     .optional(),
+});
+
+const createQrSchema = qrPart.extend({
+  text: z.string().trim().min(1, 'field must be not empty'),
+  password: asOptionalField(z.string().trim().min(2)),
+  slink: z.boolean().default(false),
 });
 
 type CreateQrSchema = z.infer<typeof createQrSchema>;
