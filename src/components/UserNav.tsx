@@ -2,34 +2,34 @@ import { useCallback } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { UserDropdown } from './UserDropdown';
 import { Button } from '~/ui/button';
+import { LoadingSpinner } from './Spinner';
 
 const UserNav = () => {
   const { data, status } = useSession();
 
   const logout = useCallback(() => void signOut(), []);
 
+  if (status === 'unauthenticated') {
+    return <LoginButton />;
+  }
+
+  if (status === 'loading') {
+    return <LoadingSpinner />;
+  }
+
   return (
-    <>
-      {status === 'authenticated' ? (
-        <>
-          <UserDropdown
-            email={data.user.email}
-            image={data.user.image}
-            name={data.user.name}
-            logout={logout}
-          />
-        </>
-      ) : (
-        <>
-          <LoginButton />
-        </>
-      )}
-    </>
+    <UserDropdown
+      email={data?.user.email}
+      image={data?.user.image}
+      name={data?.user.name}
+      logout={logout}
+    />
   );
 };
 // todo move
 const LoginButton = () => {
   const onClick = useCallback(() => void signIn(), []);
+
   return (
     <>
       <Button variant="outline" className="text-white/90" onClick={onClick}>

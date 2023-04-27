@@ -17,6 +17,7 @@ const config = {
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
     // 'plugin:react-hook-form/recommended',
+    'prettier',
   ],
   rules: {
     '@typescript-eslint/consistent-type-imports': [

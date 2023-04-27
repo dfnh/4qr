@@ -2,4 +2,6 @@ import { atom } from 'jotai';
 
 const qrIdAtom = atom('');
 
-export { qrIdAtom };
+const readQrIdAtom = atom((get) => get(qrIdAtom));
+
+export { qrIdAtom, readQrIdAtom };

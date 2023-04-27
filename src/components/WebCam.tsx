@@ -51,18 +51,18 @@ const WebCamButtons = ({
   active: boolean;
   toggle: () => void;
 }) => {
+  if (cameras.length === 0) {
+    return (
+      <Button variant="default" onClick={checkCamFn}>
+        check cameras
+      </Button>
+    );
+  }
+
   return (
-    <>
-      {cameras.length === 0 ? (
-        <Button variant="default" onClick={checkCamFn}>
-          check cameras
-        </Button>
-      ) : (
-        <Button variant={active ? 'destructive' : 'start'} onClick={toggle}>
-          {active ? 'stop' : 'start'}
-        </Button>
-      )}
-    </>
+    <Button variant={active ? 'destructive' : 'start'} onClick={toggle}>
+      {active ? 'stop' : 'start'}
+    </Button>
   );
 };
 // WebCamButtons.displayName = 'WebCamButtons';

@@ -1,6 +1,5 @@
-import { useAtom } from 'jotai';
 import Image from 'next/image';
-import { qrIdAtom } from '~/store/atoms';
+import { useReadQrIdAtom } from '~/store/hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
 import { api } from '~/utils/api';
 import { LoadingSpinner } from './Spinner';
@@ -21,10 +20,15 @@ const DisplayQr = () => {
   );
 };
 
-const QrThingy = () => {
-  const [qrId] = useAtom(qrIdAtom);
+const initialQrCode = {
+  qrUrl:
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQUAAAEFCAYAAADqlvKRAAAABmJLR0QA/wD/AP+gvaeTAAAFSklEQVR4nO3dwW7bOhBAUbvw//9yur6bPj6UYYfKOetAlmXlgosB+X69Xl+vH+rr67+/+vv9PnadFSc/a8XK/dzo5DOc5te/vgFgFlEAQhSAEAUgRAEIUQBCFIAQBSA+K39044DKjcMnJ4epVpx8hieHxHY9n6f+X1gpACEKQIgCEKIAhCgAIQpAiAIQogDE0vDSCrv9/L0bh4V2eepA0Y3/F1YKQIgCEKIAhCgAIQpAiAIQogCEKACxbXjpqaYNw0zbfWjFtPvhz6wUgBAFIEQBCFEAQhSAEAUgRAEIUQDC8NIGNx5Rd/KYthU37lD0VFYKQIgCEKIAhCgAIQpAiAIQogCEKACxbXjpqQMhN+4atGvo6OSA065nOG2QbNq7scJKAQhRAEIUgBAFIEQBCFEAQhSAEAUgloaXpg2E3OjGQaCT93PjkNhT/y+sFIAQBSBEAQhRAEIUgBAFIEQBCFEA4v01bSJkmF0DKj95EMiRcHexUgBCFIAQBSBEAQhRAEIUgBAFIEQBiG3Hxk0bUJk2wLNi1/da8dRBqRXT3tUVJ+/ZSgEIUQBCFIAQBSBEAQhRAEIUgBAFID7Thk+eOjCzy8lhmJMDM9OGqU5eZ5dd92OlAIQoACEKQIgCEKIAhCgAIQpAiAIQn2nDQjcOjUzz1Gc4bWjtxue8cj9WCkCIAhCiAIQoACEKQIgCEKIAhCgA8X69XlumPaYNQa3YNTRyckBl2jFkP/n3mva777pnKwUgRAEIUQBCFIAQBSBEAQhRAEIUgFgaXrpxYOYn7xY17bN2mXYk3C7TdriyUgBCFIAQBSBEAQhRAEIUgBAFIEQBiPfXpimNGwdLbhwWOumpw127TBsS2/VZVgpAiAIQogCEKAAhCkCIAhCiAIQoAHF056UV04agpg3MrJj2fKZdZ8XJd34aKwUgRAEIUQBCFIAQBSBEAQhRAEIUgPjsutDJIZ9px36tmLbr1FOfz42mDYBZKQAhCkCIAhCiAIQoACEKQIgCEKIAxLbhpRUnjyGbtgPPtIGrG48zW3Hyfm484nDlOlYKQIgCEKIAhCgAIQpAiAIQogCEKACxbXjpJ+8sNG3nnBt3KDr5e037LaYNOFkpACEKQIgCEKIAhCgAIQpAiAIQogDE0WPjpu2KM81Th2pWTLufXU6+87uej5UCEKIAhCgAIQpAiAIQogCEKAAhCkAc3Xnp5HWmuXEHnqcOFN3o5HO2UgBCFIAQBSBEAQhRAEIUgBAFIEQBiG3DSyum7YZ04w5FK248Wm7a4NaNn2XnJeBbiAIQogCEKAAhCkCIAhCiAIQoAPE5OXgzbcjnqaYdQzbNtOPwVpwcSLNSAEIUgBAFIEQBCFEAQhSAEAUgRAGIz7QdeE5aGQg5eRzert11pu0I9NTPmnZUop2XgG8hCkCIAhCiAIQoACEKQIgCEKIAxNKxcTfuwPPUoaxp32vXMNWN32uXk0NrK9exUgBCFIAQBSBEAQhRAEIUgBAFIEQBiKXhpRUnh0+eOliyy67nc+PxczcOSq04+R5aKQAhCkCIAhCiAIQoACEKQIgCEKIAxLbhJf7s5M45K6Z91oqTx/ytmLZj0go7LwH/mygAIQpAiAIQogCEKAAhCkCIAhCGlzbYNXwybVjopGm7V62YNpjk2DjgW4gCEKIAhCgAIQpAiAIQogCEKACxbXjp5I43J904VDPNje/Gjfe8i5UCEKIAhCgAIQpAiAIQogCEKAAhCkAsDS8Zzvl7J5/hyYGrad9rxbT3+eSxeiusFIAQBSBEAQhRAEIUgBAFIEQBCFEA4jfm2A88piuKxQAAAABJRU5ErkJggg==',
+};
 
-  const { data, isLoading, isError } = api.qr.getQrById.useQuery(
+const QrThingy = () => {
+  const [qrId] = useReadQrIdAtom();
+
+  const { data, isLoading, isFetching, isError } = api.qr.getQrById.useQuery(
     { id: qrId },
     {
       enabled: qrId.length !== 0,
@@ -32,17 +36,21 @@ const QrThingy = () => {
       onError(err) {
         console.error(err);
       },
+      initialData: initialQrCode,
     }
   );
+
+  if (isLoading || isFetching || isError) {
+    return (
+      <div className="flex aspect-square w-[256px] items-center justify-center">
+        <LoadingSpinner size={48} />
+      </div>
+    );
+  }
+
   return (
     <>
-      {isLoading || isError ? (
-        <div className="flex aspect-square w-[256px] items-center justify-center">
-          <LoadingSpinner size={48} />
-        </div>
-      ) : (
-        <Image src={data?.qrUrl ?? ''} alt="qr code" width={256} height={256} />
-      )}
+      <Image src={data.qrUrl ?? ''} alt="qr code" width={256} height={256} />
     </>
   );
 };

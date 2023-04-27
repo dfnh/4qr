@@ -74,9 +74,9 @@ const FormCreate = () => {
         {...register('text')}
       />
       {errors.text?.message && <ErrorSpan>{errors.text.message}</ErrorSpan>}
-      {Object.keys(errors).map((e) => (
+      {/* {Object.keys(errors).map((e) => (
         <p key={e}>{e}</p>
-      ))}
+      ))} */}
     </form>
   );
 };

@@ -1,4 +1,5 @@
 import { LogOut, Settings, User } from 'lucide-react';
+import { useMemo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/ui/avatar';
 import { Button } from '~/ui/button';
 import {
@@ -22,7 +23,7 @@ const UserDropdown = ({
   image?: string | null | undefined;
   logout: () => void;
 }) => {
-  const Av = name?.slice(0, 2) ?? 'A';
+  const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
