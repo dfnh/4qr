@@ -28,15 +28,19 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   const session = await getServerAuthSession({ req, res });
 
-  return createInnerTRPCContext({
-    session,
-  });
+  return {
+    ...createInnerTRPCContext({
+      session,
+    }),
+    req,
+  };
 };
 
 /** tRPC API initialization */
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
+import { getIp } from '~/helpers/getIp';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -80,3 +84,20 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+const withIpFromReq = t.middleware(({ ctx, next }) => {
+  if (!ctx.req) {
+    throw new Error('You are missing `req` in your call');
+  }
+  const ip = getIp(ctx.req);
+  return next({
+    ctx: {
+      session: ctx.session,
+      prisma: ctx.prisma,
+      ip: ip,
+      req: ctx.req,
+    },
+  });
+});
+
+export const publicWithIpProcedure = t.procedure.use(withIpFromReq);

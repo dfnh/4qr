@@ -27,6 +27,12 @@ model CodeStatistic {
   id        String   @id @default(cuid())
   codeId    String
   createdAt DateTime @default(now())
+  country   String?
+  region    String?
+  city      String?
+  timezone  String?
+  latitude  Float?   @db.Real // DoublePrecision
+  longitude Float?   @db.Real
 
   Code Code @relation(fields: [codeId], references: [id])
 }
