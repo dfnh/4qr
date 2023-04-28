@@ -35,8 +35,10 @@ const qrPart = z.object({
 });
 
 const createQrSchema = qrPart.extend({
-  text: z.string().trim().min(1, 'field must be not empty'),
-  password: asOptionalField(z.string().trim().min(2)),
+  text: z.string().trim().min(1, 'Field must be not empty'),
+  password: asOptionalField(
+    z.string().trim().min(2, 'Password must contain at least 2 characters')
+  ),
   slink: z.boolean().default(false),
 });
 
