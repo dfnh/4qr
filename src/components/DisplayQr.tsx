@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
 import { api } from '~/utils/api';
 import { LoadingSpinner } from './Spinner';
 
+// to display image
 const DisplayQr = () => {
-  // to display image
   return (
     <Card>
       <CardHeader>
@@ -49,9 +49,13 @@ const QrThingy = () => {
   }
 
   return (
-    <>
-      <Image src={data.qrUrl ?? ''} alt="qr code" width={256} height={256} />
-    </>
+    <Image
+      src={data.qrUrl ?? ''}
+      alt="qr code"
+      className="aspect-square bg-slate-50 p-1"
+      width={256}
+      height={256}
+    />
   );
 };
 

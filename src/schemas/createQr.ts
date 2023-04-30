@@ -1,4 +1,3 @@
-// import QRCode from 'easyqrcodejs-nodejs';
 import { z } from 'zod';
 import { asOptionalField } from '~/helpers/asOptionalField';
 

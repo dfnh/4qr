@@ -3,7 +3,7 @@ import { type ReactNode, useState, useEffect } from 'react';
 import { type ToastActionElement, type ToastProps } from '~/ui/toast';
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 5 * 1000;
+const TOAST_REMOVE_DELAY = 3 * 1000;
 
 type ToasterToast = ToastProps & {
   id: string;
