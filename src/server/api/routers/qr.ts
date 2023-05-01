@@ -7,8 +7,9 @@ import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
-import { getLocation } from '~/helpers/getLocation';
+// import { getLocation } from '~/helpers/getLocation';
 import { codeProcedure } from '../procedures/codeProcedure';
+import { handleLocation } from '../helpers/locationLogic';
 
 export const qrRouter = createTRPCRouter({
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
@@ -73,24 +74,10 @@ export const qrRouter = createTRPCRouter({
       if (!success) return { qrUrl: code.image, slink: code.shorturl, isUrl, success };
     }
 
-    const ip = '178.44.19.217'; //! mock ip cause my ip '::1'
-    // const ip = ctx.ip ?? '';
-    const location = await getLocation(ip);
-    if (!location) {
-      //? i think it ok not to throw here
-      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-    }
-
-    await ctx.prisma.codeStatistic.create({
-      data: {
-        codeId: code.id,
-        country: location.country,
-        region: location.region,
-        timezone: location.timezone,
-        city: location.city,
-        latitude: location.lat,
-        longitude: location.lon,
-      },
+    const stat = await handleLocation({
+      ip: ctx.ip,
+      prisma: ctx.prisma,
+      codeId: code.id,
     });
 
     return {
@@ -112,24 +99,10 @@ export const qrRouter = createTRPCRouter({
     const success = await verifyPassword(input.password, code.password);
     if (!success) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Wrong password' });
 
-    const ip = '178.44.19.217'; //! mock ip cause my ip '::1'
-    // const ip = ctx.ip ?? '';
-    const location = await getLocation(ip);
-    if (!location) {
-      //? should i throw here
-      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-    }
-
-    await ctx.prisma.codeStatistic.create({
-      data: {
-        codeId: code.id,
-        country: location.country,
-        region: location.region,
-        timezone: location.timezone,
-        city: location.city,
-        latitude: location.lat,
-        longitude: location.lon,
-      },
+    const stat = await handleLocation({
+      ip: ctx.ip,
+      prisma: ctx.prisma,
+      codeId: code.id,
     });
 
     // console.log({ info: code.info, qrUrl: code.image, isUrl, success });

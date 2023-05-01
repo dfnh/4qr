@@ -14,7 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <Provider>
-      <SessionProvider session={session}>
+      <SessionProvider refetchOnWindowFocus={false} session={session}>
         <ReactQueryDevtools />
 
         <Component {...pageProps} />
