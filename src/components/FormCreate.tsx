@@ -14,12 +14,13 @@ const FormCreate = () => {
   } = useFormContext<CreateQrSchema>();
 
   // todo add scrollbar
+  // max-h-[10.5rem] min-h-[10.5rem]
   return (
     <form className="grid gap-2">
       <Label htmlFor="data">Data</Label>
       <Textarea
         id="data"
-        className="max-h-[10.5rem] min-h-[10.5rem]"
+        className="resize-none"
         placeholder="data for qr code"
         {...register('text')}
       />

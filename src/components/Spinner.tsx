@@ -38,3 +38,19 @@ const LoadingPageSpinnerCore = () => {
 };
 
 export const LoadingPage = memo(LoadingPageSpinnerCore);
+
+import { Loader2Icon } from 'lucide-react';
+
+export const LoadingSpinner2 = memo(function LoadingSpinner2(props: { size?: number }) {
+  const size = props.size ?? '40';
+  return (
+    <>
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <Loader2Icon
+          size={size}
+          className="animate-lsd-spin text-cyan-300 ease-linear "
+        />
+      </div>
+    </>
+  );
+});

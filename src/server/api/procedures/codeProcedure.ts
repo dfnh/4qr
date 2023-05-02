@@ -6,7 +6,7 @@ import { codeProcedureSchema } from '~/schemas/codeProcedure';
 const codeProcedure = publicWithIpProcedure
   .input(codeProcedureSchema)
   .use(async ({ ctx, input, next }) => {
-    const code = await ctx.prisma.code.findUnique({
+    const code = await ctx.prisma.code.findFirst({
       where: { shorturl: input.slink },
     });
     if (!code) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Code not found' });
