@@ -19,9 +19,9 @@ const UserNav = () => {
 
   return (
     <UserDropdown
-      email={data?.user.email}
-      image={data?.user.image}
-      name={data?.user.name}
+      email={data?.user.email ?? 'email@example.com'}
+      image={data?.user.image ?? undefined}
+      name={data?.user.name ?? 'user'}
       logout={logout}
     />
   );
