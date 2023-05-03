@@ -11,8 +11,7 @@ const handleLocation = async ({
   prisma: PrismaClient;
   codeId: string;
 }) => {
-  //! mock ip cause my ip '::1'
-  const IP = '178.44.19.217' ?? ip ?? '';
+  const IP = ip ?? '';
   const location = await getLocation(IP);
   if (!location) {
     //? should i throw here

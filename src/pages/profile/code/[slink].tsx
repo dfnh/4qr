@@ -10,13 +10,20 @@ const ProfileCodeSlink = ({
   const {
     query: { slink },
   } = useRouter();
-  const { data: code, isSuccess } = api.user.getQrStats.useQuery({
-    slink: slink as string,
-  });
+  const { data: code, isSuccess } = api.user.getQrStats.useQuery(
+    {
+      slink: slink as string,
+    },
+    { refetchOnWindowFocus: false }
+  );
 
   return (
     <div className="dark min-h-screen bg-background text-foreground">
-      <div className="container flex flex-col py-6">{code?.info}</div>
+      <div className="container flex-1 flex-col py-6">
+        <p>slink: {code?.shorturl}</p>
+        <p>data: {code?.info}</p>
+        <p>visited: {code?.CodeStatistic.length}</p>
+      </div>
     </div>
   );
 };

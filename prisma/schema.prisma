@@ -7,8 +7,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // provider = "postgresql"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Code {
@@ -16,12 +18,14 @@ model Code {
   info      String //? data
   password  String?
   shorturl  String?  @unique
-  image     String?  @db.Text
+  image     String?  @db.MediumText
   userId    String?
   createdAt DateTime @default(now())
 
-  User          User?           @relation(fields: [userId], references: [id])
+  User          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   CodeStatistic CodeStatistic[]
+
+  @@index([userId])
 }
 
 model CodeStatistic {
@@ -32,10 +36,12 @@ model CodeStatistic {
   region    String?
   city      String?
   timezone  String?
-  latitude  Float?   @db.Real // DoublePrecision
-  longitude Float?   @db.Real
+  latitude  Decimal? @db.Decimal(7, 5) // @db.Real // DoublePrecision
+  longitude Decimal? @db.Decimal(7, 5) // @db.Real
 
-  Code Code @relation(fields: [codeId], references: [id])
+  Code Code @relation(fields: [codeId], references: [id], onDelete: Cascade)
+
+  @@index([codeId])
 }
 
 model User {
@@ -69,6 +75,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -78,6 +85,8 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {

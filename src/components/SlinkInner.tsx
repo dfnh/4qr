@@ -42,7 +42,7 @@ const SlinkInner = () => {
 
   return (
     <>
-      <div className="container flex flex-col gap-3 py-4">
+      <div className="container flex max-w-lg flex-col gap-3 py-4">
         {data?.qrUrl && (
           <div className="flex justify-center">
             <img

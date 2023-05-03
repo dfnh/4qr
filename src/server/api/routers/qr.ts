@@ -7,7 +7,6 @@ import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
-// import { getLocation } from '~/helpers/getLocation';
 import { codeProcedure } from '../procedures/codeProcedure';
 import { handleLocation } from '../helpers/locationLogic';
 
@@ -62,7 +61,6 @@ export const qrRouter = createTRPCRouter({
       return { qrUrl: code.image };
     }),
 
-  // fixme mock ip
   visitSlink: codeProcedure.query(async ({ ctx, input }) => {
     const { code, isUrl } = ctx;
 
