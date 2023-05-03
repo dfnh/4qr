@@ -1,22 +1,15 @@
-import { useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {
-  type CreateQrSchema,
-  createQrSchema,
-  createRouteSchema,
-  type CreateRouteSchema,
-} from '~/schemas/createQr';
+import { createQrSchema, type CreateQrSchema } from '~/schemas/createQr';
 import { Button } from '~/ui/button';
 import { CardContent, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
 import { FormCreate } from './FormCreate';
 
 import { useSetQrIdAtom } from '~/store/hooks';
-// import { useCreateQr } from '~/hooks/useCreateQr';
 
 const schema = createQrSchema;
-// const schema = createRouteSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
 const CardCreateContent = () => {
@@ -33,7 +26,7 @@ const CardCreateContent = () => {
       console.log(data);
     },
     onError(error) {
-      console.log(error);
+      console.error(error);
     },
   });
 

@@ -7,6 +7,7 @@ import { Provider } from 'jotai';
 import { Toaster } from '~/components/Toaster';
 
 import '~/styles/globals.css';
+import Layout from '~/components/Layout';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,9 +17,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <Provider>
       <SessionProvider refetchOnWindowFocus={false} session={session}>
         <ReactQueryDevtools />
-
-        <Component {...pageProps} />
-        <Toaster />
+        <Layout>
+          <Component {...pageProps} />
+          <Toaster />
+        </Layout>
       </SessionProvider>
     </Provider>
   );

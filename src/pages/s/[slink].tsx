@@ -1,10 +1,16 @@
+import Head from 'next/head';
 import { SlinkInner } from '~/components/SlinkInner';
 
 const Slink = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-primary text-primary-foreground ">
-      <SlinkInner />
-    </main>
+    <>
+      <Head>
+        <title>Slink</title>
+      </Head>
+      <div className="flex flex-col items-center justify-center">
+        <SlinkInner />
+      </div>
+    </>
   );
 };
 

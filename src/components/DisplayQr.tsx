@@ -7,9 +7,9 @@ import { LoadingSpinner } from './Spinner';
 // to display image
 const DisplayQr = () => {
   return (
-    <Card className="bg-background text-primary">
+    <Card className="border-ring bg-slate-500/5 text-foreground dark:bg-foreground/5">
       <CardHeader>
-        <CardTitle>Your Qr Code</CardTitle>
+        <CardTitle>Your qr code</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center">
         <div className="">

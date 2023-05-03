@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from 'react-hook-form';
-import { type CreateRouteSchema, type CreateQrSchema } from '~/schemas/createQr';
+import { type CreateQrSchema } from '~/schemas/createQr';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
 import { Textarea } from '~/ui/textarea';
@@ -14,7 +14,6 @@ const FormCreate = () => {
   } = useFormContext<CreateQrSchema>();
 
   // todo add scrollbar
-  // max-h-[10.5rem] min-h-[10.5rem]
   return (
     <form className="grid gap-2">
       <Label htmlFor="data">Data</Label>

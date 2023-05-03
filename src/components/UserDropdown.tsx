@@ -1,4 +1,6 @@
-import { LogOut, Settings, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/ui/avatar';
 import { Button } from '~/ui/button';
@@ -16,14 +18,16 @@ const UserDropdown = ({
   name,
   email,
   image,
-  logout,
 }: {
   name?: string;
   email?: string;
   image?: string;
-  logout: () => void;
 }) => {
+  const router = useRouter();
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
+  const logout = () => void signOut();
+  const linkprofile = () => void router.push('/profile', undefined, { shallow: true });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,7 +38,7 @@ const UserDropdown = ({
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-56 text-foreground" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{name}</p>
@@ -43,13 +47,9 @@ const UserDropdown = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={linkprofile}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

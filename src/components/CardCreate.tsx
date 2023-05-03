@@ -4,9 +4,9 @@ import { CardCreateContent } from './CardCreateContent';
 
 const CardCreate = () => {
   return (
-    <Card className="bg-background text-primary">
+    <Card className="border-ring bg-slate-500/5 text-foreground dark:bg-foreground/5">
       <CardHeader>
-        <CardTitle>Create Qr code</CardTitle>
+        <CardTitle>Create qr code</CardTitle>
       </CardHeader>
       <CardCreateContent />
     </Card>

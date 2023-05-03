@@ -7,6 +7,14 @@ import { api } from '~/utils/api';
 const ProfileCodeSlink = ({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  return (
+    <div className="container flex-1 flex-col py-6">
+      <ProfileCodeSlinkView />
+    </div>
+  );
+};
+
+const ProfileCodeSlinkView = () => {
   const {
     query: { slink },
   } = useRouter();
@@ -16,15 +24,12 @@ const ProfileCodeSlink = ({
     },
     { refetchOnWindowFocus: false }
   );
-
   return (
-    <div className="dark min-h-screen bg-background text-foreground">
-      <div className="container flex-1 flex-col py-6">
-        <p>slink: {code?.shorturl}</p>
-        <p>data: {code?.info}</p>
-        <p>visited: {code?.CodeStatistic.length}</p>
-      </div>
-    </div>
+    <>
+      <p>slink: {code?.shorturl}</p>
+      <p>data: {code?.info}</p>
+      <p>visited: {code?.CodeStatistic.length}</p>
+    </>
   );
 };
 
