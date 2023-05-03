@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { ProfileQrList } from '~/components/ProfileQrList';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
 import { getServerAuthSession } from '~/server/auth';
-import { api } from '~/utils/api';
+// import { api } from '~/utils/api';
 
 const Profile = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (

@@ -1,11 +1,9 @@
 import { createTRPCRouter } from './trpc';
-import { exampleRouter } from './routers/example';
 import { qrRouter } from './routers/qr';
 import { userRouter } from './routers/user';
 
 /** primary router */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
   qr: qrRouter,
   user: userRouter,
 });

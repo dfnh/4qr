@@ -2,6 +2,7 @@ import { type PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { getLocation } from '~/helpers/getLocation';
 
+// todo do smth with this - fat
 const handleLocation = async ({
   ip,
   prisma,
@@ -30,7 +31,7 @@ const handleLocation = async ({
     },
   });
 
-  console.log(stat);
+  // console.log(stat);
 
   if (!stat) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Statistic error' });
