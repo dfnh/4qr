@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
-import { createRouteSchema, createQrSchema } from '~/schemas/createQr';
+import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
 import { getBaseUrl } from '~/helpers/getBaseUrl';

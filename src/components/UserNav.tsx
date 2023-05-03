@@ -3,7 +3,6 @@ import { signIn, useSession } from 'next-auth/react';
 import { UserDropdown } from './UserDropdown';
 import { Button } from '~/ui/button';
 import { LoadingSpinner } from './Spinner';
-import Link from 'next/link';
 import { MainNavbar } from './MainNavbar';
 
 const Auth = () => {
