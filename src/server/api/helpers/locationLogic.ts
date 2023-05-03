@@ -30,6 +30,8 @@ const handleLocation = async ({
     },
   });
 
+  console.log(stat);
+
   if (!stat) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Statistic error' });
   }

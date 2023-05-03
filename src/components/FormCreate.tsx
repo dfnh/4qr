@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from 'react-hook-form';
-import { type CreateQrSchema } from '~/schemas/createQr';
+import { type CreateRouteSchema, type CreateQrSchema } from '~/schemas/createQr';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
 import { Textarea } from '~/ui/textarea';

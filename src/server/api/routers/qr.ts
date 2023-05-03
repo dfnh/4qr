@@ -2,31 +2,36 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
-import QRCode from 'easyqrcodejs-nodejs';
-import { createQrSchema } from '~/schemas/createQr';
+import { createRouteSchema, createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
 import { codeProcedure } from '../procedures/codeProcedure';
 import { handleLocation } from '../helpers/locationLogic';
 
+// import QRCode from 'easyqrcodejs-nodejs';
+import { generateQR } from '~/helpers/generateQr';
+
 export const qrRouter = createTRPCRouter({
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
-    let qr: QRCode;
+    // let qr: QRCode;
+    let qr: string | undefined;
     let slink: string | undefined = undefined;
     let link: string | undefined = undefined;
     const userid = ctx.session?.user.id;
 
     if (!input.slink) {
-      qr = new QRCode(input.text);
+      // qr = new QRCode(input.text);
+      qr = await generateQR(input.text);
     } else {
       slink = await nanoid();
       link = getBaseUrl(`/s/${slink}`);
-      qr = new QRCode(link);
+      // qr = new QRCode(link);
+      qr = await generateQR(link);
     }
 
-    const [qr64, hashedPassword] = await Promise.all([
-      qr.toDataURL() as Promise<string>,
+    const [hashedPassword] = await Promise.all([
+      // qr.toDataURL() as Promise<string>,
       input.password ? hashPassword(input.password) : Promise.resolve(undefined),
     ]);
 
@@ -35,7 +40,9 @@ export const qrRouter = createTRPCRouter({
         info: input.text,
         userId: userid,
         password: hashedPassword,
-        image: qr64,
+        // image: input.qr64,
+        // shorturl: input.shorturl,
+        image: qr,
         shorturl: slink,
       },
     });
@@ -43,10 +50,9 @@ export const qrRouter = createTRPCRouter({
       throw new TRPCError({ code: 'BAD_REQUEST' });
     }
     console.log(code);
-
     // const link = getBaseUrl(`/s/${code?.shorturl ?? ''}`);
 
-    return { url: link, qrUrl: qr64, id: code.id };
+    return { url: link, qrUrl: qr, id: code.id };
   }),
 
   getQrById: publicProcedure

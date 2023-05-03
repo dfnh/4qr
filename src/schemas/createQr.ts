@@ -33,6 +33,7 @@ const qrPart = z.object({
     .optional(),
 });
 
+//! not using
 const createQrSchema = qrPart.extend({
   text: z.string().trim().min(1, 'Field must be not empty'),
   password: asOptionalField(
@@ -43,4 +44,23 @@ const createQrSchema = qrPart.extend({
 
 type CreateQrSchema = z.infer<typeof createQrSchema>;
 
-export { createQrSchema, type CreateQrSchema, QRCorrectLevelEnum, QRCorrectLevel };
+const createRouteSchema = z.object({
+  text: z.string().trim().min(1, 'Field must be not empty'),
+  password: asOptionalField(
+    z.string().trim().min(2, 'Password must contain at least 2 characters')
+  ),
+  slink: z.boolean().default(false),
+  qr64: z.string().min(1),
+  shorturl: z.string().min(1),
+  link: z.string().url(),
+});
+type CreateRouteSchema = z.infer<typeof createRouteSchema>;
+
+export {
+  createQrSchema,
+  type CreateQrSchema,
+  QRCorrectLevelEnum,
+  QRCorrectLevel,
+  createRouteSchema,
+  type CreateRouteSchema,
+};

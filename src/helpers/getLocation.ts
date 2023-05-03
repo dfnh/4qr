@@ -1,6 +1,6 @@
 import geoip from 'fast-geoip';
 
-// geoip.enableCache();
+geoip.enableCache();
 
 const getLocation = async (ip: string) => {
   const location = await geoip.lookup(ip);
