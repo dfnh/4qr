@@ -39,6 +39,7 @@ const createQrSchema = qrPart.extend({
     z.string().trim().min(2, 'Password must contain at least 2 characters')
   ),
   slink: z.boolean().default(false),
+  sign: z.boolean().default(false),
 });
 
 type CreateQrSchema = z.infer<typeof createQrSchema>;

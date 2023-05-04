@@ -12,7 +12,7 @@ const CreateQr: NextPage = () => {
       </Head>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h1 className="text-5xl font-bold tracking-tight">create qr code</h1>
-        <div className="container flex w-11/12 flex-col justify-evenly gap-2 md:flex-row">
+        <div className="container flex w-11/12 flex-col justify-evenly gap-1 md:flex-row">
           <div className="md:order-2 md:w-2/6">
             <DisplayQr />
           </div>

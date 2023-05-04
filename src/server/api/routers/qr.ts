@@ -5,11 +5,12 @@ import { TRPCError } from '@trpc/server';
 import { createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
-import { getBaseUrl } from '~/helpers/getBaseUrl';
+import { getBaseUrl, getSlinkUrl } from '~/helpers/getBaseUrl';
 import { codeProcedure } from '../procedures/codeProcedure';
 import { handleLocation } from '../helpers/locationLogic';
 
 import { generateQR } from '~/helpers/generateQr';
+import { generateKeys, signMessage } from '~/helpers/crypto';
 
 export const qrRouter = createTRPCRouter({
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
@@ -22,7 +23,7 @@ export const qrRouter = createTRPCRouter({
       qr = await generateQR(input.text);
     } else {
       slink = await nanoid();
-      link = getBaseUrl(`/s/${slink}`);
+      link = getSlinkUrl(slink);
       qr = await generateQR(link);
     }
 
@@ -31,6 +32,14 @@ export const qrRouter = createTRPCRouter({
       input.password ? hashPassword(input.password) : Promise.resolve(undefined),
     ]);
 
+    let publicKey: string | undefined = undefined;
+    let privateKey: string | undefined = undefined;
+    let signature: string | undefined = undefined;
+    if (!!slink && input.sign) {
+      [publicKey, privateKey] = generateKeys();
+      signature = signMessage(input.text, privateKey);
+    }
+
     const code = await ctx.prisma.code.create({
       data: {
         info: input.text,
@@ -38,6 +47,7 @@ export const qrRouter = createTRPCRouter({
         password: hashedPassword,
         image: qr,
         shorturl: slink,
+        signature: signature,
       },
     });
     if (!code) throw new TRPCError({ code: 'BAD_REQUEST' });
@@ -45,7 +55,7 @@ export const qrRouter = createTRPCRouter({
     console.log(code);
     // const link = getBaseUrl(`/s/${code?.shorturl ?? ''}`);
 
-    return { url: link, qrUrl: qr, id: code.id };
+    return { url: link, qrUrl: qr, id: code.id, publicKey, privateKey };
   }),
 
   getQrById: publicProcedure
@@ -56,8 +66,9 @@ export const qrRouter = createTRPCRouter({
       if (!code) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
+      const url = code.shorturl ? getSlinkUrl(code.shorturl) : undefined;
 
-      return { qrUrl: code.image };
+      return { qrUrl: code.image, url: url };
     }),
 
   visitSlink: codeProcedure.query(async ({ ctx, input }) => {

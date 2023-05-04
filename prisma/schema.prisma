@@ -20,6 +20,7 @@ model Code {
   shorturl  String?  @unique
   image     String?  @db.MediumText
   userId    String?
+  signature String?  @db.MediumText
   createdAt DateTime @default(now())
 
   User          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -6,4 +6,6 @@ const getBaseUrl = (url: string) => {
   return `http://localhost:${process.env.PORT ?? 3000}${url}`;
 };
 
-export { getBaseUrl };
+const getSlinkUrl = (slink: string) => getBaseUrl(`/s/${slink}`);
+
+export { getBaseUrl, getSlinkUrl };
