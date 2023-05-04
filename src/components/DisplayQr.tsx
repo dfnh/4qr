@@ -30,7 +30,7 @@ const initialQrCode = {
 
 const QrThingy = () => {
   const [qrId] = useReadQrIdAtom();
-  const [useReadKeysAtom] = useReadKeysAtom();
+  // const [displayQr] = useReadKeysAtom();
 
   const { data, isLoading, isFetching, isError } = api.qr.getQrById.useQuery(
     { id: qrId },
