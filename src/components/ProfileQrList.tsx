@@ -1,4 +1,3 @@
-// import { useSession } from 'next-auth/react';
 import { Card, CardHeader, CardTitle } from '~/ui/card';
 import { api, type RouterOutputs } from '~/utils/api';
 import { TooltipWrapper } from './TooltipWrapper';
@@ -8,7 +7,6 @@ import { useRouter } from 'next/router';
 import { LoadingSpinner2 } from './Spinner';
 
 const ProfileQrList = () => {
-  // const { data } = useSession({ required: true });
   const router = useRouter();
   const { data: codes, isSuccess } = api.user.getQrList.useQuery(undefined, {
     refetchOnWindowFocus: false,
@@ -63,4 +61,4 @@ const CardForProfileToDisplaySmallCodeInfo = ({
   );
 };
 
-export { ProfileQrList };
+export default ProfileQrList;

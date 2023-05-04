@@ -28,7 +28,11 @@ const SelectCamera = memo(
       [onSelected]
     );
     return (
-      <Select value={value} onValueChange={handleValueChange} disabled={disabled}>
+      <Select
+        value={value}
+        onValueChange={handleValueChange}
+        disabled={disabled || cameras.length === 0}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select a camera"></SelectValue>
         </SelectTrigger>

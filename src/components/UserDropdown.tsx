@@ -25,8 +25,8 @@ const UserDropdown = ({
 }) => {
   const router = useRouter();
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
-  const logout = () => void signOut();
-  const linkprofile = () => void router.push('/profile', undefined, { shallow: true });
+  const logout = () => void signOut({ callbackUrl: '/' });
+  const linkprofile = () => void router.push('/profile');
 
   return (
     <DropdownMenu>

@@ -69,4 +69,4 @@ const WebCamButtons = ({
   );
 };
 
-export { WebCam };
+export default WebCam;

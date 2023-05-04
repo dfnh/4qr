@@ -1,9 +1,14 @@
 import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next'; // type GetServerSideProps,
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import { ProfileQrList } from '~/components/ProfileQrList';
+// import { ProfileQrList } from '~/components/ProfileQrList';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
 import { getServerAuthSession } from '~/server/auth';
 // import { api } from '~/utils/api';
+
+const LazyProfileQrList = dynamic(() => import('~/components/ProfileQrList'), {
+  ssr: false,
+});
 
 const Profile = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
@@ -16,7 +21,7 @@ const Profile = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps
           {user.name ?? user.email}`s qr codes
         </h1>
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <ProfileQrList />
+          <LazyProfileQrList />
         </div>
       </main>
     </>
