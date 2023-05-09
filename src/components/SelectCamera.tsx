@@ -1,52 +1,29 @@
-import { memo, useCallback, useState } from 'react';
 import type QrScanner from 'qr-scanner';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/ui/select';
+import { memo } from 'react';
+import { SelectItem } from '~/ui/select';
+import { SelectWrapper } from './SelectWrapper';
 
 const SelectCamera = memo(
   ({
     cameras,
     onSelected,
-    disabled = false,
   }: {
     cameras: QrScanner.Camera[];
     onSelected: (id: string) => void;
-    disabled?: boolean;
   }) => {
-    const [value, setValue] = useState<string>();
-    const handleValueChange = useCallback(
-      (v: string) => {
-        setValue(v);
-        onSelected(v);
-      },
-      [onSelected]
-    );
     return (
-      <Select
-        value={value}
-        onValueChange={handleValueChange}
-        disabled={disabled || cameras.length === 0}
+      <SelectWrapper
+        placeholder="Select camera"
+        disabled={cameras.length === 0}
+        onSelected={onSelected}
       >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a camera"></SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {cameras.length !== 0 &&
-              cameras.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.label}
-                </SelectItem>
-              ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        {cameras.length !== 0 &&
+          cameras.map((c) => (
+            <SelectItem key={c.id} value={c.id}>
+              {c.label}
+            </SelectItem>
+          ))}
+      </SelectWrapper>
     );
   }
 );

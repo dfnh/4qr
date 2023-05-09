@@ -1,17 +1,18 @@
-import { useFormContext, Controller } from 'react-hook-form';
-import { type CreateQrSchema } from '~/schemas/createQr';
+import { useFormContext } from 'react-hook-form';
 import { Label } from '~/ui/label';
-import { Switch } from '~/ui/switch';
 import { Textarea } from '~/ui/textarea';
 import { ErrorSpan } from './ErrorSpan';
 import { GeneratePassword } from './GeneratePassword';
+import { Separator } from '~/ui/separator';
+import { FormCreateOptions, FormSwitch } from './FormCreateOptions';
+
+import { type QrFullSchema } from '~/schemas/QRCodeStyling';
 
 const FormCreate = () => {
   const {
     register,
-    control,
     formState: { errors },
-  } = useFormContext<CreateQrSchema>();
+  } = useFormContext<QrFullSchema>();
 
   // todo add scrollbar
   return (
@@ -21,21 +22,17 @@ const FormCreate = () => {
         id="data"
         className="resize-none"
         placeholder="data for qr code"
-        {...register('text')}
+        {...register('data')}
       />
-      {errors.text?.message && <ErrorSpan>{errors.text.message}</ErrorSpan>}
-      <div className="flex items-center space-x-2">
-        <Controller
-          name="slink"
-          control={control}
-          render={({ field: { onChange, ref } }) => (
-            <Switch id="slink" ref={ref} onCheckedChange={(v) => onChange(v)} />
-          )}
-        />
-        <Label htmlFor="slink">Create short link</Label>
-      </div>
+      {errors.data?.message && <ErrorSpan>{errors.data.message}</ErrorSpan>}
+
+      <FormSwitch name="slink" label="Create short link" />
 
       <GeneratePassword />
+
+      <Separator className="my-2" />
+
+      <FormCreateOptions />
     </form>
   );
 };

@@ -71,6 +71,14 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'collapse-down': {
+          from: { height: ' 0' },
+          to: { height: 'var(--radix-collapsible-content-height)' },
+        },
+        'collapse-up': {
+          from: { height: 'var(--radix-collapsible-content-height)' },
+          to: { height: '0' },
+        },
         'hue-rotation': {
           '0%, 100%': { filter: 'hue-rotate(0deg)' },
           '50%': { filter: 'hue-rotate(180deg)' },
@@ -79,6 +87,8 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'collapse-down': 'collapse-down 0.2s ease-out',
+        'collapse-up': 'collapse-up 0.2s ease-in',
         'hue-rotation': 'hue-rotation 3s linear infinite',
         'hue-rotation-pulse':
           'hue-rotation 3s linear infinite, pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',

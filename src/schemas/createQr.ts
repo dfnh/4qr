@@ -10,6 +10,7 @@ enum QRCorrectLevel {
 
 const QRCorrectLevelEnum = z.nativeEnum(QRCorrectLevel);
 
+//! delete vvv
 const qrPart = z.object({
   width: z.number().gte(1).default(256),
   height: z.number().gte(1).default(256),
@@ -41,6 +42,16 @@ const createQrSchema = qrPart.extend({
   slink: z.boolean().default(false),
   sign: z.boolean().default(false),
 });
+
+export const createQrBusinessPartSchema = z.object({
+  text: z.string().trim().min(1, 'Field must be not empty'),
+  password: asOptionalField(
+    z.string().trim().min(2, 'Password must contain at least 2 characters')
+  ),
+  slink: z.boolean().default(false),
+  sign: z.boolean().default(false),
+});
+export type CreateQrBusinessPartSchema = z.infer<typeof createQrBusinessPartSchema>;
 
 type CreateQrSchema = z.infer<typeof createQrSchema>;
 

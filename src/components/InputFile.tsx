@@ -2,7 +2,7 @@ import { Input, type InputProps } from '~/ui/input';
 import { Label } from '~/ui/label';
 
 interface InputFileProps extends InputProps {
-  labelTitle: string;
+  labelTitle?: string;
 }
 
 const InputFile = ({ labelTitle, ...props }: InputFileProps) => {

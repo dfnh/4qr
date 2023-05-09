@@ -1,4 +1,6 @@
 import { atom } from 'jotai';
+import { type Options } from 'qr-code-styling';
+import { type QrFullSchema, type qrFullSchema } from '~/schemas/QRCodeStyling';
 
 // deprecated
 const qrIdAtom = atom('');
@@ -24,7 +26,22 @@ const keysAtom = atom<{ privateKey?: string; publicKey?: string }>({
 });
 const readKeysAtom = atom((get) => get(keysAtom)); //notusing
 
+const da = atom({
+  data: 'zxc',
+  width: 300,
+  height: 300,
+  type: 'canvas',
+  dotsOptions: {
+    color: '#000',
+    type: 'classy',
+  },
+  imageOptions: {
+    crossOrigin: 'anonymous',
+  },
+} satisfies Options | QrFullSchema);
+
 export {
+  da,
   qrIdAtom,
   readQrIdAtom,
   slinkAtom,

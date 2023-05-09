@@ -12,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '~/ui/dropdown-menu';
+} from '~/ui/dropdown';
 
 const UserDropdown = ({
   name,

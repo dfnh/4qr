@@ -27,7 +27,7 @@ const config = {
         fixStyle: 'inline-type-imports',
       },
     ],
-    'no-console': ['warn', { allow: ['error'] }],
+    // 'no-console': ['warn', { allow: ['error'] }],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     /** for react-hook-form */
     '@typescript-eslint/no-misused-promises': [

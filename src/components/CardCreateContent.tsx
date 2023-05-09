@@ -9,13 +9,19 @@ import { FormCreate } from './FormCreate';
 
 import { useSetDisplayQrIdAtom, useSetKeysAtom, useSetQrIdAtom } from '~/store/hooks';
 
-const schema = createQrSchema;
+import { type QrFullSchema, qrFullSchema } from '~/schemas/QRCodeStyling';
+import { useSetAtom } from 'jotai';
+import { da } from '~/store/atoms';
+
+// const schema = createQrSchema;
+const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
 const CardCreateContent = () => {
-  const methods = useForm<CreateQrSchema>({
+  const methods = useForm<QrFullSchema>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
+    shouldFocusError: true,
   });
 
   const setQrId = useSetQrIdAtom();
@@ -37,11 +43,19 @@ const CardCreateContent = () => {
     },
   });
 
+  const setDaAtom = useSetAtom(da);
+
   const submitData = useCallback(
-    (d: CreateQrSchema) => {
-      mutate(d);
+    (d: QrFullSchema) => {
+      // mutate(d);
+      console.log(d);
+      // fixme fix types
+      // eslint-disable-next-line
+      // @ts-ignore
+      setDaAtom(d);
     },
-    [mutate]
+    [setDaAtom]
+    // [mutate]
   );
   return (
     <>
