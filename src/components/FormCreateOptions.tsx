@@ -1,15 +1,15 @@
+import { memo, useCallback, useEffect, useMemo, useRef, type ChangeEvent } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
-import { CollapsibleWrapper } from './CollapsibleWrapper';
-import { InputFile } from './InputFile';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Switch } from '~/ui/switch';
-import { SelectWrapper, SelectItem, type OnSelectType } from './SelectWrapper';
-import { memo, useCallback, useMemo } from 'react';
+import { Button } from '~/ui/button';
+import { CollapsibleWrapper } from './CollapsibleWrapper';
 import { RadioGroup, RadioItem } from './RadioItem';
+import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
+import { ErrorSpan } from './ErrorSpan';
 
 import { type QrFullSchema } from '~/schemas/QRCodeStyling';
-import { ErrorSpan } from './ErrorSpan';
 
 type GetTypeOfConst<T extends readonly unknown[]> = T[number];
 
@@ -48,7 +48,7 @@ const FormCreateOptions = () => {
           {...register('margin', { value: 0, valueAsNumber: true })}
         />
 
-        <InputFile labelTitle="Logo" />
+        <FormInputFileImage />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Dots options" className="grid gap-2">
@@ -94,6 +94,30 @@ const FormCreateOptions = () => {
         />
       </CollapsibleWrapper>
 
+      <CollapsibleWrapper title="Image options" className="grid gap-2">
+        <FormSwitch name="imageOptions.hideBackgroundDots" label="Hide background dots" />
+        <Label htmlFor="imageOptions.imageSize">Image size</Label>
+        <Input
+          id="imageOptions.imageSize"
+          placeholder="image size"
+          type="number"
+          {...register('imageOptions.imageSize', { value: 0.4, valueAsNumber: true })}
+        />
+        {errors.imageOptions?.imageSize?.message && (
+          <ErrorSpan>{errors.imageOptions.imageSize.message}</ErrorSpan>
+        )}
+        <Label htmlFor="imageOptions.margin">Image margin</Label>
+        <Input
+          id="imageOptions.margin"
+          placeholder="image margin"
+          type="number"
+          {...register('imageOptions.margin', { value: 0, valueAsNumber: true })}
+        />
+        {errors.imageOptions?.margin?.message && (
+          <ErrorSpan>{errors.imageOptions.margin.message}</ErrorSpan>
+        )}
+      </CollapsibleWrapper>
+
       <CollapsibleWrapper title="Qr options" className="grid gap-2">
         <Label htmlFor="qrOptions.typeNumber">Type number</Label>
         <Input
@@ -113,7 +137,46 @@ const FormCreateOptions = () => {
   );
 };
 
-// const FormSelectRef = forwardRef<>(() => {});
+const FormInputFileImage = () => {
+  const { register, resetField, setValue } = useFormContext<QrFullSchema>();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    register('image');
+  }, [register]);
+
+  const resetFile = () => {
+    resetField('image');
+    if (!inputRef.current) return;
+    inputRef.current.value = '';
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const image = URL.createObjectURL(file);
+    setValue('image', image);
+  };
+
+  return (
+    <div className="grid w-full max-w-sm items-center gap-1.5">
+      <Label htmlFor="imageLogo">Logo</Label>
+      <span className="flex w-full items-center space-x-2">
+        <Input
+          id="imageLogo"
+          type="file"
+          accept="image/*"
+          name="image"
+          onChange={handleImageChange}
+          ref={inputRef}
+        />
+        <Button type="button" variant="default" onClick={resetFile}>
+          Cancel
+        </Button>
+      </span>
+    </div>
+  );
+};
 
 const errorCorrectionLevel = ['L', 'M', 'Q', 'H'] as const;
 type ErrorCorrectionLevel = GetTypeOfConst<typeof errorCorrectionLevel>;

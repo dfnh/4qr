@@ -1,6 +1,6 @@
 // import QRCodeStyling, { type Options } from 'qr-code-styling';
-import { drawTypes } from 'qr-code-styling';
-import { optional, z } from 'zod';
+// import { drawTypes } from 'qr-code-styling';
+import { z } from 'zod';
 import { asOptionalField } from '~/helpers/asOptionalField';
 
 const dotsOptionsType = z
@@ -46,10 +46,13 @@ const qrSchema = z.object({
     .optional(),
   imageOptions: z
     .object({
-      hideBackgroundDots: z.boolean().default(true),
-      imageSize: z.number().max(0.5).default(0.4),
-      margin: z.number().default(0),
-      crossOrigin: z.enum(['anonymous', 'use-credentials']).default('anonymous'),
+      hideBackgroundDots: z.boolean().optional().default(true),
+      imageSize: z.number().min(0).max(1).optional().default(0.4),
+      margin: z.number().min(0).optional().default(0),
+      crossOrigin: z
+        .enum(['anonymous', 'use-credentials'])
+        .optional()
+        .default('anonymous'),
     })
     // .partial()
     .optional(),
