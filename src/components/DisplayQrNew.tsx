@@ -1,33 +1,16 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { type ChangeEvent } from 'react';
 import { da } from '~/store/atoms';
 import { useEffect, useRef, useState } from 'react';
 
-import QRCodeStyling, { type Extension, type Options } from 'qr-code-styling';
+import QRCodeStyling, { type FileExtension, type Options } from 'qr-code-styling';
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
-
-const qrCode = new QRCodeStyling({
-  data: 'check',
-  width: 300,
-  height: 300,
-  image: undefined,
-  type: 'svg',
-  dotsOptions: {
-    color: undefined,
-    type: 'square',
-  },
-  imageOptions: {
-    crossOrigin: 'anonymous',
-    margin: undefined,
-  },
-  qrOptions: {
-    errorCorrectionLevel: 'H',
-  },
-});
+import { qrCodeAtom } from '~/store/qrAtom';
 
 const DisplayQrCode = () => {
-  const [fileExt, setFileExt] = useState<Extension>('svg');
+  const [fileExt, setFileExt] = useState<FileExtension>('svg');
   const daAtom = useAtomValue(da);
+  const [qrCode, setQrCode] = useAtom(qrCodeAtom);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -35,7 +18,7 @@ const DisplayQrCode = () => {
     if (ref.current) {
       qrCode.append(ref.current);
     }
-  }, []);
+  }, [qrCode]);
 
   useEffect(() => {
     if (!qrCode) return;
@@ -45,10 +28,10 @@ const DisplayQrCode = () => {
     } catch (err) {
       console.log(err as string);
     }
-  }, [daAtom]);
+  }, [daAtom, qrCode]);
 
   const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFileExt(event.target.value as Extension);
+    setFileExt(event.target.value as FileExtension);
   };
 
   const onDownloadClick = () => {
@@ -91,7 +74,7 @@ const SelectExtension = () => {
 
 const DisplayQrNew = () => {
   return (
-    <Card className="border-ring bg-slate-500/5 text-foreground dark:bg-foreground/5">
+    <Card className="top-0 border-ring bg-slate-500/5 text-foreground dark:bg-foreground/5 md:sticky">
       <CardHeader>
         <CardTitle>Your qr code</CardTitle>
       </CardHeader>

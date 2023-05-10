@@ -98,8 +98,8 @@ dependencies:
     specifier: ^4.22.1
     version: 4.22.1(next@13.4.1)(react-dom@18.2.0)(react@18.2.0)
   qr-code-styling:
-    specifier: 1.5.0
-    version: 1.5.0
+    specifier: 1.6.0-rc.1
+    version: 1.6.0-rc.1
   qr-scanner:
     specifier: ^1.4.2
     version: 1.4.2
@@ -3992,8 +3992,8 @@ packages:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
 
-  /qr-code-styling@1.5.0:
-    resolution: {integrity: sha512-7C+1cZGsZWH0BIRtv24faKZJwkxdYlynXktP9dDxKNSik2bqaUZck3B3MpQod/wqm9i3l4q7QsPGkRGKvcuqZw==}
+  /qr-code-styling@1.6.0-rc.1:
+    resolution: {integrity: sha512-ModRIiW6oUnsP18QzrRYZSc/CFKFKIdj7pUs57AEVH20ajlglRpN3HukjHk0UbNMTlKGuaYl7Gt6/O5Gg2NU2Q==}
     dependencies:
       qrcode-generator: 1.4.4
     dev: false

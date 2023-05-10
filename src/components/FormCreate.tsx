@@ -7,6 +7,9 @@ import { Separator } from '~/ui/separator';
 import { FormCreateOptions, FormSwitch } from './FormCreateOptions';
 
 import { type QrFullSchema } from '~/schemas/QRCodeStyling';
+import { useToast } from '~/hooks/useToast';
+import { useSession } from 'next-auth/react';
+import HoverCardWrapper from './HoverCardWrapper';
 
 const FormCreate = () => {
   const {
@@ -26,7 +29,7 @@ const FormCreate = () => {
       />
       {errors.data?.message && <ErrorSpan>{errors.data.message}</ErrorSpan>}
 
-      <FormSwitch name="slink" label="Create short link" />
+      <FormSwitchSlink />
 
       <GeneratePassword />
 
@@ -34,6 +37,21 @@ const FormCreate = () => {
 
       <FormCreateOptions />
     </form>
+  );
+};
+
+const FormSwitchSlink = () => {
+  const { status } = useSession();
+
+  if (status === 'authenticated') {
+    return <FormSwitch name="slink" label="Create short link" />;
+  }
+  return (
+    <>
+      <HoverCardWrapper hoverCardText="To create qr code with shorturl you need to sign in">
+        <FormSwitch name="slink" label="Create short link" disabled />
+      </HoverCardWrapper>
+    </>
   );
 };
 

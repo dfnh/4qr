@@ -1,5 +1,6 @@
 import { type PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
+import { env } from '~/env.mjs';
 import { getLocation } from '~/helpers/getLocation';
 
 // todo do smth with this - fat
@@ -12,7 +13,7 @@ const handleLocation = async ({
   prisma: PrismaClient;
   codeId: string;
 }) => {
-  const IP = ip ?? '';
+  const IP = getIpDev() ?? ip ?? '';
   const location = await getLocation(IP);
   if (!location) {
     //? should i throw here
@@ -37,6 +38,11 @@ const handleLocation = async ({
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Statistic error' });
   }
   return stat;
+};
+
+const getIpDev = () => {
+  const isDev = env.NODE_ENV === 'development';
+  return isDev ? '89.254.243.183' : undefined;
 };
 
 export { handleLocation };

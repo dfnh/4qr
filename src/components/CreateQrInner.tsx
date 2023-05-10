@@ -10,7 +10,7 @@ const LazyDisplayQr = dynamic(() => import('~/components/DisplayQrNew'), {
 const CreateQrInner = () => {
   return (
     <>
-      <div className="top-0 md:sticky md:order-2 md:w-2/6">
+      <div className="md:order-2 md:w-2/6">
         <LazyDisplayQr />
         {/* <DisplayQr /> */}
       </div>

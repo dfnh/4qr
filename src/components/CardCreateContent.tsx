@@ -7,17 +7,21 @@ import { CardContent, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
 import { FormCreate } from './FormCreate';
 
-// import { useSetDisplayQrIdAtom, useSetKeysAtom, useSetQrIdAtom } from '~/store/hooks';
-
 import { type QrFullSchema, qrFullSchema } from '~/schemas/QRCodeStyling';
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { da } from '~/store/atoms';
+import { nanoid } from '~/utils/nanoid';
+import { getSlinkUrl } from '~/helpers/getBaseUrl';
+import { qrCodeAtom } from '~/store/qrAtom';
+import { convertToBase64 } from '~/helpers/convertToBase64';
+import { useSetKeysAtom } from '~/store/hooks';
+import { useSession } from 'next-auth/react';
 
-// const schema = createQrSchema;
 const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
 const CardCreateContent = () => {
+  const { status } = useSession();
   const methods = useForm<QrFullSchema>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -25,7 +29,7 @@ const CardCreateContent = () => {
   });
 
   // const setQrId = useSetQrIdAtom();
-  // const setKeys = useSetKeysAtom();
+  const setKeys = useSetKeysAtom();
   // const setDisplayQr = useSetDisplayQrIdAtom();
 
   const { mutate } = api.qr.createQr.useMutation({
@@ -43,18 +47,57 @@ const CardCreateContent = () => {
     },
   });
 
+  const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
+    onSuccess(data) {
+      console.log(data);
+      if (data.privateKey) {
+        setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
+      }
+    },
+    onError(error) {
+      console.error(error);
+    },
+  });
+
   const setDaAtom = useSetAtom(da);
+  const [qrCode, setQrCode] = useAtom(qrCodeAtom);
 
   const handleSubmitData = useCallback(
-    (d: QrFullSchema) => {
-      // mutate(d);
-      console.log(d);
+    async (values: QrFullSchema) => {
+      console.log(values);
+
+      if (status === 'authenticated') {
+        let slink: string | undefined = undefined; // const link: string | undefined = undefined;
+        const initData = values.data;
+        if (values.slink) {
+          const slinkResult = await generateSlink();
+          slink = slinkResult.slink; // link = slinkResult.link;
+          values.data = slinkResult.link;
+        }
+        // eslint-disable-next-line
+        // @ts-ignore
+        qrCode.update(values);
+        const blob = await qrCode.getRawData('webp');
+        if (!blob) {
+          return;
+        }
+        const image64 = await convertToBase64(blob);
+
+        mutateNew({
+          data: initData,
+          password: values.password,
+          sign: values.sign,
+          image64: image64,
+          slink: slink,
+        });
+      }
+
       // fixme fix types
       // eslint-disable-next-line
       // @ts-ignore
-      setDaAtom(d);
+      setDaAtom(values);
     },
-    [setDaAtom]
+    [mutateNew, qrCode, setDaAtom, status]
     // [mutate]
   );
 
@@ -92,6 +135,13 @@ const CardCreateContent = () => {
       </FormProvider>
     </>
   );
+};
+
+const generateSlink = async () => {
+  const slink = await nanoid();
+  const link = getSlinkUrl(slink);
+
+  return { slink, link };
 };
 
 export { CardCreateContent };

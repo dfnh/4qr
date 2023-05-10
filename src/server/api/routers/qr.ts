@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
-import { createQrSchema } from '~/schemas/createQr';
+import { createQrBusinessPartSchema, createQrSchema } from '~/schemas/createQr';
 import { nanoid } from '~/utils/nanoid';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
 import { getBaseUrl, getSlinkUrl } from '~/helpers/getBaseUrl';
@@ -11,8 +11,51 @@ import { handleLocation } from '../helpers/locationLogic';
 
 import { generateQR } from '~/helpers/generateQr';
 import { generateKeys, signMessage } from '~/helpers/crypto';
+import { asOptionalField } from '~/helpers/asOptionalField';
 
 export const qrRouter = createTRPCRouter({
+  createQrNew: publicProcedure
+    .input(
+      z.object({
+        data: z.string().min(1),
+        sign: z.boolean().default(false),
+        slink: asOptionalField(z.string().min(1)),
+        password: asOptionalField(z.string().min(1)),
+        image64: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userid = ctx.session?.user.id;
+
+      let hashedPassword: string | undefined = undefined;
+      if (input.password && !input.sign) {
+        hashedPassword = await hashPassword(input.password);
+      }
+
+      let publicKey: string | undefined = undefined;
+      let privateKey: string | undefined = undefined;
+      let signature: string | undefined = undefined;
+      if (!!input.slink && input.sign) {
+        [publicKey, privateKey] = generateKeys();
+        signature = signMessage(input.data, privateKey);
+      }
+
+      const code = await ctx.prisma.code.create({
+        data: {
+          info: input.data,
+          userId: userid,
+          password: hashedPassword,
+          image: input.image64,
+          shorturl: input.slink,
+          signature: signature,
+        },
+      });
+      if (!code) throw new TRPCError({ code: 'BAD_REQUEST' });
+      console.log(code);
+
+      return { publicKey, privateKey };
+    }),
+
   createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
     let qr: string | undefined;
     let slink: string | undefined = undefined;
@@ -74,6 +117,8 @@ export const qrRouter = createTRPCRouter({
   visitSlink: codeProcedure.query(async ({ ctx, input }) => {
     const { code, isUrl } = ctx;
 
+    console.log(code);
+
     if (code.password) {
       if (!input.password)
         return { qrUrl: code.image, slink: code.shorturl, isUrl, success: false };
@@ -116,4 +161,13 @@ export const qrRouter = createTRPCRouter({
     // console.log({ info: code.info, qrUrl: code.image, isUrl, success });
     return { info: code.info, qrUrl: code.image, isUrl, success };
   }),
+
+  getKeysAndSign: publicProcedure
+    .input(z.object({ message: z.string().min(1) }))
+    .query(({ input }) => {
+      const [publicKey, privateKey] = generateKeys();
+      const signature = signMessage(input.message, privateKey);
+
+      return { signature, publicKey, privateKey };
+    }),
 });

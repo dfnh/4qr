@@ -394,6 +394,10 @@ const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
   );
 };
 
+const defaultFieldColor = new Map<FieldsWithColor, string>([
+  ['backgroundOptions', '#ffffff'],
+]);
+
 const fieldsWithColor = [
   'dotsOptions',
   'cornersDotOptions',
@@ -480,7 +484,9 @@ const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
             id={`${name}.color`}
             type="color"
             className="w-24"
-            {...register(`${name}.color`)}
+            {...register(`${name}.color`, {
+              value: defaultFieldColor.get(name) ?? '#000000',
+            })}
           />
         </span>
         <Button type="button" className="ml-auto self-end" onClick={onClickClear}>
@@ -491,7 +497,15 @@ const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
   );
 };
 
-export const FormSwitch = ({ name, label }: { name: string; label: string }) => {
+export const FormSwitch = ({
+  name,
+  label,
+  disabled = false,
+}: {
+  name: string;
+  label: string;
+  disabled?: boolean;
+}) => {
   const { control } = useFormContext();
   return (
     <div className="flex items-center space-x-2">
@@ -499,7 +513,12 @@ export const FormSwitch = ({ name, label }: { name: string; label: string }) => 
         name={name}
         control={control}
         render={({ field: { onChange, ref } }) => (
-          <Switch id={name} ref={ref} onCheckedChange={(v) => onChange(v)} />
+          <Switch
+            id={name}
+            ref={ref}
+            onCheckedChange={(v) => onChange(v)}
+            disabled={disabled}
+          />
         )}
       />
       <Label htmlFor={name}>{label}</Label>
