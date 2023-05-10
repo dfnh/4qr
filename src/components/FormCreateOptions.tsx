@@ -1,4 +1,12 @@
-import { memo, useCallback, useEffect, useMemo, useRef, type ChangeEvent } from 'react';
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type ChangeEvent,
+  useState,
+} from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
@@ -53,45 +61,24 @@ const FormCreateOptions = () => {
 
       <CollapsibleWrapper title="Dots options" className="grid gap-2">
         <SelectDots />
-        <Label htmlFor="dotsOptions.color">Color type</Label>
-        <Input
-          id="dotsOptions.color"
-          type="color"
-          className="w-28"
-          {...register('dotsOptions.color')}
-        />
+
+        <FormColorTypeChange name="dotsOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Corners square options" className="grid gap-2">
         <SelectCornerSquare />
-        <Label htmlFor="cornersSquareOptions.color">Color type</Label>
-        <Input
-          id="cornersSquareOptions.color"
-          type="color"
-          className="w-28"
-          {...register('cornersSquareOptions.color')}
-        />
+
+        <FormColorTypeChange name="cornersSquareOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Corners dot options" className="grid gap-2">
         <SelectCornerDots />
-        <Label htmlFor="cornersDotOptions.color">Color type</Label>
-        <Input
-          id="cornersDotOptions.color"
-          type="color"
-          className="w-28"
-          {...register('cornersDotOptions.color')}
-        />
+
+        <FormColorTypeChange name="cornersDotOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Background options" className="grid gap-2">
-        <Label htmlFor="backgroundOptions.color">Color type</Label>
-        <Input
-          id="backgroundOptions.color"
-          type="color"
-          className="w-28"
-          {...register('backgroundOptions.color', { value: '#ffffff' })}
-        />
+        <FormColorTypeChange name="backgroundOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Image options" className="grid gap-2">
@@ -372,25 +359,139 @@ export const SelectDots = memo(() => {
 });
 SelectDots.displayName = 'SelectDots';
 
-const FormGradient = ({ name }: { name: string }) => {
-  const { register } = useFormContext();
+const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
+  const { setValue } = useFormContext<QrFullSchema>();
+  const [single, setSingle] = useState(true);
+
+  const onValueChange = (value: string) => {
+    if (value === 'single') {
+      setSingle(true);
+      setValue(`${name}.gradient`, undefined);
+    } else {
+      setSingle(false);
+      setValue(`${name}.color`, undefined);
+    }
+  };
+
   return (
     <>
-      <Label htmlFor={`${name}.gradient`}>Gradient type</Label>
       <RadioGroup
-        id={`${name}.gradient`}
-        defaultValue="linear"
-        {...register(`${name}.gradient`)}
+        id={`${name}.colorType`}
+        onValueChange={onValueChange}
+        defaultValue="single"
+        className="mb-2"
       >
-        <RadioItem id={`${name}.gradient.linear`} value="linear" />
-        <RadioItem id={`${name}.gradient.radial`} value="radial" />
+        <span className="flex space-x-2">
+          <Label>Color Type</Label>
+          <RadioItem
+            id={`${name}.colorType.single`}
+            value="single"
+            label="Single color"
+          />
+          <RadioItem
+            id={`${name}.colorType.gradient`}
+            value="gradient"
+            label="Color gradient"
+          />
+        </span>
       </RadioGroup>
-      <Label htmlFor={`${name}.gradient.rotation`}>Rotation</Label>
+      {single ? <FormColorSingle name={name} /> : <FormColorGradient name={name} />}
+    </>
+  );
+};
+
+const fieldsWithColor = [
+  'dotsOptions',
+  'cornersDotOptions',
+  'cornersSquareOptions',
+  'backgroundOptions',
+] as const;
+type FieldsWithColor = GetTypeOfConst<typeof fieldsWithColor>;
+
+type GradientType = 'radial' | 'linear';
+
+const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
+  const { register, setValue, resetField } = useFormContext<QrFullSchema>();
+
+  const Name = useMemo(() => name, [name]);
+
+  useEffect(() => {
+    register(`${Name}.gradient.type`, { value: 'linear' });
+  }, [Name, register]);
+
+  const onValueChange = (value: GradientType) => {
+    setValue(`${Name}.gradient.type`, value);
+  };
+
+  const onClickClear = () => {
+    resetField(`${Name}.gradient.colorStops.0.color`);
+    resetField(`${Name}.gradient.colorStops.1.color`);
+  };
+
+  return (
+    <>
+      <Label htmlFor={`${Name}.gradient`}>Gradient type</Label>
+      <RadioGroup
+        id={`${Name}.gradient.type`}
+        defaultValue="linear"
+        onValueChange={onValueChange}
+      >
+        <RadioItem id={`${Name}.gradient.linear`} value="linear" />
+        <RadioItem id={`${Name}.gradient.radial`} value="radial" />
+      </RadioGroup>
+      <Label htmlFor={`${Name}.gradient.rotation`}>Rotation</Label>
       <Input
-        id={`${name}.gradient.rotation`}
+        id={`${Name}.gradient.rotation`}
         type="number"
-        {...register(`${name}.gradient.rotation`, { valueAsNumber: true })}
+        defaultValue={0}
+        {...register(`${Name}.gradient.rotation`, { value: 0, valueAsNumber: true })}
       />
+      <div className="flex justify-start">
+        <span className="flex space-x-2">
+          <Input
+            id={`${Name}.color`}
+            type="color"
+            className="w-24"
+            {...register(`${Name}.gradient.colorStops.0.color`)}
+          />
+          <Input
+            id={`${Name}.color`}
+            type="color"
+            className="w-24"
+            {...register(`${Name}.gradient.colorStops.1.color`)}
+          />
+        </span>
+        <Button type="button" className="ml-auto" onClick={onClickClear}>
+          clear
+        </Button>
+      </div>
+    </>
+  );
+};
+
+const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
+  const { register, setValue } = useFormContext<QrFullSchema>();
+
+  const onClickClear = () => {
+    setValue(`${name}.color`, undefined);
+  };
+
+  return (
+    <>
+      <div className="flex justify-start">
+        <span>
+          <Label htmlFor={`${name}.color`}>Color</Label>
+          <Input
+            id={`${name}.color`}
+            type="color"
+            className="w-24"
+            {...register(`${name}.color`)}
+          />
+        </span>
+        <Button type="button" className="ml-auto self-end" onClick={onClickClear}>
+          Clear
+        </Button>
+      </div>
     </>
   );
 };

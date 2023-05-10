@@ -1,5 +1,3 @@
-// import QRCodeStyling, { type Options } from 'qr-code-styling';
-// import { drawTypes } from 'qr-code-styling';
 import { z } from 'zod';
 import { asOptionalField } from '~/helpers/asOptionalField';
 
@@ -8,12 +6,20 @@ const dotsOptionsType = z
   .optional()
   .default('square');
 const colorSchema = z.string().min(4).max(9).regex(/^#/);
+
 const colorStopsSchema = z
-  .object({
-    offset: z.number().min(0).max(1),
-    color: colorSchema,
-  })
-  .array();
+  .tuple([
+    z.object({
+      offset: z.literal(0).optional().default(0),
+      color: colorSchema.optional().default('#000000'),
+    }),
+    z.object({
+      offset: z.literal(1).optional().default(1),
+      color: colorSchema.optional().default('#000000'),
+    }),
+  ])
+  .optional();
+
 const gradientSchema = z
   .object({
     type: z.enum(['radial', 'linear']).default('radial'),
@@ -22,8 +28,8 @@ const gradientSchema = z
   })
   .optional();
 const colorGradientSchema = z.object({
-  color: colorSchema.default('#000000'),
-  gradient: gradientSchema, //optional()
+  color: colorSchema.default('#000000').optional(),
+  gradient: gradientSchema,
 });
 // const check = z.object({
 //   z: z.nativeEnum(drawTypes),
@@ -42,7 +48,6 @@ const qrSchema = z.object({
       mode: z.enum(['Numeric', 'Alphanumeric', 'Byte', 'Kanji']).optional(),
       errorCorrectionLevel: z.enum(['L', 'M', 'Q', 'H']).optional().default('Q'),
     })
-    // .partial()
     .optional(),
   imageOptions: z
     .object({
@@ -54,23 +59,19 @@ const qrSchema = z.object({
         .optional()
         .default('anonymous'),
     })
-    // .partial()
     .optional(),
   dotsOptions: colorGradientSchema.extend({ type: dotsOptionsType }).optional(),
   cornersSquareOptions: colorGradientSchema
     .extend({ type: z.enum(['dot', 'square', 'extra-rounded']).optional() }) //.default('square')
-    // .partial()
     .optional(),
   cornersDotOptions: colorGradientSchema
     .extend({ type: z.enum(['dot', 'square']).optional() }) //.default('square')
-    // .partial()
     .optional(),
   backgroundOptions: z
     .object({
       color: colorSchema.default('#ffffff'),
       gradient: gradientSchema,
     })
-    // .partial()
     .optional(),
   shape: z.enum(['square', 'circle']).default('square').optional(),
 });
@@ -87,7 +88,5 @@ export type QrFullSchema = z.infer<typeof qrFullSchema>;
 export type QrFullSchemaOut = z.output<typeof qrFullSchema>;
 
 export type QrSchema = z.infer<typeof qrSchema>;
-
-// const qrSchema1 = z.instanceof(QRCodeStyling);
 
 export { qrSchema };
