@@ -5,15 +5,16 @@ const useCameraList = () => {
   const [cameras, setCameras] = useState<QrScanner.Camera[]>([]);
 
   const refresh = useCallback(async () => {
-    const devices = await QrScanner.listCameras(false);
-    const cams = devices.filter((d) => d.id != '');
+    const cams = await getListCameras();
     setCameras(cams);
   }, []);
 
   const askPerms = useCallback(async () => {
-    const devices = await QrScanner.listCameras(true);
-    const cams = devices.filter((d) => d.id != '');
+    const cams = await getListCameras(true);
     setCameras(cams);
+    if (cams.length === 0) {
+      throw new Error('no webcams');
+    }
   }, []);
 
   useEffect(() => {
@@ -22,6 +23,12 @@ const useCameraList = () => {
   }, [refresh]);
 
   return { cameras: cameras, refresh: askPerms };
+};
+
+const getListCameras = async (perms = false) => {
+  const devices = await QrScanner.listCameras(perms);
+  const cams = devices.filter((d) => d.id != '');
+  return cams;
 };
 
 export { useCameraList };

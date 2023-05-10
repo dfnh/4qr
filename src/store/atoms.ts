@@ -32,7 +32,7 @@ const da = atom({
   height: 300,
   type: 'canvas',
   dotsOptions: {
-    color: '#000',
+    color: '#000000',
     type: 'classy',
   },
   imageOptions: {

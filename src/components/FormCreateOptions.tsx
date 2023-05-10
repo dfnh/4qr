@@ -379,21 +379,15 @@ const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
         id={`${name}.colorType`}
         onValueChange={onValueChange}
         defaultValue="single"
-        className="mb-2"
+        className="mb-2 flex space-x-2"
       >
-        <span className="flex space-x-2">
-          <Label>Color Type</Label>
-          <RadioItem
-            id={`${name}.colorType.single`}
-            value="single"
-            label="Single color"
-          />
-          <RadioItem
-            id={`${name}.colorType.gradient`}
-            value="gradient"
-            label="Color gradient"
-          />
-        </span>
+        <Label>Color Type</Label>
+        <RadioItem id={`${name}.colorType.single`} value="single" label="Single color" />
+        <RadioItem
+          id={`${name}.colorType.gradient`}
+          value="gradient"
+          label="Color gradient"
+        />
       </RadioGroup>
       {single ? <FormColorSingle name={name} /> : <FormColorGradient name={name} />}
     </>
@@ -430,12 +424,13 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
 
   return (
     <>
-      <Label htmlFor={`${Name}.gradient`}>Gradient type</Label>
       <RadioGroup
         id={`${Name}.gradient.type`}
         defaultValue="linear"
         onValueChange={onValueChange}
+        className="flex space-x-2"
       >
+        <Label htmlFor={`${Name}.gradient`}>Gradient type</Label>
         <RadioItem id={`${Name}.gradient.linear`} value="linear" />
         <RadioItem id={`${Name}.gradient.radial`} value="radial" />
       </RadioGroup>

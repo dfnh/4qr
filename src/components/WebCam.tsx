@@ -4,13 +4,26 @@ import { useQrScanner } from '~/hooks/useQrScanner';
 import { Camera } from '~/components/Camera';
 import { Button } from '~/ui/button';
 import { SelectCamera } from './SelectCamera';
+import { useToast } from '~/hooks/useToast';
 
 // todo decompose
 const WebCam = () => {
   const { cameras, refresh } = useCameraList();
   const { result: data, toggle, camRef, active, changeCam } = useQrScanner();
+  const { toast } = useToast();
 
-  const checkCamFn = useCallback(() => void refresh(), [refresh]);
+  const checkCamFn = useCallback(() => {
+    refresh().catch((e) => {
+      console.error(e);
+      toast({
+        variant: 'destructive',
+        title: 'Unable to access webcam',
+        description:
+          'Please check your browser settings to make sure webcam access is enabled',
+      });
+    });
+  }, [refresh, toast]);
+
   const onSelected = useCallback(
     (id: string) => {
       changeCam(id);
@@ -50,7 +63,7 @@ const WebCamButtons = ({
   toggle,
 }: {
   cameras: QrScanner.Camera[];
-  checkCamFn: () => undefined;
+  checkCamFn: () => void;
   active: boolean;
   toggle: () => void;
 }) => {

@@ -38,7 +38,7 @@ const colorGradientSchema = z.object({
 const qrSchema = z.object({
   width: z.number().min(0).default(300),
   height: z.number().min(0).default(300),
-  type: z.enum(['canvas', 'svg']).default('canvas'),
+  type: z.enum(['canvas', 'svg']).optional().default('canvas'),
   data: z.string().trim().min(1, 'Field must be not empty'),
   image: z.string().optional(),
   margin: z.number().default(0).optional(),
