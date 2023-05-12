@@ -23,4 +23,6 @@ const qrCodeAtom = atom(
   })
 );
 
-export { qrCodeAtom };
+const slinkNewAtom = atom('');
+
+export { qrCodeAtom, slinkNewAtom };

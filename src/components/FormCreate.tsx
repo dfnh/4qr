@@ -7,17 +7,19 @@ import { Separator } from '~/ui/separator';
 import { FormCreateOptions, FormSwitch } from './FormCreateOptions';
 
 import { type QrFullSchema } from '~/schemas/QRCodeStyling';
-import { useToast } from '~/hooks/useToast';
 import { useSession } from 'next-auth/react';
 import HoverCardWrapper from './HoverCardWrapper';
+import { memo, useEffect, useMemo } from 'react';
 
 const FormCreate = () => {
   const {
     register,
     formState: { errors },
   } = useFormContext<QrFullSchema>();
+  const { status } = useSession();
 
-  // todo add scrollbar
+  const isAuthed = useMemo(() => status === 'authenticated', [status]);
+
   return (
     <form className="grid gap-2">
       <Label htmlFor="data">Data</Label>
@@ -29,9 +31,10 @@ const FormCreate = () => {
       />
       {errors.data?.message && <ErrorSpan>{errors.data.message}</ErrorSpan>}
 
-      <FormSwitchSlink />
+      <FormSwitchSlink isAuthed={isAuthed} />
+      <FormSwitchSign isAuthed={isAuthed} />
 
-      <GeneratePassword />
+      <GeneratePassword isAuthed={isAuthed} />
 
       <Separator className="my-2" />
 
@@ -40,19 +43,52 @@ const FormCreate = () => {
   );
 };
 
-const FormSwitchSlink = () => {
-  const { status } = useSession();
+const FormSwitchSlink = memo(({ isAuthed = true }: { isAuthed: boolean }) => {
+  const { watch, setValue } = useFormContext<QrFullSchema>();
 
-  if (status === 'authenticated') {
-    return <FormSwitch name="slink" label="Create short link" />;
-  }
+  const sign = watch('sign');
+
+  useEffect(() => {
+    if (sign) {
+      setValue('slink', true);
+    }
+  }, [setValue, sign]);
+
   return (
-    <>
-      <HoverCardWrapper hoverCardText="To create qr code with shorturl you need to sign in">
-        <FormSwitch name="slink" label="Create short link" disabled />
-      </HoverCardWrapper>
-    </>
+    <HoverCardWrapper
+      openDelay={!isAuthed ? 200 : undefined}
+      hoverCardText={formSwitchSlinkHoverMap.get(isAuthed)}
+    >
+      <FormSwitch name="slink" label="Create short link" disabled={!isAuthed} />
+    </HoverCardWrapper>
   );
-};
+});
+FormSwitchSlink.displayName = 'FormSwitchSlink';
+const formSwitchSlinkHoverMap = new Map([
+  [
+    true,
+    'This feature creates a short URL that represents the data provided in your QR code',
+  ],
+  [false, 'To create qr code with short URL you need to sign in'],
+]);
 
-export { FormCreate };
+const FormSwitchSign = memo(({ isAuthed = true }: { isAuthed: boolean }) => {
+  return (
+    <HoverCardWrapper
+      openDelay={!isAuthed ? 200 : undefined}
+      hoverCardText={formSwitchSignHoverMap.get(isAuthed)}
+    >
+      <FormSwitch name="sign" label="Sign data" disabled={!isAuthed} />
+    </HoverCardWrapper>
+  );
+});
+FormSwitchSign.displayName = 'FormSwitchSign';
+const formSwitchSignHoverMap = new Map([
+  [
+    true,
+    'Your data will be signed with a unique key pair that only you possess. This provides an additional layer of security and ensures that your data remains the same',
+  ],
+  [false, 'To sign your data with unique key pair you need to sign in'],
+]);
+
+export default FormCreate;

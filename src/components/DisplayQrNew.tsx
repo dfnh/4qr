@@ -1,16 +1,25 @@
 import { useAtom, useAtomValue } from 'jotai';
-import React, { type ChangeEvent } from 'react';
+import React, { type MouseEvent, type ChangeEvent } from 'react';
 import { da } from '~/store/atoms';
 import { useEffect, useRef, useState } from 'react';
 
-import QRCodeStyling, { type FileExtension, type Options } from 'qr-code-styling';
+import { type FileExtension } from 'qr-code-styling';
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
 import { qrCodeAtom } from '~/store/qrAtom';
+import { useToast } from '~/hooks/useToast';
+import { useKeysAtomValue, useSlinkNewAtomValue } from '~/store/hooks';
+import { Label } from '~/ui/label';
+import { Copy, InfoIcon } from 'lucide-react';
+import { Button } from '~/ui/button';
+import { copyToClipboard } from '~/helpers/copyToClipboard';
+import { exportJson } from '~/helpers/exportJson';
+import HoverCardWrapper from './HoverCardWrapper';
 
 const DisplayQrCode = () => {
   const [fileExt, setFileExt] = useState<FileExtension>('svg');
-  const daAtom = useAtomValue(da);
   const [qrCode, setQrCode] = useAtom(qrCodeAtom);
+  const { toast } = useToast();
+  const daAtom = useAtomValue(da);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -27,8 +36,13 @@ const DisplayQrCode = () => {
       console.log(daAtom);
     } catch (err) {
       console.log(err as string);
+      toast({
+        title: 'Error',
+        description: (err as string | undefined) ?? 'something went wrong',
+        variant: 'destructive',
+      });
     }
-  }, [daAtom, qrCode]);
+  }, [daAtom, qrCode, toast]);
 
   const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setFileExt(event.target.value as FileExtension);
@@ -64,6 +78,8 @@ const DisplayQrCode = () => {
         </select>
         <button onClick={onDownloadClick}>Download</button>
       </div>
+
+      <DisplayKeys />
     </>
   );
 };
@@ -84,6 +100,77 @@ const DisplayQrNew = () => {
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+const displayKeysHoverCardText = `
+These keys are your public and private keys, they are like your secret code that only you should know.
+Your private key is used to sign the data that you inputted into the QR code. This means that the data is secure and can only be verified by someone who has the corresponding public key. If someone tries to tamper with the data or create a fake QR code, the signature will not match, and it will be clear that the data has been modified
+`;
+
+const DisplayKeys = () => {
+  const keysAtom = useKeysAtomValue();
+  const slink = useSlinkNewAtomValue();
+
+  if (!keysAtom?.privateKey || !keysAtom.publicKey || !slink.trim()) {
+    return null;
+  }
+
+  const handleCopy = (value: string) => {
+    return () => {
+      copyToClipboard(value);
+    };
+  };
+
+  return (
+    <>
+      <Card className="w-full border-inherit bg-inherit text-inherit ">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-center gap-2">
+            Your keys
+            <HoverCardWrapper
+              className="text-sm"
+              openDelay={300}
+              hoverCardText={displayKeysHoverCardText}
+            >
+              <span className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200  ">
+                <InfoIcon size={22} />
+              </span>
+            </HoverCardWrapper>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-2 px-2">
+          <div className="flex items-center gap-2">
+            <Label>Public key: </Label>
+            <Label>***</Label>
+            <button
+              onClick={handleCopy(keysAtom.publicKey)}
+              className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
+            >
+              <Copy className="w-4" />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label>Private key: </Label>
+            <Label>***</Label>
+            <button
+              onClick={handleCopy(keysAtom.privateKey)}
+              className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
+            >
+              <Copy className="w-4" />
+            </button>
+          </div>
+          <a
+            type="button"
+            href={exportJson(keysAtom)}
+            download={`key-pair-${slink}.json`}
+            className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
+          >
+            Download Json
+          </a>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

@@ -25,8 +25,8 @@ const UserDropdown = ({
 }) => {
   const router = useRouter();
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
-  const logout = () => void signOut({ callbackUrl: '/' });
   const linkprofile = () => void router.push('/profile');
+  const logout = async () => await signOut({ callbackUrl: '/' });
 
   return (
     <DropdownMenu>

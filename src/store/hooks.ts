@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   displayQrAtom,
   keysAtom,
@@ -8,6 +8,7 @@ import {
   readQrIdAtom,
   slinkAtom,
 } from './atoms';
+import { slinkNewAtom } from './qrAtom';
 
 const useReadQrIdAtom = () => useAtom(readQrIdAtom);
 
@@ -22,6 +23,9 @@ const useSlinkAtom = () => useAtom(slinkAtom);
 const useSetKeysAtom = () => useSetAtom(keysAtom);
 const useReadKeysAtom = () => useAtom(readKeysAtom);
 
+const useKeysAtomValue = () => useAtomValue(keysAtom);
+const useSlinkNewAtomValue = () => useAtomValue(slinkNewAtom);
+
 export {
   useReadQrIdAtom,
   useSetQrIdAtom,
@@ -30,4 +34,6 @@ export {
   useReadKeysAtom,
   useSetDisplayQrIdAtom,
   useReadDisplayQrIdAtom,
+  useKeysAtomValue,
+  useSlinkNewAtomValue,
 };

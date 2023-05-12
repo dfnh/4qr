@@ -9,22 +9,25 @@ const colorSchema = z.string().min(4).max(9).regex(/^#/);
 
 const colorStopsSchema = z
   .tuple([
-    z.object({
-      offset: z.literal(0).optional().default(0),
-      color: colorSchema.optional().default('#000000'),
-    }),
-    z.object({
-      offset: z.literal(1).optional().default(1),
-      color: colorSchema.optional().default('#000000'),
-    }),
+    z
+      .object({ color: colorSchema.optional().default('#000000') })
+      .transform((data) => ({ ...data, offset: 0 })),
+    z
+      .object({ color: colorSchema.optional().default('#000000') })
+      .transform((data) => ({ ...data, offset: 1 })),
   ])
   .optional();
+// offset: z.literal(1).optional().default(1),
 
 const gradientSchema = z
   .object({
     type: z.enum(['radial', 'linear']).default('radial'),
-    rotation: z.number().default(0),
     colorStops: colorStopsSchema,
+    rotation: z
+      .number()
+      .min(0)
+      .default(0)
+      .transform((deg) => deg * (Math.PI / 180)),
   })
   .optional();
 const colorGradientSchema = z.object({
@@ -62,10 +65,10 @@ const qrSchema = z.object({
     .optional(),
   dotsOptions: colorGradientSchema.extend({ type: dotsOptionsType }).optional(),
   cornersSquareOptions: colorGradientSchema
-    .extend({ type: z.enum(['dot', 'square', 'extra-rounded']).optional() }) //.default('square')
+    .extend({ type: z.enum(['dot', 'square', 'extra-rounded']).optional() })
     .optional(),
   cornersDotOptions: colorGradientSchema
-    .extend({ type: z.enum(['dot', 'square']).optional() }) //.default('square')
+    .extend({ type: z.enum(['dot', 'square']).optional() })
     .optional(),
   backgroundOptions: z
     .object({
@@ -76,14 +79,19 @@ const qrSchema = z.object({
   shape: z.enum(['square', 'circle']).default('square').optional(),
 });
 
-export const qrFullSchema = qrSchema.extend({
-  // text: z.string().trim().min(1, 'Field must be not empty'),
+const strictlyBusiness = z.object({
   password: asOptionalField(
     z.string().trim().min(2, 'Password must contain at least 2 characters')
   ),
   slink: z.boolean().default(false),
   sign: z.boolean().default(false),
 });
+
+export const qrFullSchema = qrSchema.merge(strictlyBusiness).transform((data) => ({
+  ...data,
+  createCode: data.slink || data.sign || !!data.password,
+}));
+
 export type QrFullSchema = z.infer<typeof qrFullSchema>;
 export type QrFullSchemaOut = z.output<typeof qrFullSchema>;
 

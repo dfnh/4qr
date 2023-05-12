@@ -92,7 +92,7 @@ export default {
         'hue-rotation': 'hue-rotation 3s linear infinite',
         'hue-rotation-pulse':
           'hue-rotation 3s linear infinite, pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'lsd-spin':
+        'acid-spin':
           'spin 2s linear infinite, hue-rotation 4s infinite, pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },

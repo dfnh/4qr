@@ -5,7 +5,7 @@ import { createQrSchema, type CreateQrSchema } from '~/schemas/createQr';
 import { Button } from '~/ui/button';
 import { CardContent, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
-import { FormCreate } from './FormCreate';
+import FormCreate from './FormCreate';
 
 import { type QrFullSchema, qrFullSchema } from '~/schemas/QRCodeStyling';
 import { useAtom, useSetAtom } from 'jotai';
@@ -32,20 +32,20 @@ const CardCreateContent = () => {
   const setKeys = useSetKeysAtom();
   // const setDisplayQr = useSetDisplayQrIdAtom();
 
-  const { mutate } = api.qr.createQr.useMutation({
-    onSuccess(data) {
-      // const qr = { qrId: data.id };
-      // setQrId(data.id);
-      // if (data.privateKey) {
-      //   // qr.keys = { privateKey: data.privateKey, publicKey: data.publicKey };
-      //   setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
-      // }
-      // console.log(data);
-    },
-    onError(error) {
-      console.error(error);
-    },
-  });
+  // const { mutate } = api.qr.createQr.useMutation({
+  //   onSuccess(data) {
+  //     // const qr = { qrId: data.id };
+  //     // setQrId(data.id);
+  //     // if (data.privateKey) {
+  //     //   // qr.keys = { privateKey: data.privateKey, publicKey: data.publicKey };
+  //     //   setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
+  //     // }
+  //     // console.log(data);
+  //   },
+  //   onError(error) {
+  //     console.error(error);
+  //   },
+  // });
 
   const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
     onSuccess(data) {
@@ -64,9 +64,9 @@ const CardCreateContent = () => {
 
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
-      console.log(values);
+      if (status === 'authenticated' && values.createCode) {
+        console.log(values);
 
-      if (status === 'authenticated') {
         let slink: string | undefined = undefined; // const link: string | undefined = undefined;
         const initData = values.data;
         if (values.slink) {

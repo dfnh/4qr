@@ -16,7 +16,7 @@ const CreateQr: NextPage = () => {
       </Head>
       <div className="container flex flex-col items-center justify-center gap-10 px-2 py-14 md:px-8">
         <h1 className="text-5xl font-bold tracking-tight">create qr code</h1>
-        <div className="container flex flex-col justify-evenly gap-2 md:flex-row md:gap-0">
+        <div className="container flex flex-col justify-evenly gap-1 md:flex-row md:gap-0">
           <LazyCreateQrInner />
         </div>
       </div>

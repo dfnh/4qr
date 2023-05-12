@@ -4,18 +4,18 @@ import {
   useEffect,
   useMemo,
   useRef,
-  type ChangeEvent,
   useState,
+  type ChangeEvent,
 } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { Button } from '~/ui/button';
 import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
-import { Button } from '~/ui/button';
 import { CollapsibleWrapper } from './CollapsibleWrapper';
+import { ErrorSpan } from './ErrorSpan';
 import { RadioGroup, RadioItem } from './RadioItem';
 import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
-import { ErrorSpan } from './ErrorSpan';
 
 import { type QrFullSchema } from '~/schemas/QRCodeStyling';
 
@@ -146,9 +146,9 @@ const FormInputFileImage = () => {
   };
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
+    <>
       <Label htmlFor="imageLogo">Logo</Label>
-      <span className="flex w-full items-center space-x-2">
+      <div className="flex w-full items-center space-x-2">
         <Input
           id="imageLogo"
           type="file"
@@ -160,8 +160,8 @@ const FormInputFileImage = () => {
         <Button type="button" variant="default" onClick={resetFile}>
           Cancel
         </Button>
-      </span>
-    </div>
+      </div>
+    </>
   );
 };
 
@@ -184,13 +184,12 @@ const SelectErrorLevel = memo(() => {
 
   return (
     <div className="flex items-center space-x-2">
-      <Label>Mode</Label>
+      <Label>Correction Level</Label>
       <SelectWrapper
         placeholder="mode"
         defaultValue={errorCorrectionLevel['2']}
         onSelected={onSelect as OnSelectType}
         name={'qrOptions.errorCorrectionLevel'}
-        // {...register('qrOptions.errorCorrectionLevel')}
       >
         <FormSelectTypeItems type={errorCorrectionLevel} />
       </SelectWrapper>
@@ -446,20 +445,20 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
         {...register(`${Name}.gradient.rotation`, { value: 0, valueAsNumber: true })}
       />
       <div className="flex justify-start">
-        <span className="flex space-x-2">
+        <div className="flex space-x-2">
           <Input
             id={`${Name}.color`}
             type="color"
-            className="w-24"
+            className="w-16"
             {...register(`${Name}.gradient.colorStops.0.color`)}
           />
           <Input
             id={`${Name}.color`}
             type="color"
-            className="w-24"
+            className="w-16"
             {...register(`${Name}.gradient.colorStops.1.color`)}
           />
-        </span>
+        </div>
         <Button type="button" className="ml-auto" onClick={onClickClear}>
           clear
         </Button>
@@ -512,10 +511,11 @@ export const FormSwitch = ({
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, ref } }) => (
+        render={({ field: { onChange, ref, value } }) => (
           <Switch
             id={name}
             ref={ref}
+            checked={value as boolean | undefined}
             onCheckedChange={(v) => onChange(v)}
             disabled={disabled}
           />
