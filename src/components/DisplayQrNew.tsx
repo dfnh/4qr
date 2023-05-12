@@ -2,7 +2,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { da } from '~/store/atoms';
 
-import { Copy } from 'lucide-react';
+// import { Copy } from 'lucide-react';
 import { type FileExtension } from 'qr-code-styling';
 import { copyToClipboard } from '~/helpers/copyToClipboard';
 import { exportJson } from '~/helpers/exportJson';

@@ -1,15 +1,14 @@
+import { useSession } from 'next-auth/react';
+import { memo, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { type QrFullSchema } from '~/schemas/QRCodeStyling';
 import { Label } from '~/ui/label';
+import { Separator } from '~/ui/separator';
 import { Textarea } from '~/ui/textarea';
 import { ErrorSpan } from './ErrorSpan';
-import { GeneratePassword } from './GeneratePassword';
-import { Separator } from '~/ui/separator';
 import { FormCreateOptions, FormSwitch } from './FormCreateOptions';
-
-import { type QrFullSchema } from '~/schemas/QRCodeStyling';
-import { useSession } from 'next-auth/react';
+import { GeneratePassword } from './GeneratePassword';
 import HoverCardWrapper from './HoverCardWrapper';
-import { memo, useEffect, useMemo } from 'react';
 
 const FormCreate = () => {
   const {
@@ -55,12 +54,19 @@ const FormSwitchSlink = memo(({ isAuthed = true }: { isAuthed: boolean }) => {
   const { watch, setValue } = useFormContext<QrFullSchema>();
 
   const sign = watch('sign');
+  const slink = watch('slink');
 
   useEffect(() => {
     if (sign) {
       setValue('slink', true);
     }
   }, [setValue, sign]);
+
+  useEffect(() => {
+    if (!slink) {
+      setValue('sign', false);
+    }
+  }, [setValue, slink]);
 
   return (
     <HoverCardWrapper
