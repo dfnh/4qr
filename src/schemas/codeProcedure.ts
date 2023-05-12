@@ -11,5 +11,7 @@ export type CodeProcedureSchema = z.infer<typeof codeProcedureSchema>;
 export const schemaForFormPassword = z.object({ password: z.string().min(1) });
 export type SchemaForFormPassword = z.infer<typeof schemaForFormPassword>;
 
-export const schemaForFormPublicKey = z.object({ publicKey: z.string().min(1) });
+export const schemaForFormPublicKey = z.object({
+  publicKey: z.string().trim().min(1, { message: 'Public key is required' }),
+});
 export type SchemaForFormPublicKey = z.infer<typeof schemaForFormPublicKey>;

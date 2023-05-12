@@ -48,7 +48,7 @@ export const LoadingSpinner2 = memo(function LoadingSpinner2(props: { size?: num
       <div className="absolute left-1/2 -translate-x-1/2">
         <Loader2Icon
           size={size}
-          className="animate-lsd-spin text-cyan-300 ease-linear "
+          className="animate-acid-spin text-cyan-300 ease-linear "
         />
       </div>
     </>

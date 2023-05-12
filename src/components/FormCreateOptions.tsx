@@ -7,19 +7,17 @@ import {
   useState,
   type ChangeEvent,
 } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, type UseFormRegisterReturn } from 'react-hook-form';
+import { type QrFullSchema } from '~/schemas/QRCodeStyling';
+import type { GetTypeOfConst } from '~/typescript';
 import { Button } from '~/ui/button';
-import { Input } from '~/ui/input';
+import { Input, type InputProps } from '~/ui/input';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
 import { CollapsibleWrapper } from './CollapsibleWrapper';
 import { ErrorSpan } from './ErrorSpan';
 import { RadioGroup, RadioItem } from './RadioItem';
 import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
-
-import { type QrFullSchema } from '~/schemas/QRCodeStyling';
-
-type GetTypeOfConst<T extends readonly unknown[]> = T[number];
 
 const FormCreateOptions = () => {
   const {
@@ -30,30 +28,31 @@ const FormCreateOptions = () => {
   return (
     <>
       <CollapsibleWrapper title="Main options" className="grid gap-2" defaultIsOpen>
-        <Label htmlFor="width">Width</Label>
-        <Input
+        <InputWithLabel
+          labelText="Width"
           id="width"
           placeholder="width"
           type="number"
-          {...register('width', { value: 300, valueAsNumber: true })}
+          register={register('width', { value: 300, valueAsNumber: true })}
+          error={errors.width?.message}
         />
-        {errors.width?.message && <ErrorSpan>{errors.width.message}</ErrorSpan>}
 
-        <Label htmlFor="height">Height</Label>
-        <Input
+        <InputWithLabel
+          labelText="Height"
           id="height"
           placeholder="height"
           type="number"
-          {...register('height', { value: 300, valueAsNumber: true })}
+          register={register('height', { value: 300, valueAsNumber: true })}
+          error={errors.height?.message}
         />
-        {errors.height?.message && <ErrorSpan>{errors.height.message}</ErrorSpan>}
 
-        <Label htmlFor="margin">Margin</Label>
-        <Input
+        <InputWithLabel
+          labelText="Margin"
           id="margin"
           placeholder="margin"
           type="number"
-          {...register('margin', { value: 0, valueAsNumber: true })}
+          register={register('margin', { value: 0, valueAsNumber: true })}
+          error={errors.margin?.message}
         />
 
         <FormInputFileImage />
@@ -61,19 +60,16 @@ const FormCreateOptions = () => {
 
       <CollapsibleWrapper title="Dots options" className="grid gap-2">
         <SelectDots />
-
         <FormColorTypeChange name="dotsOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Corners square options" className="grid gap-2">
         <SelectCornerSquare />
-
         <FormColorTypeChange name="cornersSquareOptions" />
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Corners dot options" className="grid gap-2">
         <SelectCornerDots />
-
         <FormColorTypeChange name="cornersDotOptions" />
       </CollapsibleWrapper>
 
@@ -83,46 +79,65 @@ const FormCreateOptions = () => {
 
       <CollapsibleWrapper title="Image options" className="grid gap-2">
         <FormSwitch name="imageOptions.hideBackgroundDots" label="Hide background dots" />
-        <Label htmlFor="imageOptions.imageSize">Image size</Label>
-        <Input
+
+        <InputWithLabel
+          labelText="Image size"
           id="imageOptions.imageSize"
           placeholder="image size"
           type="number"
-          {...register('imageOptions.imageSize', { value: 0.4, valueAsNumber: true })}
+          register={register('imageOptions.imageSize', {
+            value: 0.4,
+            valueAsNumber: true,
+          })}
+          error={errors.imageOptions?.imageSize?.message}
         />
-        {errors.imageOptions?.imageSize?.message && (
-          <ErrorSpan>{errors.imageOptions.imageSize.message}</ErrorSpan>
-        )}
-        <Label htmlFor="imageOptions.margin">Image margin</Label>
-        <Input
+
+        <InputWithLabel
+          labelText="Image margin"
           id="imageOptions.margin"
           placeholder="image margin"
           type="number"
-          {...register('imageOptions.margin', { value: 0, valueAsNumber: true })}
+          register={register('imageOptions.margin', { value: 0, valueAsNumber: true })}
+          error={errors.imageOptions?.margin?.message}
         />
-        {errors.imageOptions?.margin?.message && (
-          <ErrorSpan>{errors.imageOptions.margin.message}</ErrorSpan>
-        )}
       </CollapsibleWrapper>
 
       <CollapsibleWrapper title="Qr options" className="grid gap-2">
-        <Label htmlFor="qrOptions.typeNumber">Type number</Label>
-        <Input
+        <InputWithLabel
+          labelText="Type number"
           id="qrOptions.typeNumber"
           placeholder="type number"
+          defaultValue={0}
           type="number"
-          {...register('qrOptions.typeNumber', { value: 0, valueAsNumber: true })}
+          register={register('qrOptions.typeNumber', { value: 0, valueAsNumber: true })}
+          error={errors.qrOptions?.typeNumber?.message}
         />
-        {errors.qrOptions?.typeNumber?.message && (
-          <ErrorSpan>{errors.qrOptions.typeNumber.message}</ErrorSpan>
-        )}
-
         <SelectQrMode />
         <SelectErrorLevel />
       </CollapsibleWrapper>
     </>
   );
 };
+
+type InputWithLabelProps = {
+  id: string;
+  labelText: string;
+  error?: string;
+  register?: Partial<UseFormRegisterReturn>;
+} & InputProps;
+
+const InputWithLabel = memo(
+  ({ id, labelText, error, register, ...rest }: InputWithLabelProps) => {
+    return (
+      <div className="grid gap-2">
+        <Label htmlFor={id}>{labelText}</Label>
+        <Input id={id} {...register} {...rest} />
+        {error && <ErrorSpan>{error}</ErrorSpan>}
+      </div>
+    );
+  }
+);
+InputWithLabel.displayName = 'InputWithLabel';
 
 const FormInputFileImage = () => {
   const { register, resetField, setValue } = useFormContext<QrFullSchema>();
@@ -183,17 +198,18 @@ const SelectErrorLevel = memo(() => {
   }, [register]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       <Label>Correction Level</Label>
       <SelectWrapper
         placeholder="mode"
         defaultValue={errorCorrectionLevel['2']}
         onSelected={onSelect as OnSelectType}
         name={'qrOptions.errorCorrectionLevel'}
+        className="w-full"
       >
         <FormSelectTypeItems type={errorCorrectionLevel} />
       </SelectWrapper>
-    </div>
+    </>
   );
 });
 SelectErrorLevel.displayName = 'SelectErrorLevel';
@@ -216,18 +232,18 @@ const SelectQrMode = memo(() => {
   }, [register]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       <Label>Mode</Label>
       <SelectWrapper
         placeholder="mode"
         defaultValue={qrMode['2']}
         onSelected={onSelect as OnSelectType}
         name={'qrOptions.mode'}
-        // {...register('qrOptions.mode')}
+        className="w-full"
       >
         <FormSelectTypeItems type={qrMode} />
       </SelectWrapper>
-    </div>
+    </>
   );
 });
 SelectQrMode.displayName = 'SelectQrMode';
@@ -251,18 +267,18 @@ const SelectCornerSquare = memo(() => {
   }, [register]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       <Label>Corner square style</Label>
       <SelectWrapper
         placeholder="corner dot style"
         defaultValue={cornerSquareTypes['3']}
         onSelected={onSelect as OnSelectType}
         name={'cornersSquareOptions.type'}
-        // {...register('cornersSquareOptions.type')}
+        className="w-full"
       >
         <FormSelectTypeItems type={cornerSquareTypes} />
       </SelectWrapper>
-    </div>
+    </>
   );
 });
 SelectCornerSquare.displayName = 'SelectCornerSquare';
@@ -286,18 +302,18 @@ const SelectCornerDots = memo(() => {
   }, [register]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       <Label>Corner dot style</Label>
       <SelectWrapper
         placeholder="corner dot style"
         defaultValue={cornerDotTypes['2']}
         onSelected={onSelect as OnSelectType}
         name={'cornersDotOptions.type'}
-        // {...register('cornersDotOptions.type')}
+        className="w-full"
       >
         <FormSelectTypeItems type={cornerDotTypes} />
       </SelectWrapper>
-    </div>
+    </>
   );
 });
 SelectCornerDots.displayName = 'SelectCornerDots';
@@ -342,18 +358,18 @@ export const SelectDots = memo(() => {
   }, [register]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       <Label>Dots style</Label>
       <SelectWrapper
         placeholder="dot style"
         defaultValue={dotTypes['4']}
         onSelected={onSelect as OnSelectType}
         name={'dotsOptions.type'}
-        // {...register('dotsOptions.type')}
+        className="w-full"
       >
         <FormSelectTypeItems type={dotTypes} />
       </SelectWrapper>
-    </div>
+    </>
   );
 });
 SelectDots.displayName = 'SelectDots';
@@ -378,7 +394,7 @@ const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
         id={`${name}.colorType`}
         onValueChange={onValueChange}
         defaultValue="single"
-        className="mb-2 flex space-x-2"
+        className="my-1 flex space-x-2"
       >
         <Label>Color Type</Label>
         <RadioItem id={`${name}.colorType.single`} value="single" label="Single color" />
@@ -407,7 +423,7 @@ type FieldsWithColor = GetTypeOfConst<typeof fieldsWithColor>;
 
 type GradientType = 'radial' | 'linear';
 
-const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
+const FormColorGradient = memo(({ name }: { name: FieldsWithColor }) => {
   const { register, setValue, resetField } = useFormContext<QrFullSchema>();
 
   const Name = useMemo(() => name, [name]);
@@ -416,14 +432,17 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
     register(`${Name}.gradient.type`, { value: 'linear' });
   }, [Name, register]);
 
-  const onValueChange = (value: GradientType) => {
-    setValue(`${Name}.gradient.type`, value);
-  };
+  const onValueChange = useCallback(
+    (value: GradientType) => {
+      setValue(`${Name}.gradient.type`, value);
+    },
+    [Name, setValue]
+  );
 
-  const onClickClear = () => {
+  const onClickClear = useCallback(() => {
     resetField(`${Name}.gradient.colorStops.0.color`);
     resetField(`${Name}.gradient.colorStops.1.color`);
-  };
+  }, [Name, resetField]);
 
   return (
     <>
@@ -431,7 +450,7 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
         id={`${Name}.gradient.type`}
         defaultValue="linear"
         onValueChange={onValueChange}
-        className="flex space-x-2"
+        className="my-1 flex space-x-2"
       >
         <Label htmlFor={`${Name}.gradient`}>Gradient type</Label>
         <RadioItem id={`${Name}.gradient.linear`} value="linear" />
@@ -444,6 +463,7 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
         defaultValue={0}
         {...register(`${Name}.gradient.rotation`, { value: 0, valueAsNumber: true })}
       />
+      <Label>Colors</Label>
       <div className="flex justify-start">
         <div className="flex space-x-2">
           <Input
@@ -465,7 +485,8 @@ const FormColorGradient = ({ name }: { name: FieldsWithColor }) => {
       </div>
     </>
   );
-};
+});
+FormColorGradient.displayName = 'FormColorGradient';
 
 const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
   const { register, setValue } = useFormContext<QrFullSchema>();
@@ -475,36 +496,31 @@ const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
   };
 
   return (
-    <>
-      <div className="flex justify-start">
-        <span>
-          <Label htmlFor={`${name}.color`}>Color</Label>
-          <Input
-            id={`${name}.color`}
-            type="color"
-            className="w-24"
-            {...register(`${name}.color`, {
-              value: defaultFieldColor.get(name) ?? '#000000',
-            })}
-          />
-        </span>
-        <Button type="button" className="ml-auto self-end" onClick={onClickClear}>
-          Clear
-        </Button>
-      </div>
-    </>
+    <div className="flex justify-start">
+      <span>
+        <Label htmlFor={`${name}.color`}>Color</Label>
+        <Input
+          id={`${name}.color`}
+          type="color"
+          className="mt-1 w-32"
+          {...register(`${name}.color`, {
+            value: defaultFieldColor.get(name) ?? '#000000',
+          })}
+        />
+      </span>
+      <Button type="button" className="ml-auto self-end" onClick={onClickClear}>
+        Clear
+      </Button>
+    </div>
   );
 };
 
-export const FormSwitch = ({
-  name,
-  label,
-  disabled = false,
-}: {
+type FormSwitchProps = {
   name: string;
   label: string;
   disabled?: boolean;
-}) => {
+};
+export const FormSwitch = ({ name, label, disabled = false }: FormSwitchProps) => {
   const { control } = useFormContext();
   return (
     <div className="flex items-center space-x-2">

@@ -1,9 +1,12 @@
-import { useCallback } from 'react';
 import { signIn, useSession } from 'next-auth/react';
-import { UserDropdown } from './UserDropdown';
+import dynamic from 'next/dynamic';
+import { useCallback } from 'react';
 import { Button } from '~/ui/button';
-import { LoadingSpinner } from './Spinner';
 import { MainNavbar } from './MainNavbar';
+import { LoadingSpinner } from './Spinner';
+
+// import UserDropdown from './UserDropdown';
+const UserDropdown = dynamic(() => import('./UserDropdown'), { ssr: false });
 
 const Auth = () => {
   const { data, status } = useSession();
@@ -39,14 +42,12 @@ const LoginButton = () => {
 //? nav
 const UserNav = () => {
   return (
-    <>
-      <nav className="flex h-12 items-center border-b border-slate-300 px-4 dark:border-slate-700">
-        <MainNavbar className="leading-tight" />
-        <span className="ml-auto flex items-center space-x-4">
-          <Auth />
-        </span>
-      </nav>
-    </>
+    <nav className="flex h-12 items-center border-b border-slate-300 px-4 dark:border-slate-700">
+      <MainNavbar className="leading-tight" />
+      <span className="ml-auto flex items-center space-x-4">
+        <Auth />
+      </span>
+    </nav>
   );
 };
 

@@ -1,21 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAtom, useSetAtom } from 'jotai';
+import { useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { createQrSchema, type CreateQrSchema } from '~/schemas/createQr';
+import { convertToBase64 } from '~/helpers/convertToBase64';
+import { getSlinkUrl } from '~/helpers/getBaseUrl';
+import { qrFullSchema, type QrFullSchema } from '~/schemas/QRCodeStyling';
+import { da } from '~/store/atoms';
+import { useSetKeysAtom, useSetSlinkNewAtom } from '~/store/hooks';
+import { qrCodeAtom } from '~/store/qrAtom';
 import { Button } from '~/ui/button';
 import { CardContent, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
-import FormCreate from './FormCreate';
-
-import { type QrFullSchema, qrFullSchema } from '~/schemas/QRCodeStyling';
-import { useAtom, useSetAtom } from 'jotai';
-import { da } from '~/store/atoms';
 import { nanoid } from '~/utils/nanoid';
-import { getSlinkUrl } from '~/helpers/getBaseUrl';
-import { qrCodeAtom } from '~/store/qrAtom';
-import { convertToBase64 } from '~/helpers/convertToBase64';
-import { useSetKeysAtom, useSetSlinkNewAtom } from '~/store/hooks';
-import { useSession } from 'next-auth/react';
+import FormCreate from './FormCreate';
 
 const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
@@ -31,21 +29,6 @@ const CardCreateContent = () => {
   // const setQrId = useSetQrIdAtom();
   const setKeys = useSetKeysAtom();
   // const setDisplayQr = useSetDisplayQrIdAtom();
-
-  // const { mutate } = api.qr.createQr.useMutation({
-  //   onSuccess(data) {
-  //     // const qr = { qrId: data.id };
-  //     // setQrId(data.id);
-  //     // if (data.privateKey) {
-  //     //   // qr.keys = { privateKey: data.privateKey, publicKey: data.publicKey };
-  //     //   setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
-  //     // }
-  //     // console.log(data);
-  //   },
-  //   onError(error) {
-  //     console.error(error);
-  //   },
-  // });
 
   const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
     onSuccess(data) {
@@ -105,7 +88,7 @@ const CardCreateContent = () => {
         setSlinkAtom('');
       }
     },
-    [mutateNew, qrCode, setDaAtom, status]
+    [mutateNew, qrCode, setDaAtom, setSlinkAtom, status]
     // [mutate]
   );
 

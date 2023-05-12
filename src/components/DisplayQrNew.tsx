@@ -2,7 +2,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { da } from '~/store/atoms';
 
-import { Copy, InfoIcon } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { type FileExtension } from 'qr-code-styling';
 import { copyToClipboard } from '~/helpers/copyToClipboard';
 import { exportJson } from '~/helpers/exportJson';
@@ -12,6 +12,8 @@ import { qrCodeAtom } from '~/store/qrAtom';
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
 import { Label } from '~/ui/label';
 import HoverCardWrapper from './HoverCardWrapper';
+import { Info } from '~/components/icons';
+import { CopyButton } from './CopyButton';
 
 const DisplayQrCode = () => {
   const [fileExt, setFileExt] = useState<FileExtension>('svg');
@@ -131,9 +133,7 @@ const DisplayKeys = () => {
               openDelay={300}
               hoverCardText={displayKeysHoverCardText}
             >
-              <span className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200  ">
-                <InfoIcon size={22} />
-              </span>
+              <Info />
             </HoverCardWrapper>
           </CardTitle>
         </CardHeader>
@@ -141,22 +141,12 @@ const DisplayKeys = () => {
           <div className="flex items-center gap-2">
             <Label>Public key: </Label>
             <Label>***</Label>
-            <button
-              onClick={handleCopy(keysAtom.publicKey)}
-              className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
-            >
-              <Copy className="w-4" />
-            </button>
+            <CopyButton onClick={handleCopy(keysAtom.publicKey)} />
           </div>
           <div className="flex items-center gap-2">
             <Label>Private key: </Label>
             <Label>***</Label>
-            <button
-              onClick={handleCopy(keysAtom.privateKey)}
-              className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
-            >
-              <Copy className="w-4" />
-            </button>
+            <CopyButton onClick={handleCopy(keysAtom.privateKey)} />
           </div>
           <a
             type="button"

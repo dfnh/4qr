@@ -1,20 +1,20 @@
 import { type SelectProps } from '@radix-ui/react-select';
-import { memo, useCallback, type ReactNode } from 'react';
+import { memo, useCallback } from 'react';
 import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
 } from '~/ui/select';
+import { cn } from '~/utils/cn';
 
 export type SelectWrapperProps = {
-  children: ReactNode;
   placeholder: string;
   onSelected: OnSelectType;
+  className?: string;
   disabled?: boolean;
-  defaultValue?: string;
 } & SelectProps;
 
 //fixme im braindead
@@ -26,6 +26,7 @@ const SelectWrapper = memo(
     placeholder,
     onSelected,
     defaultValue,
+    className,
     disabled = false,
     ...props
   }: SelectWrapperProps) => {
@@ -35,6 +36,7 @@ const SelectWrapper = memo(
       },
       [onSelected]
     );
+
     return (
       <Select
         defaultValue={defaultValue}
@@ -42,7 +44,7 @@ const SelectWrapper = memo(
         disabled={disabled}
         {...props}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className={cn('w-[180px]', className)}>
           <SelectValue placeholder={placeholder}></SelectValue>
         </SelectTrigger>
         <SelectContent>

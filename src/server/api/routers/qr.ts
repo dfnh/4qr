@@ -1,18 +1,16 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { createTRPCRouter, publicProcedure } from '../trpc';
-
+import { asOptionalField } from '~/helpers/asOptionalField';
 import { hashPassword, verifyPassword } from '~/helpers/bcrypt';
-import { getBaseUrl, getSlinkUrl } from '~/helpers/getBaseUrl';
-import { createQrBusinessPartSchema, createQrSchema } from '~/schemas/createQr';
-import { nanoid } from '~/utils/nanoid';
+import { generateKeys, signMessage, verifyMessageSignature } from '~/helpers/crypto';
+import { schemaForFormPassword, schemaForFormPublicKey } from '~/schemas/codeProcedure';
 import { handleLocation } from '../helpers/locationLogic';
 import { codeProcedure } from '../procedures/codeProcedure';
-
-import { asOptionalField } from '~/helpers/asOptionalField';
-import { generateKeys, signMessage, verifyMessageSignature } from '~/helpers/crypto';
-import { generateQR } from '~/helpers/generateQr';
-import { schemaForFormPassword, schemaForFormPublicKey } from '~/schemas/codeProcedure';
+import { createTRPCRouter, publicProcedure } from '../trpc';
+// import { generateQR } from '~/helpers/generateQr';
+// import { getBaseUrl, getSlinkUrl } from '~/helpers/getBaseUrl';
+// import { createQrBusinessPartSchema, createQrSchema } from '~/schemas/createQr';
+// import { nanoid } from '~/utils/nanoid';
 
 export const qrRouter = createTRPCRouter({
   createQrNew: publicProcedure
@@ -38,11 +36,7 @@ export const qrRouter = createTRPCRouter({
       let signature: string | undefined = undefined;
       if (!!input.slink && input.sign) {
         [publicKey, privateKey] = generateKeys();
-
-        console.log({ publicKey, privateKey });
-
         const message = `${input.data}${input.image64}`;
-
         signature = signMessage(message, privateKey);
       }
 
@@ -62,68 +56,8 @@ export const qrRouter = createTRPCRouter({
       return { publicKey, privateKey };
     }),
 
-  createQr: publicProcedure.input(createQrSchema).mutation(async ({ ctx, input }) => {
-    let qr: string | undefined;
-    let slink: string | undefined = undefined;
-    let link: string | undefined = undefined;
-    const userid = ctx.session?.user.id;
-
-    if (!input.slink) {
-      qr = await generateQR(input.text);
-    } else {
-      slink = await nanoid();
-      link = getSlinkUrl(slink);
-      qr = await generateQR(link);
-    }
-
-    const [hashedPassword] = await Promise.all([
-      // qr.toDataURL() as Promise<string>,
-      input.password ? hashPassword(input.password) : Promise.resolve(undefined),
-    ]);
-
-    let publicKey: string | undefined = undefined;
-    let privateKey: string | undefined = undefined;
-    let signature: string | undefined = undefined;
-    if (!!slink && input.sign) {
-      [publicKey, privateKey] = generateKeys();
-      signature = signMessage(input.text, privateKey);
-    }
-
-    const code = await ctx.prisma.code.create({
-      data: {
-        info: input.text,
-        userId: userid,
-        password: hashedPassword,
-        image: qr,
-        shorturl: slink,
-        signature: signature,
-      },
-    });
-    if (!code) throw new TRPCError({ code: 'BAD_REQUEST' });
-
-    console.log(code);
-    // const link = getBaseUrl(`/s/${code?.shorturl ?? ''}`);
-
-    return { url: link, qrUrl: qr, id: code.id, publicKey, privateKey };
-  }),
-
-  getQrById: publicProcedure
-    .input(z.object({ id: z.string().min(1) }))
-    .query(async ({ ctx, input }) => {
-      const code = await ctx.prisma.code.findFirst({ where: { id: input.id } });
-      //\ !code || ctx.session?.user.id === code?.userId
-      if (!code) {
-        throw new TRPCError({ code: 'BAD_REQUEST' });
-      }
-      const url = code.shorturl ? getSlinkUrl(code.shorturl) : undefined;
-
-      return { qrUrl: code.image, url: url };
-    }),
-
   visitSlink: codeProcedure.query(async ({ ctx, input }) => {
     const { code, isUrl } = ctx;
-
-    console.log(code);
 
     const responseObj = {
       info: undefined as string | undefined,
@@ -137,17 +71,13 @@ export const qrRouter = createTRPCRouter({
 
     if (code.password) {
       responseObj.password = true;
-      if (!input.password)
-        // return { qrUrl: code.image, slink: code.shorturl, isUrl, success: false };
-        return { ...responseObj };
+      if (!input.password) return { ...responseObj };
 
       const success = await verifyPassword(input.password, code.password);
-      // if (!success) return { qrUrl: code.image, slink: code.shorturl, isUrl, success };
       if (!success) return { ...responseObj };
     }
 
     if (!!code.signature) {
-      // return { qrUrl: code.image, slink: code.shorturl, isUrl, success: false };
       responseObj.signature = true;
       return { ...responseObj };
     }
@@ -184,12 +114,10 @@ export const qrRouter = createTRPCRouter({
         codeId: code.id,
       });
 
-      // console.log({ info: code.info, qrUrl: code.image, isUrl, success });
       return { info: code.info, qrUrl: code.image, isUrl, success: success };
     }),
   getSlinkWithSignature: codeProcedure
-    // .input(z.object({}))
-    .input(schemaForFormPublicKey.extend({ pubkeyar: z.string().array().optional() }))
+    .input(schemaForFormPublicKey)
     .mutation(async ({ ctx, input }) => {
       const { code, isUrl } = ctx;
 
@@ -197,16 +125,15 @@ export const qrRouter = createTRPCRouter({
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
       if (!input.publicKey) throw new TRPCError({ code: 'BAD_REQUEST' });
 
-      // const pub =
-      //   '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtkRxScJbYWZTwsDTEGT3\nTrZ6nOY1Ey2we9WZOiTz4MEZlOqVW1RTuy4Fzzy03hxuUO0KzTRsWa9Rr7yB2gbL\ngmxDEJBAM7fDgwWAeeRxLg9Gjs4JqYpUfxg1nXLylHHNRlot4CDPRPkvH1ntm/Il\nGE4kt+PWUtVNiUMJhVzw8dtH8GpyiNc90v82chuFLwrTwqavFtezOL2Qe778snxr\nFEVPmDbZKkLmT898GtFAc5ip6MdOleCEk9eECHSQJuBruyNfLna7IBwvB3x/zbMg\n+w45TytWcqtVPrx1o2jcvGGVFvt8RLTehe5hbRg6+/QpAFrXAluIwNQ1n/8Bm6Cu\npQIDAQAB\n-----END PUBLIC KEY-----\n';
-
       const message = `${code.info}${code.image}`;
 
-      console.log({ input });
+      const publicKeyTrimmed = input.publicKey.replace(/\\n/g, '\n').trim();
 
-      // const isVerified = verifyMessageSignature(message, pub, code.signature);
-      // const isVerified = verifyMessageSignature(message, input.pubkeyar, code.signature);
-      const isVerified = verifyMessageSignature(message, input.publicKey, code.signature);
+      const isVerified = verifyMessageSignature(
+        message,
+        publicKeyTrimmed,
+        code.signature
+      );
       if (!isVerified) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Wrong key' });
 
       const stat = await handleLocation({
@@ -214,8 +141,6 @@ export const qrRouter = createTRPCRouter({
         prisma: ctx.prisma,
         codeId: code.id,
       });
-
-      console.log({ info: code.info, qrUrl: code.image, isUrl, success: isVerified });
 
       return { info: code.info, qrUrl: code.image, isUrl, success: isVerified };
     }),

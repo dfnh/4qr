@@ -1,4 +1,4 @@
-import { createPublicKey, createSign, createVerify, generateKeyPairSync } from 'crypto';
+import { createSign, createVerify, generateKeyPairSync } from 'crypto';
 
 function generateKeys() {
   // const { generateKeyPairSync } = await import('node:crypto')
@@ -24,7 +24,7 @@ function signMessage(message: string, privateKey: string) {
 }
 
 function verifyMessageSignature(message: string, publicKey: string, signature: string) {
-  const key = createPublicKey(publicKey); // !?!?!?!?!?!?!?!?!?!?!?!?!?!
+  const key = publicKey; // createPublicKey(publicKey);
   const verifier = createVerify('rsa-sha256');
   verifier.update(message);
   const isVerified = verifier.verify(key, signature, 'base64');

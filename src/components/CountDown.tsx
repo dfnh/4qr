@@ -11,11 +11,9 @@ const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean 
     void router.replace(url);
   }, [router, url]);
 
-  if (disabled) {
-    return <Button onClick={redirectToUrl}>Go now</Button>;
-  }
-
   useEffect(() => {
+    if (disabled) return;
+
     const timer =
       count > 0 &&
       setInterval(() => {
@@ -25,13 +23,17 @@ const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean 
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [count]);
+  }, [count, disabled]);
 
   useEffect(() => {
     if (count === 0) {
       redirectToUrl();
     }
   }, [count, redirectToUrl]);
+
+  if (disabled) {
+    return <Button onClick={redirectToUrl}>Go now</Button>;
+  }
 
   return (
     <>

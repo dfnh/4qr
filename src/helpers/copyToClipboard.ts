@@ -12,4 +12,10 @@ const copyToClipboard = (value: string) => {
   }
 };
 
-export { copyToClipboard };
+const handleCopy = (value: string) => {
+  return () => {
+    copyToClipboard(value);
+  };
+};
+
+export { copyToClipboard, handleCopy };

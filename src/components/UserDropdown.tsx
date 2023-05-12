@@ -14,19 +14,18 @@ import {
   DropdownMenuTrigger,
 } from '~/ui/dropdown';
 
-const UserDropdown = ({
-  name,
-  email,
-  image,
-}: {
+type UserDropdownProps = {
   name?: string;
   email?: string;
   image?: string;
-}) => {
+};
+
+const UserDropdown = ({ name, email, image }: UserDropdownProps) => {
   const router = useRouter();
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
   const linkprofile = () => void router.push('/profile');
-  const logout = async () => await signOut({ callbackUrl: '/' });
+  const logout = () => void signOut({ callbackUrl: '/' });
+  // const logout = async () => await signOut({ callbackUrl: '/' });
 
   return (
     <DropdownMenu>
@@ -62,4 +61,4 @@ const UserDropdown = ({
   );
 };
 
-export { UserDropdown };
+export default UserDropdown;
