@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 import { type Options } from 'qr-code-styling';
-import { type QrFullSchema, type qrFullSchema } from '~/schemas/QRCodeStyling';
+import { type QrFullSchema } from '~/schemas/QRCodeStyling';
 
 // deprecated
 const qrIdAtom = atom('');
@@ -27,7 +27,7 @@ const keysAtom = atom<{ privateKey?: string; publicKey?: string }>({
 const readKeysAtom = atom((get) => get(keysAtom)); //notusing
 
 const da = atom({
-  data: 'zxc',
+  data: 'https://4qr.vercel.app',
   width: 300,
   height: 300,
   type: 'canvas',

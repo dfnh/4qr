@@ -2,9 +2,18 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '~/ui/button';
 
-const CountDown = ({ url }: { url: string }) => {
+const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean }) => {
   const [count, setCount] = useState(5);
   const router = useRouter();
+
+  const redirectToUrl = useCallback(() => {
+    if (!url) return;
+    void router.replace(url);
+  }, [router, url]);
+
+  if (disabled) {
+    return <Button onClick={redirectToUrl}>Go now</Button>;
+  }
 
   useEffect(() => {
     const timer =
@@ -17,11 +26,6 @@ const CountDown = ({ url }: { url: string }) => {
       if (timer) clearInterval(timer);
     };
   }, [count]);
-
-  const redirectToUrl = useCallback(() => {
-    if (!url) return;
-    void router.replace(url);
-  }, [router, url]);
 
   useEffect(() => {
     if (count === 0) {

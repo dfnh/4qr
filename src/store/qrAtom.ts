@@ -4,7 +4,7 @@ import QRCodeStyling from 'qr-code-styling';
 
 const qrCodeAtom = atom(
   new QRCodeStyling({
-    data: 'default',
+    data: 'https://4qr.vercel.app',
     width: 300,
     height: 300,
     image: undefined,
@@ -23,6 +23,4 @@ const qrCodeAtom = atom(
   })
 );
 
-const slinkNewAtom = atom('');
-
-export { qrCodeAtom, slinkNewAtom };
+export { qrCodeAtom };

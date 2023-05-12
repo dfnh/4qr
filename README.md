@@ -10,5 +10,3 @@
 - [react-hook-form](https://react-hook-form.com)
 
 #
-
-Project bootstrapped with `create-t3-app`.

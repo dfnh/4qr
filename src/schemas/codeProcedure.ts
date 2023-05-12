@@ -1,17 +1,15 @@
 import { z } from 'zod';
 import { asOptionalField as opt } from '~/helpers/asOptionalField';
 
-export const codeProcedureCoreSchema = z.object({
-  password: opt(z.string().min(1)),
-});
-
-export type CodeProcedureCoreSchema = z.infer<typeof codeProcedureCoreSchema>;
-
-export const codeProcedureSchema = codeProcedureCoreSchema.extend({
+export const codeProcedureSchema = z.object({
   slink: z.string().min(1),
+  password: opt(z.string().min(1)),
 });
 
 export type CodeProcedureSchema = z.infer<typeof codeProcedureSchema>;
 
-export const schemaForForm = z.object({ password: z.string().min(1) });
-export type SchemaForForm = z.infer<typeof schemaForForm>;
+export const schemaForFormPassword = z.object({ password: z.string().min(1) });
+export type SchemaForFormPassword = z.infer<typeof schemaForFormPassword>;
+
+export const schemaForFormPublicKey = z.object({ publicKey: z.string().min(1) });
+export type SchemaForFormPublicKey = z.infer<typeof schemaForFormPublicKey>;

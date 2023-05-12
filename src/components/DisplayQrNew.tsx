@@ -1,18 +1,16 @@
 import { useAtom, useAtomValue } from 'jotai';
-import React, { type MouseEvent, type ChangeEvent } from 'react';
+import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { da } from '~/store/atoms';
-import { useEffect, useRef, useState } from 'react';
 
-import { type FileExtension } from 'qr-code-styling';
-import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
-import { qrCodeAtom } from '~/store/qrAtom';
-import { useToast } from '~/hooks/useToast';
-import { useKeysAtomValue, useSlinkNewAtomValue } from '~/store/hooks';
-import { Label } from '~/ui/label';
 import { Copy, InfoIcon } from 'lucide-react';
-import { Button } from '~/ui/button';
+import { type FileExtension } from 'qr-code-styling';
 import { copyToClipboard } from '~/helpers/copyToClipboard';
 import { exportJson } from '~/helpers/exportJson';
+import { useToast } from '~/hooks/useToast';
+import { useKeysAtomValue, useSlinkNewAtomValue } from '~/store/hooks';
+import { qrCodeAtom } from '~/store/qrAtom';
+import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
+import { Label } from '~/ui/label';
 import HoverCardWrapper from './HoverCardWrapper';
 
 const DisplayQrCode = () => {

@@ -16,9 +16,6 @@ const FormCreate = () => {
     register,
     formState: { errors },
   } = useFormContext<QrFullSchema>();
-  const { status } = useSession();
-
-  const isAuthed = useMemo(() => status === 'authenticated', [status]);
 
   return (
     <form className="grid gap-2">
@@ -31,15 +28,26 @@ const FormCreate = () => {
       />
       {errors.data?.message && <ErrorSpan>{errors.data.message}</ErrorSpan>}
 
-      <FormSwitchSlink isAuthed={isAuthed} />
-      <FormSwitchSign isAuthed={isAuthed} />
-
-      <GeneratePassword isAuthed={isAuthed} />
+      <FormCreateMainBusiness />
 
       <Separator className="my-2" />
 
       <FormCreateOptions />
     </form>
+  );
+};
+
+const FormCreateMainBusiness = () => {
+  const { status } = useSession();
+
+  const isAuthed = useMemo(() => status === 'authenticated', [status]);
+
+  return (
+    <>
+      <FormSwitchSlink isAuthed={isAuthed} />
+      <FormSwitchSign isAuthed={isAuthed} />
+      <GeneratePassword isAuthed={isAuthed} />
+    </>
   );
 };
 

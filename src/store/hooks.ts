@@ -8,7 +8,7 @@ import {
   readQrIdAtom,
   slinkAtom,
 } from './atoms';
-import { slinkNewAtom } from './qrAtom';
+import { slinkNewAtom } from './slinkNewAtom';
 
 const useReadQrIdAtom = () => useAtom(readQrIdAtom);
 
@@ -18,22 +18,26 @@ const useSetQrIdAtom = () => useSetAtom(qrIdAtom);
 const useSetDisplayQrIdAtom = () => useSetAtom(displayQrAtom);
 const useReadDisplayQrIdAtom = () => useAtom(readDisplayQrAtom);
 
-const useSlinkAtom = () => useAtom(slinkAtom);
+const useSlinkAtomValue = () => useAtomValue(slinkAtom);
+const useSetSlinkAtom = () => useSetAtom(slinkAtom);
 
 const useSetKeysAtom = () => useSetAtom(keysAtom);
 const useReadKeysAtom = () => useAtom(readKeysAtom);
 
 const useKeysAtomValue = () => useAtomValue(keysAtom);
 const useSlinkNewAtomValue = () => useAtomValue(slinkNewAtom);
+const useSetSlinkNewAtom = () => useSetAtom(slinkNewAtom);
 
 export {
   useReadQrIdAtom,
   useSetQrIdAtom,
-  useSlinkAtom,
+  useSlinkAtomValue,
+  useSetSlinkAtom,
   useSetKeysAtom,
   useReadKeysAtom,
   useSetDisplayQrIdAtom,
   useReadDisplayQrIdAtom,
   useKeysAtomValue,
   useSlinkNewAtomValue,
+  useSetSlinkNewAtom,
 };

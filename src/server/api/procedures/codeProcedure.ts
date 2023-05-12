@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
-import { publicWithIpProcedure } from '../trpc';
 import { isUrl } from '~/helpers/isUrl';
 import { codeProcedureSchema } from '~/schemas/codeProcedure';
+import { publicWithIpProcedure } from '../trpc';
 
 const codeProcedure = publicWithIpProcedure
   .input(codeProcedureSchema)

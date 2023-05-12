@@ -3,8 +3,11 @@ import { useRouter } from 'next/router';
 import { LoadingSpinner } from '~/components/Spinner';
 import { CountDown } from '~/components/CountDown';
 import { api } from '~/utils/api';
-import { useSlinkAtom } from '~/store/hooks';
-import { FormPartOfSlink } from '~/components/FormPartOfSlink';
+import { useSlinkAtomValue } from '~/store/hooks';
+import {
+  FormPartOfSlinkPassword,
+  FormPartOfSlinkSignature,
+} from '~/components/FormPartOfSlink';
 
 const SlinkInner = () => {
   const {
@@ -23,10 +26,9 @@ const SlinkInner = () => {
     }
   );
 
-  const [slinkAtom, _] = useSlinkAtom();
+  console.log(data);
 
-  const newInfo = data?.info ?? slinkAtom.info;
-  const urlInfo = data?.isUrl ? newInfo : undefined;
+  const slinkAtom = useSlinkAtomValue();
 
   if (error) {
     return (
@@ -39,6 +41,9 @@ const SlinkInner = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
+
+  const newInfo = data?.info ?? slinkAtom.info;
+  const urlInfo = data?.isUrl ? newInfo : undefined;
 
   return (
     <>
@@ -54,10 +59,13 @@ const SlinkInner = () => {
         )}
         <p className="break-all leading-7">data: {newInfo || '***'}</p>
 
-        {data?.success === false && !slinkAtom.success && (
-          <FormPartOfSlink slink={slink as string} />
+        {data?.success === false && !slinkAtom.success && data.password && (
+          <FormPartOfSlinkPassword slink={slink as string} />
         )}
-        {!!urlInfo && <CountDown url={urlInfo} />}
+        {data?.success === false && !slinkAtom.success && data?.signature && (
+          <FormPartOfSlinkSignature slink={slink as string} />
+        )}
+        {!!urlInfo && <CountDown disabled={data?.signature} url={urlInfo} />}
       </div>
     </>
   );

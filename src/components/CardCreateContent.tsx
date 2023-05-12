@@ -14,7 +14,7 @@ import { nanoid } from '~/utils/nanoid';
 import { getSlinkUrl } from '~/helpers/getBaseUrl';
 import { qrCodeAtom } from '~/store/qrAtom';
 import { convertToBase64 } from '~/helpers/convertToBase64';
-import { useSetKeysAtom } from '~/store/hooks';
+import { useSetKeysAtom, useSetSlinkNewAtom } from '~/store/hooks';
 import { useSession } from 'next-auth/react';
 
 const schema = qrFullSchema;
@@ -51,6 +51,8 @@ const CardCreateContent = () => {
     onSuccess(data) {
       console.log(data);
       if (data.privateKey) {
+        console.log(data);
+
         setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
       }
     },
@@ -61,6 +63,7 @@ const CardCreateContent = () => {
 
   const setDaAtom = useSetAtom(da);
   const [qrCode, setQrCode] = useAtom(qrCodeAtom);
+  const setSlinkAtom = useSetSlinkNewAtom();
 
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
@@ -73,6 +76,8 @@ const CardCreateContent = () => {
           const slinkResult = await generateSlink();
           slink = slinkResult.slink; // link = slinkResult.link;
           values.data = slinkResult.link;
+
+          setSlinkAtom(slink);
         }
         // eslint-disable-next-line
         // @ts-ignore
@@ -96,6 +101,9 @@ const CardCreateContent = () => {
       // eslint-disable-next-line
       // @ts-ignore
       setDaAtom(values);
+      if (!values.slink) {
+        setSlinkAtom('');
+      }
     },
     [mutateNew, qrCode, setDaAtom, status]
     // [mutate]
