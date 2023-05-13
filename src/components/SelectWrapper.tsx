@@ -7,6 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectLabel,
 } from '~/ui/select';
 import { cn } from '~/utils/cn';
 
@@ -18,7 +19,7 @@ export type SelectWrapperProps = {
 } & SelectProps;
 
 //fixme im braindead
-export type OnSelectType = (id: string) => void;
+export type OnSelectType = (value: string) => void;
 
 const SelectWrapper = memo(
   ({
@@ -56,4 +57,4 @@ const SelectWrapper = memo(
 );
 SelectWrapper.displayName = 'SelectWrapper';
 
-export { SelectWrapper, SelectItem };
+export { SelectWrapper, SelectItem, SelectLabel };

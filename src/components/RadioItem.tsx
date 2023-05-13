@@ -2,7 +2,7 @@ import { type RadioGroupItemProps } from '@radix-ui/react-radio-group';
 import { Label } from '~/ui/label';
 import { RadioGroup, RadioGroupItem } from '~/ui/radiogroup';
 
-type RadioItemProps = { id: string; label?: string } & RadioGroupItemProps;
+export type RadioItemProps = { id: string; label?: string } & RadioGroupItemProps;
 
 const RadioItem = ({ id, value, label }: RadioItemProps) => {
   return (

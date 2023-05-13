@@ -1,8 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai';
-import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { da } from '~/store/atoms';
 
-// import { Copy } from 'lucide-react';
 import { type FileExtension } from 'qr-code-styling';
 import { copyToClipboard } from '~/helpers/copyToClipboard';
 import { exportJson } from '~/helpers/exportJson';
@@ -15,9 +14,14 @@ import HoverCardWrapper from './HoverCardWrapper';
 import { Info } from '~/components/icons';
 import { CopyButton } from './CopyButton';
 
+import { Button } from '~/ui/button';
+
+import { Separator } from '~/ui/separator';
+import { Download } from 'lucide-react';
+import { type OnSelectType, SelectItem, SelectWrapper } from './SelectWrapper';
+
 const DisplayQrCode = () => {
-  const [fileExt, setFileExt] = useState<FileExtension>('svg');
-  const [qrCode, setQrCode] = useAtom(qrCodeAtom);
+  const qrCode = useAtomValue(qrCodeAtom);
   const { toast } = useToast();
   const daAtom = useAtomValue(da);
 
@@ -44,19 +48,11 @@ const DisplayQrCode = () => {
     }
   }, [daAtom, qrCode, toast]);
 
-  const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFileExt(event.target.value as FileExtension);
-  };
-
-  const onDownloadClick = () => {
+  const onDownloadClick = (ext: FileExtension) => {
     if (!qrCode) return;
-    qrCode
-      .download({
-        extension: fileExt,
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    qrCode.download({ extension: ext, name: `qrcode` }).catch((error) => {
+      console.error(error);
+    });
   };
 
   return (
@@ -70,13 +66,7 @@ const DisplayQrCode = () => {
         </div>
       </div>
       <div>
-        <select onChange={onExtensionChange} value={fileExt}>
-          <option value="svg">SVG</option>
-          <option value="png">PNG</option>
-          <option value="jpeg">JPEG</option>
-          <option value="webp">WEBP</option>
-        </select>
-        <button onClick={onDownloadClick}>Download</button>
+        <SelectExtension onDownload={onDownloadClick} />
       </div>
 
       <DisplayKeys />
@@ -84,8 +74,43 @@ const DisplayQrCode = () => {
   );
 };
 
-const SelectExtension = () => {
-  return <></>;
+const fileExtensions = ['svg', 'png', 'jpeg', 'webp'] as const;
+type SelectExtensionProps = { onDownload: (ext: FileExtension) => void };
+
+const SelectExtension = ({ onDownload }: SelectExtensionProps) => {
+  const [fileExt, setFileExt] = useState<FileExtension>('webp');
+
+  const onClick = () => {
+    onDownload(fileExt);
+  };
+
+  const onSelected: OnSelectType = (v) => {
+    setFileExt(v as FileExtension);
+  };
+
+  return (
+    <>
+      <div className="flex items-center rounded-md border bg-secondary text-secondary-foreground">
+        <Button variant="secondary" className="px-3" onClick={onClick}>
+          <Download className="mr-2 h-4 w-4" />
+          Download
+        </Button>
+        <Separator orientation="vertical" className="h-[20px]" />
+        <SelectWrapper
+          placeholder="extension"
+          onSelected={onSelected}
+          defaultValue={fileExt}
+          className="w-[75px] border-none"
+        >
+          {fileExtensions.map((e) => (
+            <SelectItem key={e} value={e}>
+              {e}
+            </SelectItem>
+          ))}
+        </SelectWrapper>
+      </div>
+    </>
+  );
 };
 
 const DisplayQrNew = () => {
