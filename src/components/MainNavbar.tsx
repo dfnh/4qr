@@ -11,7 +11,7 @@ const Links = [
 const MainNavbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
   return (
     <nav
-      className={cn('flex items-center space-x-4 md:space-x-6 lg:space-x-8', className)}
+      className={cn('flex items-center space-x-3 md:space-x-6 lg:space-x-8', className)}
       {...props}
     >
       <Link href={'/'} className="pl-4 text-2xl font-normal leading-tight">

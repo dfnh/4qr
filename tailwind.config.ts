@@ -1,15 +1,5 @@
-// import { type Config } from 'tailwindcss';
-
-// export default {
-//   content: ['./src/**/*.{js,ts,jsx,tsx}'],
-//   theme: {
-//     extend: {},
-//   },
-//   plugins: [],
-// } satisfies Config;
-
 import { type Config } from 'tailwindcss';
-// import { fontFamily } from 'tailwindcss/defaultTheme';
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
 export default {
   darkMode: ['class'],
@@ -61,7 +51,7 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      // fontFamily: { sans: ['var(--font-sans)', ...fontFamily.sans] },
+      fontFamily: { sans: ['var(--font-sans)', ...fontFamily.sans] },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },

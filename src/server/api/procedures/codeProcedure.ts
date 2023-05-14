@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { isUrl } from '~/helpers/isUrl';
+import { isUrl } from '~/helpers/validation/isUrl';
 import { codeProcedureSchema } from '~/schemas/codeProcedure';
 import { publicWithIpProcedure } from '../trpc';
 

@@ -15,9 +15,9 @@ import { Input, type InputProps } from '~/ui/input';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
 import { CollapsibleWrapper } from './CollapsibleWrapper';
-import { ErrorSpan } from './ErrorSpan';
 import { RadioGroup, RadioItem } from './RadioItem';
 import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
+import InputWithLabel from './InputWithLabel';
 
 const FormCreateOptions = () => {
   const {
@@ -118,26 +118,6 @@ const FormCreateOptions = () => {
     </>
   );
 };
-
-type InputWithLabelProps = {
-  id: string;
-  labelText: string;
-  error?: string;
-  register?: Partial<UseFormRegisterReturn>;
-} & InputProps;
-
-const InputWithLabel = memo(
-  ({ id, labelText, error, register, ...rest }: InputWithLabelProps) => {
-    return (
-      <div className="grid gap-2">
-        <Label htmlFor={id}>{labelText}</Label>
-        <Input id={id} {...register} {...rest} />
-        {error && <ErrorSpan>{error}</ErrorSpan>}
-      </div>
-    );
-  }
-);
-InputWithLabel.displayName = 'InputWithLabel';
 
 const FormInputFileImage = () => {
   const { register, resetField, setValue } = useFormContext<QrFullSchema>();

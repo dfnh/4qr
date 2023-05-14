@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 const _ErrorSpan = ({ children, message }: { children?: string; message?: string }) => {
   return (
-    <span role="alert" className="text-red-600">
+    <span role="alert" className="text-sm font-medium leading-none text-red-600">
       {message ?? children}
     </span>
   );

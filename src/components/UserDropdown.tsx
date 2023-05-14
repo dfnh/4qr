@@ -1,5 +1,6 @@
 import { LogOut, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/ui/avatar';
@@ -23,7 +24,7 @@ type UserDropdownProps = {
 const UserDropdown = ({ name, email, image }: UserDropdownProps) => {
   const router = useRouter();
   const Av = useMemo(() => name?.slice(0, 2) ?? 'A', [name]);
-  const linkprofile = () => void router.push('/profile');
+  // const linkprofile = () => void router.push('/profile');
   const logout = () => void signOut({ callbackUrl: '/' });
   // const logout = async () => await signOut({ callbackUrl: '/' });
 
@@ -46,9 +47,12 @@ const UserDropdown = ({ name, email, image }: UserDropdownProps) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={linkprofile}>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+          {/* <DropdownMenuItem onClick={linkprofile}> */}
+          <DropdownMenuItem asChild>
+            <Link href="/profile">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

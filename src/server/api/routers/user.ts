@@ -1,10 +1,42 @@
-import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { hashPassword } from '~/helpers/bcrypt';
+import { signUpSchema } from '~/schemas/authSchema';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '~/server/api/trpc';
 
 export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(({ ctx }) => {
     return ctx.session.user;
+  }),
+
+  signUp: publicProcedure.input(signUpSchema).mutation(async ({ ctx, input }) => {
+    const userFromSession = ctx.session?.user;
+    if (userFromSession) {
+      throw new TRPCError({ code: 'FORBIDDEN', message: 'User already logged in' });
+    }
+
+    const userPrevious = await ctx.prisma.user.findFirst({
+      where: { email: input.email },
+    });
+    if (userPrevious) {
+      console.log(userPrevious);
+      throw new TRPCError({
+        code: 'CONFLICT',
+        message: 'User with this email is already registered',
+      });
+    }
+
+    const hash = await hashPassword(input.password);
+    const user = await ctx.prisma.user.create({
+      data: {
+        name: input.name,
+        email: input.email,
+        password: hash,
+      },
+    });
+    if (!user) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+
+    return { email: user.email };
   }),
 
   getQrList: protectedProcedure.query(async ({ ctx }) => {
