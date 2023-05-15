@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { signInLoadingAtom } from './authAtom';
+import { signInLoadingAtom } from './atoms';
 
 const useSignInLoadingAtom = () => useAtom(signInLoadingAtom);
 

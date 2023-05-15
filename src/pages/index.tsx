@@ -1,13 +1,11 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 
-// import { api } from '~/utils/api';
-
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>yo</title>
+        <title>4qr</title>
         <meta name="description" content="4qr" />
       </Head>
       <main className="container flex flex-col items-center justify-center gap-12 bg-background px-4 py-16 ">
@@ -19,4 +17,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default HomePage;

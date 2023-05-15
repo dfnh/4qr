@@ -8,7 +8,7 @@ const LazyCreateQrInner = dynamic(() => import('~/components/CreateQrInner'), {
   loading: () => <LoadingSpinner2 />,
 });
 
-const CreateQr: NextPage = () => {
+const CreateQrPage: NextPage = () => {
   return (
     <>
       <Head>
@@ -24,4 +24,4 @@ const CreateQr: NextPage = () => {
   );
 };
 
-export default CreateQr;
+export default CreateQrPage;

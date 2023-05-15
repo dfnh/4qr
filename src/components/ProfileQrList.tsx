@@ -21,6 +21,22 @@ const ProfileQrList = () => {
 
   return (
     <>
+      {codes?.length === 0 && (
+        <div>
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            you haven&apos;t created any QR codes yet.{' '}
+          </h4>
+          <Link
+            href="/create"
+            className="scroll-m-20 text-xl font-semibold tracking-tight"
+          >
+            To create new Qr code go to{' '}
+            <span className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200">
+              /create
+            </span>
+          </Link>
+        </div>
+      )}
       {codes?.map((code) => (
         <CardForProfileToDisplaySmallCodeInfo
           key={code.id}
@@ -45,9 +61,12 @@ const CardForProfileToDisplaySmallCodeInfo = ({ code, link }: CardForProfileProp
         <div className="relative flex">
           <CardTitle className="flex items-center gap-2">
             {`/s/${code.shorturl ?? ''}`}
-            <CopyButton onClick={handleCopy(getSlinkUrl(code.shorturl ?? ''))} />
+            <CopyButton
+              className="rounded border transition-all ease-out active:border-emerald-500 active:duration-500"
+              onClick={handleCopy(getSlinkUrl(code.shorturl ?? ''))}
+            />
           </CardTitle>
-          <span className="absolute right-0 hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200  ">
+          <span className="absolute right-0 hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200 ">
             <Link href={`${link}`}>
               <Link2Icon size={22} />
             </Link>

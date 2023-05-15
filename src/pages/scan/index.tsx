@@ -8,7 +8,6 @@ const LazyScanWithFile = dynamic(() => import('~/components/ScanWithFile'), {
   loading: () => <LoadingSpinner2 />,
 });
 
-// todo decompose
 const ScanPage: NextPage = () => {
   return (
     <>

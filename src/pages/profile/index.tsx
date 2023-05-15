@@ -1,16 +1,15 @@
 import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next'; // type GetServerSideProps,
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-// import { ProfileQrList } from '~/components/ProfileQrList';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
 import { getServerAuthSession } from '~/server/auth';
-// import { api } from '~/utils/api';
 
 const LazyProfileQrList = dynamic(() => import('~/components/ProfileQrList'), {
   ssr: false,
 });
 
-const Profile = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+type ProfilePageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+const ProfilePage = ({ user }: ProfilePageProps) => {
   return (
     <>
       <Head>
@@ -28,21 +27,17 @@ const Profile = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps
   );
 };
 
-export default Profile;
+export default ProfilePage;
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(context);
-
   if (!session) {
     return {
       redirect: {
-        destination: `/api/auth/signin?callbackUrl=${getBaseUrl('/profile')}`,
+        destination: `/auth/signin?callbackUrl=${getBaseUrl('/profile')}`,
         permanent: false,
       },
     };
   }
-
-  return {
-    props: { user: session.user },
-  };
+  return { props: { user: session.user } };
 };

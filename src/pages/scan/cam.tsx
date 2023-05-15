@@ -7,7 +7,7 @@ const LazyWebCam = dynamic(() => import('~/components/WebCam'), {
   loading: () => <LoadingSpinner2 />,
 });
 
-const Cam = () => {
+const CamPage = () => {
   return (
     <>
       <Head>
@@ -20,4 +20,4 @@ const Cam = () => {
   );
 };
 
-export default Cam;
+export default CamPage;

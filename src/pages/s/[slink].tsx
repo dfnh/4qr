@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { SlinkInner } from '~/components/SlinkInner';
 
-const Slink = () => {
+const SSlinkPage = () => {
   return (
     <>
       <Head>
@@ -14,4 +14,4 @@ const Slink = () => {
   );
 };
 
-export default Slink;
+export default SSlinkPage;
