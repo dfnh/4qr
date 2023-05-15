@@ -37,7 +37,7 @@ const DisplayQrCode = () => {
     if (!qrCode) return;
     try {
       qrCode.update(daAtom);
-      console.log(daAtom);
+      // console.log(daAtom);
     } catch (err) {
       console.log(err as string);
       toast({

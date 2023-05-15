@@ -51,7 +51,7 @@ export const qrRouter = createTRPCRouter({
         },
       });
       if (!code) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-      console.log(code);
+      // console.log(code);
 
       return { publicKey, privateKey };
     }),

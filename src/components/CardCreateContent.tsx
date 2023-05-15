@@ -32,9 +32,9 @@ const CardCreateContent = () => {
 
   const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
     onSuccess(data) {
-      console.log(data);
+      // console.log(data);
       if (data.privateKey) {
-        console.log(data);
+        // console.log(data);
 
         setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
       }
@@ -51,7 +51,7 @@ const CardCreateContent = () => {
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
       if (status === 'authenticated' && values.createCode) {
-        console.log(values);
+        // console.log(values);
 
         let slink: string | undefined = undefined; // const link: string | undefined = undefined;
         const initData = values.data;
@@ -97,7 +97,7 @@ const CardCreateContent = () => {
     values.data = 'preview data';
     const parsed = schema.safeParse(values);
     if (!parsed?.success) return;
-    console.log(parsed.data);
+    // console.log(parsed.data);
     // eslint-disable-next-line
     // @ts-ignore
     setDaAtom(parsed.data);

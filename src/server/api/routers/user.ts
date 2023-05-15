@@ -19,7 +19,7 @@ export const userRouter = createTRPCRouter({
       where: { email: input.email },
     });
     if (userPrevious) {
-      console.log(userPrevious);
+      // console.log(userPrevious);
       throw new TRPCError({
         code: 'CONFLICT',
         message: 'User with this email is already registered',

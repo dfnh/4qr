@@ -48,14 +48,16 @@ const ProfileCodeSlinkView = () => {
 
   return (
     <>
-      <p>slink: {code?.shorturl}</p>
-      <p>data: {code?.info}</p>
-      <p>visited: {code?.CodeStatistic.length}</p>
-      {data && (
-        <div className="container">
-          <PieChart data={data} />
-        </div>
-      )}
+      <div className="container flex max-w-md flex-col">
+        <p>slink: {code?.shorturl}</p>
+        <p>data: {code?.info}</p>
+        <p>visited total: {code?.CodeStatistic.length}</p>
+        {data && (
+          <div className="container">
+            <PieChart data={data} />
+          </div>
+        )}
+      </div>
     </>
   );
 };
