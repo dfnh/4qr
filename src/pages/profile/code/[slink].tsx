@@ -1,17 +1,28 @@
-import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next';
+import { type GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import PieChart, { createDataForPie } from '~/components/PieChart';
 import { getBaseUrl } from '~/helpers/getBaseUrl';
 import { getServerAuthSession } from '~/server/auth';
+import { Button } from '~/ui/button';
+import { Separator } from '~/ui/separator';
 import { api } from '~/utils/api';
 
-type ProfileCodeSlinkPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
-const ProfileCodeSlinkPage = ({ user }: ProfileCodeSlinkPageProps) => {
+// import PieChart, { createDataForPie } from '~/components/PieChart';
+import { createDataForPie } from '~/helpers/createDataForPie';
+const PieChart = dynamic(() => import('~/components/PieChart'), {
+  ssr: false,
+});
+
+// type ProfileCodeSlinkPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+const ProfileCodeSlinkPage = () => {
   return (
-    <div className="container flex-1 flex-col py-6">
-      <ProfileCodeSlinkView />
-    </div>
+    <>
+      <div className="container flex-1 flex-col py-6">
+        <ProfileCodeSlinkView />
+      </div>
+    </>
   );
 };
 
@@ -19,14 +30,24 @@ export default ProfileCodeSlinkPage;
 
 const ProfileCodeSlinkView = () => {
   const {
+    replace,
     query: { slink },
   } = useRouter();
-  const { data: code, isSuccess } = api.user.getQrStats.useQuery(
+  const { data: code } = api.user.getQrStats.useQuery(
     {
       slink: slink as string,
     },
     { refetchOnWindowFocus: false }
   );
+
+  const { mutate, isLoading } = api.user.deleteQr.useMutation({
+    onError(error) {
+      console.error(error);
+    },
+    onSuccess() {
+      void replace('/profile');
+    },
+  });
 
   const data = useMemo(() => {
     if (!code) return;
@@ -46,11 +67,24 @@ const ProfileCodeSlinkView = () => {
     return data;
   }, [code]);
 
+  const onDelete = () => {
+    if (code?.id) {
+      mutate({ id: code?.id });
+    }
+  };
+
   return (
     <>
-      <div className="container flex max-w-md flex-col">
+      <Head>
+        <title>Code statistics - {code?.shorturl}</title>
+      </Head>
+      <div className="container flex max-w-md flex-col gap-2">
         <p>slink: {code?.shorturl}</p>
         <p>data: {code?.info}</p>
+        <Button variant="destructive" size="sm" onClick={onDelete} disabled={isLoading}>
+          delete this code
+        </Button>
+        <Separator className="my-2" />
         <p>visited total: {code?.CodeStatistic.length}</p>
         {data && (
           <div className="container">

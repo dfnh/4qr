@@ -60,4 +60,30 @@ export const userRouter = createTRPCRouter({
 
       return code;
     }),
+
+  deleteQr: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const code = await ctx.prisma.code.findFirst({
+        where: { id: input.id },
+      });
+      if (!code)
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Code was not found' });
+
+      try {
+        await ctx.prisma.code.delete({
+          where: { id: code.id },
+        });
+        return true;
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: (error as Error)?.message ?? 'Cant delete code',
+        });
+      }
+    }),
 });
