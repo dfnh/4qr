@@ -1,5 +1,6 @@
 import { type BuiltInProviderType } from 'next-auth/providers';
 import { signIn, type ClientSafeProvider, type LiteralUnion } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { memo, useCallback, useMemo } from 'react';
@@ -171,10 +172,12 @@ const ProviderButton = memo(
         disabled={disabled}
         className="flex h-11 w-full justify-center gap-4"
       >
-        <img
+        <Image
           loading="lazy"
           width={24}
+          height={24}
           className=""
+          alt={provider.id}
           src={`https://authjs.dev/img/providers/${provider.name.toLowerCase()}.svg`}
         />
         Sign in with {provider.name}
