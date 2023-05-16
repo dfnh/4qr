@@ -22,7 +22,7 @@ const ProfileQrList = () => {
   return (
     <>
       {codes?.length === 0 && (
-        <div>
+        <div className="absolute self-center justify-self-center">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
             you haven&apos;t created any QR codes yet.{' '}
           </h4>

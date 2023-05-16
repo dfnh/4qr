@@ -1,11 +1,28 @@
-import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next';
-import { getProviders } from 'next-auth/react';
+import { type InferGetStaticPropsType } from 'next';
+import { getProviders, useSession } from 'next-auth/react';
 import Head from 'next/head';
-import SignIn from '~/components/SignIn';
-import { getServerAuthSession } from '~/server/auth';
+import { useRouter } from 'next/router';
+import { LoadingSpinner2 } from '~/components/Spinner';
+// import dynamic from 'next/dynamic';
 
-type SignInPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+import SignIn from '~/components/SignIn';
+// const SignIn = dynamic(() => import('~/components/SignIn'), { ssr: false,
+//   loading: () => <LoadingSpinner2 /> });
+
+type SignInPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 const SignInPage = ({ providers }: SignInPageProps) => {
+  const { status } = useSession();
+  const router = useRouter();
+  if (status === 'authenticated') {
+    void router.replace('/');
+  }
+  if (status === 'loading') {
+    return (
+      <div className=" mt-2 flex flex-col">
+        <LoadingSpinner2 />
+      </div>
+    );
+  }
   return (
     <>
       <Head>
@@ -19,12 +36,7 @@ const SignInPage = ({ providers }: SignInPageProps) => {
   );
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const session = await getServerAuthSession(context);
-  if (session) {
-    return { redirect: { destination: '/', permanent: false } };
-  }
-
+export const getStaticProps = async () => {
   const providers = await getProviders();
   return {
     props: { providers: providers ?? [] },

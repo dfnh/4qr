@@ -1,9 +1,22 @@
-import { type GetServerSidePropsContext } from 'next';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import SignUp from '~/components/SignUp';
-import { getServerAuthSession } from '~/server/auth';
+import { LoadingSpinner2 } from '~/components/Spinner';
 
 const SignUpPage = () => {
+  const { status } = useSession();
+  const router = useRouter();
+  if (status === 'authenticated') {
+    void router.replace('/');
+  }
+  if (status === 'loading') {
+    return (
+      <div className=" mt-2 flex flex-col">
+        <LoadingSpinner2 />
+      </div>
+    );
+  }
   return (
     <>
       <Head>
@@ -15,14 +28,6 @@ const SignUpPage = () => {
       </div>
     </>
   );
-};
-
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const session = await getServerAuthSession(context);
-  if (session) {
-    return { redirect: { destination: '/', permanent: false } };
-  }
-  return { props: { session: session } };
 };
 
 export default SignUpPage;

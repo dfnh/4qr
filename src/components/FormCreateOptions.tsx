@@ -104,7 +104,7 @@ const FormCreateOptions = () => {
 
       <CollapsibleWrapper title="Qr options" className="grid gap-2">
         <InputWithLabel
-          labelText="Type number"
+          labelText="Version"
           id="qrOptions.typeNumber"
           placeholder="type number"
           defaultValue={0}

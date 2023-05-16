@@ -13,6 +13,7 @@ const SelectCamera = memo(({ cameras, onSelected }: SelectCameraProps) => {
       placeholder="Select camera"
       disabled={cameras.length === 0}
       onSelected={onSelected}
+      className="w-72 max-w-md"
     >
       {cameras.length !== 0 &&
         cameras.map((c) => (
