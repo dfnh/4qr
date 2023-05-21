@@ -7,6 +7,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
+        <meta charSet="utf-8" />
       </Head>
       <div className="dark flex min-h-screen w-full grow flex-col bg-background text-foreground">
         <UserNav />

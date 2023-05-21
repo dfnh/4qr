@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { asOptionalField } from '~/helpers/asOptionalField';
+import { toUtf8 } from '~/helpers/toUtf8';
 
 const dotsOptionsType = z
   .enum(['dots', 'rounded', 'classy', 'classy-rounded', 'square', 'extra-rounded'])
@@ -87,9 +88,10 @@ const strictlyBusiness = z.object({
   sign: z.boolean().default(false),
 });
 
-export const qrFullSchema = qrSchema.merge(strictlyBusiness).transform((data) => ({
-  ...data,
-  createCode: data.slink || data.sign || !!data.password,
+export const qrFullSchema = qrSchema.merge(strictlyBusiness).transform((d) => ({
+  ...d,
+  createCode: d.slink || d.sign || !!d.password,
+  utf8: toUtf8(d.data),
 }));
 
 export type QrFullSchema = z.infer<typeof qrFullSchema>;

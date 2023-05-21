@@ -19,7 +19,7 @@ const useQrScanner = () => {
         setActive(false);
         setScannedData(result.data);
       },
-      { returnDetailedScanResult: true }
+      { returnDetailedScanResult: true, highlightScanRegion: true }
     );
     setScanner(newScanner);
 

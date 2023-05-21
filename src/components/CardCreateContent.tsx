@@ -18,7 +18,7 @@ import FormCreate from './FormCreate';
 const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
-const CardCreateContent = () => {
+const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
   const { status } = useSession();
   const methods = useForm<QrFullSchema>({
     resolver: zodResolver(schema),
@@ -64,11 +64,10 @@ const CardCreateContent = () => {
         }
         // eslint-disable-next-line
         // @ts-ignore
-        qrCode.update(values);
+        qrCode.update({ ...values, data: values.utf8 });
         const blob = await qrCode.getRawData('webp');
-        if (!blob) {
-          return;
-        }
+        if (!blob) return;
+
         const image64 = await convertToBase64(blob);
 
         mutateNew({
@@ -78,17 +77,20 @@ const CardCreateContent = () => {
           image64: image64,
           slink: slink,
         });
+        return;
       }
+
+      scrollIntoView?.();
 
       // fixme fix types
       // eslint-disable-next-line
       // @ts-ignore
-      setDaAtom(values);
+      setDaAtom({ ...values, data: values.utf8 });
       if (!values.slink) {
         setSlinkAtom('');
       }
     },
-    [mutateNew, qrCode, setDaAtom, setSlinkAtom, status]
+    [mutateNew, qrCode, scrollIntoView, setDaAtom, setSlinkAtom, status]
     // [mutate]
   );
 
@@ -97,11 +99,13 @@ const CardCreateContent = () => {
     values.data = 'preview data';
     const parsed = schema.safeParse(values);
     if (!parsed?.success) return;
+    parsed.data.data = parsed.data.utf8;
     // console.log(parsed.data);
     // eslint-disable-next-line
     // @ts-ignore
     setDaAtom(parsed.data);
-  }, [methods, setDaAtom]);
+    scrollIntoView?.();
+  }, [methods, scrollIntoView, setDaAtom]);
 
   return (
     <>
