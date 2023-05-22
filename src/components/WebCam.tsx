@@ -6,7 +6,6 @@ import { Button } from '~/ui/button';
 import { SelectCamera } from './SelectCamera';
 import { useToast } from '~/hooks/useToast';
 
-// todo decompose
 const WebCam = () => {
   const { cameras, refresh } = useCameraList();
   const { result: data, toggle, camRef, active, changeCam } = useQrScanner();
@@ -56,17 +55,13 @@ const WebCam = () => {
 
 import type QrScanner from 'qr-scanner';
 
-const WebCamButtons = ({
-  cameras,
-  checkCamFn,
-  active,
-  toggle,
-}: {
+type WebCamButtonsProps = {
   cameras: QrScanner.Camera[];
   checkCamFn: () => void;
   active: boolean;
   toggle: () => void;
-}) => {
+};
+const WebCamButtons = ({ cameras, checkCamFn, active, toggle }: WebCamButtonsProps) => {
   if (cameras.length === 0) {
     return (
       <Button variant="default" onClick={checkCamFn}>

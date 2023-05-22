@@ -1,36 +1,24 @@
-import Image from 'next/image';
 import QrScanner from 'qr-scanner';
-import { useCallback, useState, type ChangeEvent } from 'react';
+import { useCallback, useState } from 'react';
 
-import { InputFile } from '~/components/InputFile';
+import DragAndDrop from './DragAndDrop';
 
 const ScanWithFile = () => {
-  const [im, setIm] = useState<string>('');
-  const [data, setData] = useState<string>('data will be here');
+  const [data, setData] = useState<string>('initial data');
 
-  const handleImageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const f = event.target.files?.[0];
-    if (!f) return; // todo throw error or smth mb
-
+  const onSuccess = useCallback((f: File) => {
     QrScanner.scanImage(f, { returnDetailedScanResult: true })
       .then((result) => setData(result.data))
       .catch((error) => setData(error as string));
-
-    setIm(URL.createObjectURL(f));
   }, []);
 
   return (
-    <>
+    <div className="container flex flex-col items-center gap-6">
       <div className="container max-w-md">
-        <InputFile
-          labelTitle="Select qr code"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+        <DragAndDrop onSuccess={onSuccess} />
       </div>
       {data && <p className="break-all">{data}</p>}
-      {im && <Image src={im} alt="Users qr code" width={128} height={128} />}
-    </>
+    </div>
   );
 };
 
