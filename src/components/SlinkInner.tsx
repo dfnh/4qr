@@ -6,14 +6,17 @@ import { LoadingSpinner2 } from '~/components/Spinner';
 import { useSlinkAtomValue } from '~/store/hooks';
 import { api } from '~/utils/api';
 
-const FormPartOfSlinkPassword = dynamic(() =>
-  import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkPassword)
+const FormPartOfSlinkPassword = dynamic(
+  () => import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkPassword),
+  { ssr: false }
 );
-const FormPartOfSlinkSignature = dynamic(() =>
-  import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkSignature)
+const FormPartOfSlinkSignature = dynamic(
+  () => import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkSignature),
+  { ssr: false }
 );
-const CountDown = dynamic(() =>
-  import('~/components/CountDown').then((c) => c.CountDown)
+const CountDown = dynamic(
+  () => import('~/components/CountDown').then((c) => c.CountDown),
+  { ssr: false }
 );
 
 const disableQuery = {
@@ -53,7 +56,7 @@ const SlinkInner = ({ slink }: SlinkInnerProps) => {
 
   const newInfo = initData?.info ?? data?.info ?? slinkAtom.info;
   const urlInfo = initData?.isUrl || data?.isUrl ? newInfo : undefined;
-  const unsuccess = data?.success === false && !slinkAtom.success;
+  const unsuccess = !!data?.success === false && !slinkAtom.success;
 
   return (
     <>

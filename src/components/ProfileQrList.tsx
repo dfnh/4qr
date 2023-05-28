@@ -12,7 +12,7 @@ import { TooltipWrapper } from './TooltipWrapper';
 const ProfileQrList = () => {
   const router = useRouter();
   const { data: codes, isSuccess } = api.user.getQrList.useQuery(undefined, {
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   if (!isSuccess) {
