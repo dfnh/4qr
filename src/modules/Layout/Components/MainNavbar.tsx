@@ -1,17 +1,20 @@
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-
+import { memo, type HTMLAttributes } from 'react';
 import { cn } from '~/utils/cn';
 
 const Links = [
   { href: '/create', title: 'Create' },
   { href: '/scan', title: 'Scan/file' },
   { href: '/scan/cam', title: 'Scan/camera' },
-];
+] as const;
 
-const MainNavbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => {
+const MainNavbar = memo(({ className, ...props }: HTMLAttributes<HTMLElement>) => {
+  const t = useTranslations('UserNav.MainNav');
+
   return (
     <nav
-      className={cn('flex items-center space-x-3 md:space-x-6 lg:space-x-8', className)}
+      className={cn('flex items-center space-x-2 md:space-x-6 lg:space-x-8', className)}
       {...props}
     >
       <Link href={'/'} className="pl-4 text-2xl font-normal leading-tight">
@@ -23,10 +26,12 @@ const MainNavbar = ({ className, ...props }: React.HTMLAttributes<HTMLElement>) 
           href={l.href}
           className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
         >
-          {l.title}
+          {t(l.title)}
         </Link>
       ))}
     </nav>
   );
-};
-export { MainNavbar };
+});
+MainNavbar.displayName = 'MainNavbar';
+
+export default MainNavbar;

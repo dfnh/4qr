@@ -1,0 +1,257 @@
+{
+  "UserNav": {
+    "MainNav": {
+      "Create": "Создать",
+      "Scan/file": "Скан/файл",
+      "Scan/camera": "Скан/камера"
+    },
+    "ThemeDropdown": {
+      "Change theme": "Изменить тему",
+      "Light": "Светлая",
+      "Dark": "Темная",
+      "System": "Системная"
+    },
+    "Auth": {
+      "UserDropdown": {
+        "Profile": "Профиль",
+        "Log out": "Выйти"
+      },
+      "LoginButton": {
+        "Sign in": "Войти"
+      }
+    }
+  },
+  "404": {
+    "head": {
+      "title": "Страница не найдена"
+    },
+    "title": "Вы нашли секретную страницу",
+    "text": "Возможно, вы допустили ошибку при вводе URL-адреса или что-то пошло не так.",
+    "link": "Перейти на главную страницу"
+  },
+  "HomePage": {
+    "yo": "ку"
+  },
+  "ScanPage": {
+    "title": "сканировать qr-код",
+    "DragAndDrop": {
+      "isDragging": "Отпустите файл",
+      "isNotDragging": "Перетащите файл",
+      "or click to select": "или нажмите чтобы выбрать файл"
+    }
+  },
+  "CamPage": {
+    "title": "сканировать с веб-камерой",
+    "SelectCamera": "выберите камеру",
+    "WebCamButtons": {
+      "give access": "дать доступ",
+      "active": {
+        "stop": "стоп",
+        "start": "старт"
+      }
+    },
+    "toast": {
+      "no webcam": {
+        "title": "Невозможно получить доступ к веб-камере",
+        "description": "Пожалуйста, убедитесь, что доступ к веб-камере включен в настройках вашего браузера"
+      }
+    }
+  },
+  "SignInPage": {
+    "title": "Вход",
+    "SignIn": {
+      "to signup": "У вас нет аккаунта?",
+      "SeparatorWithText": "или",
+      "SignInForm": {
+        "Email": "Email",
+        "Password": "Пароль",
+        "Sign in": "Войти"
+      },
+      "ProviderButton": {
+        "Sign in with": "Войти с {name}"
+      },
+      "toast": {
+        "onError": {
+          "title": "Ошибка",
+          "description": "{error, select, NotFound {Аккаунт пользователя не существует} WrongProvider {Попробуйте войти с помощью другого провайдера:} WrongPassword {Неправильный пароль} NotValidEmail {Email адрес недействителен} other {Что-то пошло не так}}"
+        }
+      },
+      "authErrors": "{error, select, OAuthAccountNotLinked {Электронная почта в аккаунте уже связана, но не с этим провайдером} other {Что-то пошло не так}}"
+    }
+  },
+  "SignUpPage": {
+    "title": "Регистрация",
+    "SignUp": {
+      "to signin": "Уже есть аккаунт!",
+      "SignUpForm": {
+        "Name": "Имя",
+        "Email": "Email",
+        "Password": "Пароль",
+        "Confirm password": "Подтвердите пароль",
+        "Sign up": "Зарегистрироваться",
+        "toast": {
+          "onError": {
+            "title": "Ошибка",
+            "description": "{code, select, FORBIDDEN {Пользователь уже авторизован} CONFLICT {Пользователь с этой электронной почтой уже зарегистрирован} other {Что-то пошло не так}}"
+          },
+          "Sign in error": {
+            "title": "Ошибка при входе"
+          }
+        }
+      }
+    }
+  },
+  "CreateQrPage": {
+    "head": {
+      "title": "Создать qr-код"
+    },
+    "title": "создать qr-код",
+    "CardCreate": {
+      "CardTitle": "Создать qr-код",
+      "Submit": "Создать",
+      "Preview": "Предпросмотр",
+      "FormCreate": {
+        "Data": {
+          "label": "Данные",
+          "placeholder": "данные qr-кода"
+        },
+        "FormSwitchSlink": {
+          "label": "Создать slink",
+          "hoverCardText": "{isAuthed, select, true {Эта функция создает короткую ссылку (slink), которая представляет данные, предоставленные в вашем qr-коде} false {Чтобы создать qr-код с короткой ссылкой вам необходимо войти в аккаунт} other {Ошибка}}"
+        },
+        "FormSwitchSign": {
+          "label": "Подписать данные",
+          "hoverCardText": "{isAuthed, select, true {Ваши данные будут подписаны уникальной парой ключей, которой вы владеете только вы. Это обеспечивает дополнительный уровень безопасности и гарантирует, что ваши данные остаются неизменными} false {Чтобы создать qr-код с подписью вам необходимо войти в аккаунт} other {Ошибка}}"
+        },
+        "GeneratePassword": {
+          "Generate": "Случайный",
+          "label": "Пароль",
+          "placeholder": "укажите или сгенерируйте пароль",
+          "toast": {
+            "sign": {
+              "title": "Вы выбрали `Подписать данные`",
+              "description": "Вы можете использовать только 1 опцию"
+            },
+            "disabled": {
+              "title": "Вы не авторизованы",
+              "description": "Чтобы создать qr-код с паролем вам необходимо войти в аккаунт"
+            }
+          }
+        },
+        "Options": {
+          "Main options": "Основные",
+          "Dots options": "Точки",
+          "Corners square options": "Углы",
+          "Corners dot options": "Угловые точки",
+          "Background options": "Фон",
+          "Image options": "Изображение",
+          "Qr options": "QR-код",
+          "Width": {
+            "label": "Ширина",
+            "placeholder": "ширина"
+          },
+          "Height": {
+            "label": "Длина",
+            "placeholder": "длина"
+          },
+          "Margin": {
+            "label": "Отступ",
+            "placeholder": "отступ"
+          },
+          "InputFile": {
+            "label": "Лого",
+            "Cancel": "Отменить"
+          },
+          "ErrorLevel": {
+            "label": "Избыточность",
+            "placeholder": "уровень"
+          },
+          "QrMode": {
+            "label": "Кодировка",
+            "placeholder": "кодировка"
+          },
+          "CornerSquare": {
+            "label": "Угловые квадраты",
+            "placeholder": "Угловые квадраты"
+          },
+          "CornerDots": {
+            "label": "Точки угловых квадратов",
+            "placeholder": "точки угловых квадратов"
+          },
+          "Dots": {
+            "label": "Основные точки",
+            "placeholder": "основные точки"
+          },
+          "ColorChange": {
+            "label": "Типы цвета",
+            "single": "Одиночный",
+            "gradient": "Градиент"
+          },
+          "Gradient": {
+            "radio": {
+              "label": "Тип градиента",
+              "linear": "линейный",
+              "radial": "радиальный"
+            },
+            "Rotation": "Поворот",
+            "Colors": "Цвета",
+            "clear": "очистить"
+          },
+          "Single": {
+            "Color": "Цвет",
+            "Clear": "Очистить"
+          }
+        }
+      }
+    },
+    "DisplayQrCode": {
+      "Download": "Скачать",
+      "Your qr code": "Ваш qr-код",
+      "DisplayKeys": {
+        "Your keys": "Ваши ключи",
+        "Public key": "Публичный ключ",
+        "Private key": "Приватный ключ",
+        "Download Json": "Скачать Json",
+        "displayKeysHoverCardText": "Это ваша пара ключей (публичный и приватный). Ваш приватный ключ используется один раз - для подписи данных, которые вы ввели в QR-код. Это означает, что данные являются безопасными и могут быть проверены только тем, кто имеет соответствующий открытый ключ. Если кто-то попытается подделать данные или изменить QR-код, подпись не будет совпадать, и будет ясно, что данные были изменены."
+      }
+    }
+  },
+  "ProfilePage": {
+    "title": "{user, select, user {ваши} other {{user}}} qr-коды"
+  },
+  "ProfileCodePage": {
+    "head": {
+      "title": "Статистика кода - {code}"
+    },
+    "slink": "slink",
+    "data": "данные",
+    "delete this code": "удалить код",
+    "visited total": "всего посещений"
+  },
+  "SSlinkPage": {
+    "SlinkInner": {
+      "data": "данные",
+      "error": {
+        "title": "произошла ошибка: {error}"
+      }
+    },
+    "CountDown": {
+      "Go now": "Перейти",
+      "You will be redirected in": "Вы будете переадресованы через {count, number}"
+    },
+    "WithPassword": {
+      "Password": "Пароль",
+      "Send": "Отправить",
+      "error": {
+        "Wrong password": "Неправильный пароль"
+      }
+    },
+    "WithSignature": {
+      "Public key": "Публичный ключ",
+      "Send": "Отправить",
+      "error": {
+        "Wrong public key": "Неправильный публичный ключ"
+      }
+    }
+  }
+}

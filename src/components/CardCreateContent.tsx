@@ -14,11 +14,13 @@ import { CardContent, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
 import { nanoid } from '~/utils/nanoid';
 import FormCreate from './FormCreate';
+import { useTranslations } from 'next-intl';
 
 const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
 const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
+  const t = useTranslations('CreateQrPage.CardCreate');
   const { status } = useSession();
   const methods = useForm<QrFullSchema>({
     resolver: zodResolver(schema),
@@ -51,10 +53,9 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
       if (status === 'authenticated' && values.createCode) {
-        // console.log(values);
-
         let slink: string | undefined = undefined; // const link: string | undefined = undefined;
         const initData = values.data;
+        values.data = values.utf8;
         if (values.slink) {
           const slinkResult = await generateSlink();
           slink = slinkResult.slink; // link = slinkResult.link;
@@ -64,7 +65,7 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
         }
         // eslint-disable-next-line
         // @ts-ignore
-        qrCode.update({ ...values, data: values.utf8 });
+        qrCode.update({ ...values });
         const blob = await qrCode.getRawData('webp');
         if (!blob) return;
 
@@ -77,6 +78,7 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
           image64: image64,
           slink: slink,
         });
+        scrollIntoView?.();
         return;
       }
 
@@ -120,10 +122,10 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
               type="submit"
               onClick={methods.handleSubmit(handleSubmitData)}
             >
-              Submit
+              {t('Submit')}
             </Button>
             <Button type="button" onClick={handlePreviewData}>
-              Preview
+              {t('Preview')}
             </Button>
           </span>
         </CardFooter>

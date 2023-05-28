@@ -8,8 +8,10 @@ import { useSignInLoadingAtom } from '~/store/auth';
 import { Button } from '~/ui/button';
 import { api } from '~/utils/api';
 import InputWithLabel from './InputWithLabel';
+import { useTranslations } from 'next-intl';
 
 const SignUp = () => {
+  const t = useTranslations('SignUpPage.SignUp');
   const {
     query: { callbackUrl },
   } = useRouter();
@@ -19,29 +21,30 @@ const SignUp = () => {
       <SignUpForm callbackUrl={callbackUrl as string} />
 
       <Link href="/auth/signin" className="text-center text-sm font-medium leading-none">
-        Already have an account?
+        {t('to signin')}
       </Link>
     </div>
   );
 };
 
 const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
+  const t = useTranslations('SignUpPage.SignUp.SignUpForm');
   const methods = useZodForm({
     schema: signUpSchema,
     mode: 'onChange',
   });
-
   const { push } = useRouter();
-  const [loading, setLoading] = useSignInLoadingAtom();
   const { toast } = useToast();
+  const [loading, setLoading] = useSignInLoadingAtom();
 
   const { mutate } = api.user.signUp.useMutation({
     onError(error) {
       setLoading(false);
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: error.message,
+        title: t('toast.onError.title'),
+        description: t(`toast.onError.description`, { code: error.data?.code }),
+        // description: error.message,
       });
     },
     onMutate() {
@@ -60,14 +63,13 @@ const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
       } else {
         toast({
           variant: 'destructive',
-          title: 'Sign in error',
+          title: t('toast.Sign in error.title'),
           description: result?.error ?? 'Something went wrong',
         });
         setLoading(false);
       }
     },
   });
-
   const onSubmit = (data: SignUpSchema) => {
     mutate(data);
   };
@@ -79,34 +81,34 @@ const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
     >
       <InputWithLabel
         id="name"
-        labelText="Name"
+        labelText={t('Name')}
         type="text"
         register={methods.register('name')}
         error={methods.formState.errors?.name?.message}
       />
       <InputWithLabel
         id="email"
-        labelText="Email"
+        labelText={t('Email')}
         type="email"
         register={methods.register('email')}
         error={methods.formState.errors?.email?.message}
       />
       <InputWithLabel
         id="password"
-        labelText="Password"
+        labelText={t('Password')}
         type="password"
         register={methods.register('password')}
         error={methods.formState.errors?.password?.message}
       />
       <InputWithLabel
         id="confirmPassword"
-        labelText="Confirm password"
+        labelText={t('Confirm password')}
         type="password"
         register={methods.register('confirmPassword')}
         error={methods.formState.errors?.confirmPassword?.message}
       />
       <Button variant="secondary" type="submit" disabled={loading}>
-        Sign up
+        {t('Sign up')}
       </Button>
     </form>
   );

@@ -7,19 +7,26 @@ import {
   useState,
   type ChangeEvent,
 } from 'react';
-import { Controller, useFormContext, type UseFormRegisterReturn } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { type QrFullSchema } from '~/schemas/QRCodeStyling';
 import type { GetTypeOfConst } from '~/typescript';
 import { Button } from '~/ui/button';
-import { Input, type InputProps } from '~/ui/input';
+import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
 import { Switch } from '~/ui/switch';
 import { CollapsibleWrapper } from './CollapsibleWrapper';
-import { RadioGroup, RadioItem } from './RadioItem';
-import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
 import InputWithLabel from './InputWithLabel';
+import { RadioGroup, RadioItem } from './RadioItem';
+import {
+  SelectItem,
+  SelectWrapper,
+  type OnSelectType,
+  type SelectWrapperProps,
+} from './SelectWrapper';
+import { useTranslations } from 'next-intl';
 
 const FormCreateOptions = () => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options');
   const {
     register,
     formState: { errors },
@@ -27,29 +34,29 @@ const FormCreateOptions = () => {
 
   return (
     <>
-      <CollapsibleWrapper title="Main options" className="grid gap-2" defaultIsOpen>
+      <CollapsibleWrapper title={t('Main options')} className="grid gap-2" defaultIsOpen>
         <InputWithLabel
-          labelText="Width"
           id="width"
-          placeholder="width"
+          labelText={t('Width.label')}
+          placeholder={t('Width.placeholder')}
           type="number"
           register={register('width', { value: 300, valueAsNumber: true })}
           error={errors.width?.message}
         />
 
         <InputWithLabel
-          labelText="Height"
           id="height"
-          placeholder="height"
+          labelText={t('Height.label')}
+          placeholder={t('Height.placeholder')}
           type="number"
           register={register('height', { value: 300, valueAsNumber: true })}
           error={errors.height?.message}
         />
 
         <InputWithLabel
-          labelText="Margin"
           id="margin"
-          placeholder="margin"
+          labelText={t('Margin.label')}
+          placeholder={t('Margin.placeholder')}
           type="number"
           register={register('margin', { value: 0, valueAsNumber: true })}
           error={errors.margin?.message}
@@ -58,26 +65,26 @@ const FormCreateOptions = () => {
         <FormInputFileImage />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Dots options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Dots options')} className="grid gap-2">
         <SelectDots />
         <FormColorTypeChange name="dotsOptions" />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Corners square options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Corners square options')} className="grid gap-2">
         <SelectCornerSquare />
         <FormColorTypeChange name="cornersSquareOptions" />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Corners dot options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Corners dot options')} className="grid gap-2">
         <SelectCornerDots />
         <FormColorTypeChange name="cornersDotOptions" />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Background options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Background options')} className="grid gap-2">
         <FormColorTypeChange name="backgroundOptions" />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Image options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Image options')} className="grid gap-2">
         <FormSwitch name="imageOptions.hideBackgroundDots" label="Hide background dots" />
 
         <InputWithLabel
@@ -102,7 +109,7 @@ const FormCreateOptions = () => {
         />
       </CollapsibleWrapper>
 
-      <CollapsibleWrapper title="Qr options" className="grid gap-2">
+      <CollapsibleWrapper title={t('Qr options')} className="grid gap-2">
         <InputWithLabel
           labelText="Version"
           id="qrOptions.typeNumber"
@@ -120,6 +127,7 @@ const FormCreateOptions = () => {
 };
 
 const FormInputFileImage = () => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.InputFile');
   const { register, resetField, setValue } = useFormContext<QrFullSchema>();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -132,7 +140,6 @@ const FormInputFileImage = () => {
     if (!inputRef.current) return;
     inputRef.current.value = '';
   };
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -142,7 +149,7 @@ const FormInputFileImage = () => {
 
   return (
     <>
-      <Label htmlFor="imageLogo">Logo</Label>
+      <Label htmlFor="imageLogo">{t('label')}</Label>
       <div className="flex w-full items-center space-x-2">
         <Input
           id="imageLogo"
@@ -153,19 +160,45 @@ const FormInputFileImage = () => {
           ref={inputRef}
         />
         <Button type="button" variant="default" onClick={resetFile}>
-          Cancel
+          {t('Cancel')}
         </Button>
       </div>
     </>
   );
 };
 
+type FormSelectOptions = { label: string } & FormSelectTypeItemsProps &
+  Required<
+    Pick<SelectWrapperProps, 'placeholder' | 'defaultValue' | 'onSelected' | 'name'>
+  > &
+  Pick<SelectWrapperProps, 'className'>;
+const FormSelectOptions = memo((props: FormSelectOptions) => {
+  return (
+    <>
+      <Label>{props.label}</Label>
+      <SelectWrapper
+        placeholder={props.placeholder}
+        defaultValue={props.defaultValue}
+        onSelected={props.onSelected}
+        name={props.name}
+        className={props.className}
+      >
+        <FormSelectTypeItems type={props.type} />
+      </SelectWrapper>
+    </>
+  );
+});
+FormSelectOptions.displayName = 'FormSelectOptions';
+
 const errorCorrectionLevel = ['L', 'M', 'Q', 'H'] as const;
 type ErrorCorrectionLevel = GetTypeOfConst<typeof errorCorrectionLevel>;
-
 const SelectErrorLevel = memo(() => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.ErrorLevel');
   const { register, setValue: sv } = useFormContext<QrFullSchema>();
 
+  useEffect(() => {
+    register('qrOptions.errorCorrectionLevel');
+  }, [register]);
   const onSelect = useCallback(
     (id: ErrorCorrectionLevel) => {
       sv('qrOptions.errorCorrectionLevel', id);
@@ -173,33 +206,29 @@ const SelectErrorLevel = memo(() => {
     [sv]
   );
 
-  useMemo(() => {
-    register('qrOptions.errorCorrectionLevel');
-  }, [register]);
-
   return (
-    <>
-      <Label>Correction Level</Label>
-      <SelectWrapper
-        placeholder="mode"
-        defaultValue={errorCorrectionLevel['2']}
-        onSelected={onSelect as OnSelectType}
-        name={'qrOptions.errorCorrectionLevel'}
-        className="w-full"
-      >
-        <FormSelectTypeItems type={errorCorrectionLevel} />
-      </SelectWrapper>
-    </>
+    <FormSelectOptions
+      label={t('label')}
+      placeholder={t('placeholder')}
+      defaultValue={errorCorrectionLevel['2']}
+      onSelected={onSelect as OnSelectType}
+      name={'qrOptions.errorCorrectionLevel'}
+      className="w-full"
+      type={errorCorrectionLevel}
+    />
   );
 });
 SelectErrorLevel.displayName = 'SelectErrorLevel';
 
 const qrMode = ['Numeric', 'Alphanumeric', 'Byte', 'Kanji'] as const;
 type QrMode = GetTypeOfConst<typeof qrMode>;
-
 const SelectQrMode = memo(() => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.QrMode');
   const { register, setValue: sv } = useFormContext<QrFullSchema>();
 
+  useEffect(() => {
+    register('qrOptions.mode');
+  }, [register]);
   const onSelect = useCallback(
     (id: QrMode) => {
       sv('qrOptions.mode', id);
@@ -207,33 +236,29 @@ const SelectQrMode = memo(() => {
     [sv]
   );
 
-  useMemo(() => {
-    register('qrOptions.mode');
-  }, [register]);
-
   return (
-    <>
-      <Label>Mode</Label>
-      <SelectWrapper
-        placeholder="mode"
-        defaultValue={qrMode['2']}
-        onSelected={onSelect as OnSelectType}
-        name={'qrOptions.mode'}
-        className="w-full"
-      >
-        <FormSelectTypeItems type={qrMode} />
-      </SelectWrapper>
-    </>
+    <FormSelectOptions
+      label={t('label')}
+      placeholder={t('placeholder')}
+      defaultValue={qrMode['2']}
+      onSelected={onSelect as OnSelectType}
+      name={'qrOptions.mode'}
+      className="w-full"
+      type={qrMode}
+    />
   );
 });
 SelectQrMode.displayName = 'SelectQrMode';
 
 const cornerSquareTypes = ['dot', 'square', 'extra-rounded', 'none'] as const;
 type CornerSquareTypes = GetTypeOfConst<typeof cornerSquareTypes>;
-
 const SelectCornerSquare = memo(() => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.CornerSquare');
   const { register, setValue: sv } = useFormContext<QrFullSchema>();
 
+  useEffect(() => {
+    register('cornersSquareOptions.type');
+  }, [register]);
   const onSelect = useCallback(
     (id: CornerSquareTypes) => {
       const t = id === 'none' ? undefined : id;
@@ -242,33 +267,29 @@ const SelectCornerSquare = memo(() => {
     [sv]
   );
 
-  useMemo(() => {
-    register('cornersSquareOptions.type');
-  }, [register]);
-
   return (
-    <>
-      <Label>Corner square style</Label>
-      <SelectWrapper
-        placeholder="corner dot style"
-        defaultValue={cornerSquareTypes['3']}
-        onSelected={onSelect as OnSelectType}
-        name={'cornersSquareOptions.type'}
-        className="w-full"
-      >
-        <FormSelectTypeItems type={cornerSquareTypes} />
-      </SelectWrapper>
-    </>
+    <FormSelectOptions
+      label={t('label')}
+      placeholder={t('placeholder')}
+      defaultValue={cornerSquareTypes['3']}
+      onSelected={onSelect as OnSelectType}
+      name={'cornersSquareOptions.type'}
+      className="w-full"
+      type={cornerSquareTypes}
+    />
   );
 });
 SelectCornerSquare.displayName = 'SelectCornerSquare';
 
 const cornerDotTypes = ['dot', 'square', 'none'] as const;
 type CornerDotTypes = GetTypeOfConst<typeof cornerDotTypes>;
-
 const SelectCornerDots = memo(() => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.CornerDots');
   const { register, setValue: sv } = useFormContext<QrFullSchema>();
 
+  useEffect(() => {
+    register('cornersDotOptions.type');
+  }, [register]);
   const onSelect = useCallback(
     (id: CornerDotTypes) => {
       const t = id === 'none' ? undefined : id;
@@ -277,40 +298,34 @@ const SelectCornerDots = memo(() => {
     [sv]
   );
 
-  useMemo(() => {
-    register('cornersDotOptions.type');
-  }, [register]);
-
   return (
-    <>
-      <Label>Corner dot style</Label>
-      <SelectWrapper
-        placeholder="corner dot style"
-        defaultValue={cornerDotTypes['2']}
-        onSelected={onSelect as OnSelectType}
-        name={'cornersDotOptions.type'}
-        className="w-full"
-      >
-        <FormSelectTypeItems type={cornerDotTypes} />
-      </SelectWrapper>
-    </>
+    <FormSelectOptions
+      label={t('label')}
+      placeholder={t('placeholder')}
+      defaultValue={cornerDotTypes['2']}
+      onSelected={onSelect as OnSelectType}
+      name={'cornersDotOptions.type'}
+      className="w-full"
+      type={cornerDotTypes}
+    />
   );
 });
 SelectCornerDots.displayName = 'SelectCornerDots';
 
-const FormSelectTypeItems = memo(
-  ({ type }: { type: [string, ...string[]] | Readonly<[string, ...string[]]> }) => {
-    return (
-      <>
-        {type.map((d) => (
-          <SelectItem key={d} value={d}>
-            {d}
-          </SelectItem>
-        ))}
-      </>
-    );
-  }
-);
+type FormSelectTypeItemsProps = {
+  type: [string, ...string[]] | Readonly<[string, ...string[]]>;
+};
+const FormSelectTypeItems = memo(({ type }: FormSelectTypeItemsProps) => {
+  return (
+    <>
+      {type.map((d) => (
+        <SelectItem key={d} value={d}>
+          {d}
+        </SelectItem>
+      ))}
+    </>
+  );
+});
 FormSelectTypeItems.displayName = 'FormSelectTypeItems';
 
 const dotTypes = [
@@ -322,10 +337,13 @@ const dotTypes = [
   'extra-rounded',
 ] as const;
 type DotTypes = GetTypeOfConst<typeof dotTypes>;
-
 export const SelectDots = memo(() => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.Dots');
   const { register, setValue: sv } = useFormContext<QrFullSchema>();
 
+  useEffect(() => {
+    register('dotsOptions.type');
+  }, [register]);
   const onSelect = useCallback(
     (id: DotTypes) => {
       sv('dotsOptions.type', id);
@@ -333,28 +351,22 @@ export const SelectDots = memo(() => {
     [sv]
   );
 
-  useMemo(() => {
-    register('dotsOptions.type');
-  }, [register]);
-
   return (
-    <>
-      <Label>Dots style</Label>
-      <SelectWrapper
-        placeholder="dot style"
-        defaultValue={dotTypes['4']}
-        onSelected={onSelect as OnSelectType}
-        name={'dotsOptions.type'}
-        className="w-full"
-      >
-        <FormSelectTypeItems type={dotTypes} />
-      </SelectWrapper>
-    </>
+    <FormSelectOptions
+      label={t('label')}
+      placeholder={t('placeholder')}
+      defaultValue={dotTypes['4']}
+      onSelected={onSelect as OnSelectType}
+      name={'dotsOptions.type'}
+      className="w-full"
+      type={dotTypes}
+    />
   );
 });
 SelectDots.displayName = 'SelectDots';
 
 const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options');
   const { setValue } = useFormContext<QrFullSchema>();
   const [single, setSingle] = useState(true);
 
@@ -376,15 +388,29 @@ const FormColorTypeChange = ({ name }: { name: FieldsWithColor }) => {
         defaultValue="single"
         className="my-1 flex space-x-2"
       >
-        <Label>Color Type</Label>
-        <RadioItem id={`${name}.colorType.single`} value="single" label="Single color" />
-        <RadioItem
-          id={`${name}.colorType.gradient`}
-          value="gradient"
-          label="Color gradient"
-        />
+        <Label>{t('ColorChange.label')}</Label>
+        <div className="flex flex-wrap gap-2">
+          <RadioItem
+            id={`${name}.colorType.single`}
+            value="single"
+            label={t('ColorChange.single')}
+          />
+          <RadioItem
+            id={`${name}.colorType.gradient`}
+            value="gradient"
+            label={t('ColorChange.gradient')}
+          />
+        </div>
       </RadioGroup>
-      {single ? <FormColorSingle name={name} /> : <FormColorGradient name={name} />}
+      {single ? (
+        <FormColorSingle
+          label={t('Single.Color')}
+          clear={t('Single.Clear')}
+          name={name}
+        />
+      ) : (
+        <FormColorGradient name={name} />
+      )}
     </>
   );
 };
@@ -399,26 +425,22 @@ const fieldsWithColor = [
   'cornersSquareOptions',
   'backgroundOptions',
 ] as const;
-type FieldsWithColor = GetTypeOfConst<typeof fieldsWithColor>;
-
 type GradientType = 'radial' | 'linear';
-
+type FieldsWithColor = GetTypeOfConst<typeof fieldsWithColor>;
 const FormColorGradient = memo(({ name }: { name: FieldsWithColor }) => {
+  const t = useTranslations('CreateQrPage.CardCreate.FormCreate.Options.Gradient');
   const { register, setValue, resetField } = useFormContext<QrFullSchema>();
-
   const Name = useMemo(() => name, [name]);
 
   useEffect(() => {
     register(`${Name}.gradient.type`, { value: 'linear' });
   }, [Name, register]);
-
   const onValueChange = useCallback(
     (value: GradientType) => {
       setValue(`${Name}.gradient.type`, value);
     },
     [Name, setValue]
   );
-
   const onClickClear = useCallback(() => {
     resetField(`${Name}.gradient.colorStops.0.color`);
     resetField(`${Name}.gradient.colorStops.1.color`);
@@ -432,20 +454,30 @@ const FormColorGradient = memo(({ name }: { name: FieldsWithColor }) => {
         onValueChange={onValueChange}
         className="my-1 flex space-x-2"
       >
-        <Label htmlFor={`${Name}.gradient`}>Gradient type</Label>
-        <RadioItem id={`${Name}.gradient.linear`} value="linear" />
-        <RadioItem id={`${Name}.gradient.radial`} value="radial" />
+        <Label htmlFor={`${Name}.gradient`}>{t('radio.label')}</Label>
+        <div className="flex flex-wrap gap-2">
+          <RadioItem
+            id={`${Name}.gradient.linear`}
+            value="linear"
+            label={t('radio.linear')}
+          />
+          <RadioItem
+            id={`${Name}.gradient.radial`}
+            value="radial"
+            label={t('radio.radial')}
+          />
+        </div>
       </RadioGroup>
-      <Label htmlFor={`${Name}.gradient.rotation`}>Rotation</Label>
+      <Label htmlFor={`${Name}.gradient.rotation`}>{t('Rotation')}</Label>
       <Input
         id={`${Name}.gradient.rotation`}
         type="number"
         defaultValue={0}
         {...register(`${Name}.gradient.rotation`, { value: 0, valueAsNumber: true })}
       />
-      <Label>Colors</Label>
+      <Label>{t('Colors')}</Label>
       <div className="flex justify-start">
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           <Input
             id={`${Name}.color`}
             type="color"
@@ -460,7 +492,7 @@ const FormColorGradient = memo(({ name }: { name: FieldsWithColor }) => {
           />
         </div>
         <Button type="button" className="ml-auto" onClick={onClickClear}>
-          clear
+          {t('clear')}
         </Button>
       </div>
     </>
@@ -468,9 +500,13 @@ const FormColorGradient = memo(({ name }: { name: FieldsWithColor }) => {
 });
 FormColorGradient.displayName = 'FormColorGradient';
 
-const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
+type FormColorSingleProps = {
+  name: FieldsWithColor;
+  label: string;
+  clear: string;
+};
+const FormColorSingle = ({ name, label, clear }: FormColorSingleProps) => {
   const { register, setValue } = useFormContext<QrFullSchema>();
-
   const onClickClear = () => {
     setValue(`${name}.color`, undefined);
   };
@@ -478,7 +514,7 @@ const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
   return (
     <div className="flex justify-start">
       <span>
-        <Label htmlFor={`${name}.color`}>Color</Label>
+        <Label htmlFor={`${name}.color`}>{label}</Label>
         <Input
           id={`${name}.color`}
           type="color"
@@ -489,7 +525,7 @@ const FormColorSingle = ({ name }: { name: FieldsWithColor }) => {
         />
       </span>
       <Button type="button" className="ml-auto self-end" onClick={onClickClear}>
-        Clear
+        {clear}
       </Button>
     </div>
   );

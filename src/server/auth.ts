@@ -63,7 +63,7 @@ export const authOptions: NextAuthOptions = {
 
         try {
           if (!isEmail(email)) {
-            throw new Error('Email is not a valid email address');
+            throw new Error('NotValidEmail'); //Email is not a valid email address
           }
           const user = await prisma.user.findUnique({
             where: { email: email },
@@ -71,16 +71,17 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) {
-            throw new Error('User account does not exist');
+            throw new Error('NotFound'); //User account does not exist
           }
           if (!user.password) {
             const accounts = user.accounts.map((a) => a.provider).join(', ');
-            throw new Error(`Try to sign in with different provider: ${accounts}`);
+            throw new Error(`WrongProvider: ${accounts}`);
+            // throw new Error(`Try to sign in with different provider: ${accounts}`);
           }
 
           const isMatch = await verifyPassword(password, user.password);
           if (!isMatch) {
-            throw new Error('Password is wrong');
+            throw new Error('WrongPassword'); //Password is wrong
           }
 
           return {

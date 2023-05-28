@@ -40,17 +40,19 @@ const LoadingPageSpinnerCore = () => {
 export const LoadingPage = memo(LoadingPageSpinnerCore);
 
 import { Loader2Icon } from 'lucide-react';
+import { cn } from '~/utils/cn';
 
-export const LoadingSpinner2 = memo(function LoadingSpinner2(props: { size?: number }) {
+type LoadingSpinner2Props = { size?: number; className?: string };
+export const LoadingSpinner2 = memo(function LoadingSpinner2(
+  props: LoadingSpinner2Props
+) {
   const size = props.size ?? '40';
   return (
-    <>
-      <div className="absolute left-1/2 -translate-x-1/2">
-        <Loader2Icon
-          size={size}
-          className="animate-acid-spin text-cyan-300 ease-linear "
-        />
-      </div>
-    </>
+    <div className={cn('flex justify-center', props.className)}>
+      {/* <div className="absolute left-1/2 -translate-x-1/2"> */}
+      <Loader2Icon size={size} className="animate-acid-spin text-cyan-300 ease-linear" />
+      <span className="sr-only">Loading...</span>
+      {/* </div> */}
+    </div>
   );
 });

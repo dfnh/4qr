@@ -1,14 +1,16 @@
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '~/ui/button';
 
 const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean }) => {
+  const t = useTranslations('SSlinkPage.CountDown');
   const [count, setCount] = useState(5);
   const router = useRouter();
 
   const redirectToUrl = useCallback(() => {
     if (!url) return;
-    void router.replace(url);
+    router.replace(url).catch((e) => console.error(e));
   }, [router, url]);
 
   useEffect(() => {
@@ -24,7 +26,6 @@ const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean 
       if (timer) clearInterval(timer);
     };
   }, [count, disabled]);
-
   useEffect(() => {
     if (count === 0) {
       redirectToUrl();
@@ -32,13 +33,13 @@ const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean 
   }, [count, redirectToUrl]);
 
   if (disabled) {
-    return <Button onClick={redirectToUrl}>Go now</Button>;
+    return <Button onClick={redirectToUrl}>{t('Go now')}</Button>;
   }
 
   return (
     <>
-      <p className="mt-6 leading-7">You will be redirected in {count}</p>
-      <Button onClick={redirectToUrl}>Go now</Button>
+      <p className="mt-6 leading-7">{t('You will be redirected in', { count: count })}</p>
+      <Button onClick={redirectToUrl}>{t('Go now')}</Button>
     </>
   );
 };

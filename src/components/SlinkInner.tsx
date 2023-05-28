@@ -1,74 +1,81 @@
+import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { CountDown } from '~/components/CountDown';
-import {
-  FormPartOfSlinkPassword,
-  FormPartOfSlinkSignature,
-} from '~/components/FormPartOfSlink';
 import { LoadingSpinner2 } from '~/components/Spinner';
 import { useSlinkAtomValue } from '~/store/hooks';
 import { api } from '~/utils/api';
 
-const SlinkInner = () => {
+const FormPartOfSlinkPassword = dynamic(() =>
+  import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkPassword)
+);
+const FormPartOfSlinkSignature = dynamic(() =>
+  import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkSignature)
+);
+const CountDown = dynamic(() =>
+  import('~/components/CountDown').then((c) => c.CountDown)
+);
+
+const disableQuery = {
+  retry: false,
+  staleTime: 86_400_000,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  refetchOnReconnect: false,
+};
+type SlinkInnerProps = { slink: string };
+const SlinkInner = ({ slink }: SlinkInnerProps) => {
+  const t = useTranslations('SSlinkPage.SlinkInner');
   const {
-    query: { slink, p }, //? password as query
+    query: { p }, //? password as query
   } = useRouter();
 
-  const { data, isLoading, error } = api.qr.visitSlink.useQuery(
-    { slink: slink as string, password: p as string | undefined },
-    {
-      enabled: !!slink,
-      retry: false,
-      staleTime: 86_400_000,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
+  const { data: initData, isLoading } = api.qr.getById.useQuery(
+    { slink: slink },
+    { ...disableQuery } // { enabled: !!slink, ...disableQuery }
   );
-
+  const { data, error } = api.qr.visitSlink.useQuery(
+    { slink: slink, password: p as string | undefined },
+    { enabled: !initData?.withInput, ...disableQuery }
+  );
   const slinkAtom = useSlinkAtomValue();
 
   if (error) {
     return (
       <p className="mt-2 flex justify-center text-foreground">
-        nothing here. error: {error.message}
+        {t('error.title', { error: error.message ?? '' })}
       </p>
     );
   }
-
   if (isLoading) {
-    return (
-      <div className=" mt-2 flex flex-col">
-        <LoadingSpinner2 />
-      </div>
-    );
+    return <LoadingSpinner2 className="mt-2" />;
   }
 
-  const newInfo = data?.info ?? slinkAtom.info;
-  const urlInfo = data?.isUrl ? newInfo : undefined;
+  const newInfo = initData?.info ?? data?.info ?? slinkAtom.info;
+  const urlInfo = initData?.isUrl || data?.isUrl ? newInfo : undefined;
   const unsuccess = data?.success === false && !slinkAtom.success;
 
   return (
     <>
       <div className="container flex max-w-lg flex-col gap-3 py-4">
-        {data?.qrUrl && (
+        {initData?.image && (
           <div className="flex justify-center">
             <Image
-              src={data.qrUrl}
-              className="aspect-square w-36 bg-slate-50 p-[2px]"
+              src={initData.image}
+              className="aspect-square w-36 bg-slate-50/80 p-[2px]"
               alt="qrcode"
-              width={144}
-              height={144}
+              width={100}
+              height={100}
             />
           </div>
         )}
-        <p className="break-all leading-7">data: {newInfo || '***'}</p>
+        <p className="break-all leading-7">
+          {t('data')}: {newInfo || '***'}
+        </p>
 
-        {unsuccess && data.password && (
-          <FormPartOfSlinkPassword slink={slink as string} />
-        )}
-        {unsuccess && data?.signature && (
-          <FormPartOfSlinkSignature slink={slink as string} />
+        {unsuccess && initData?.withPassword && <FormPartOfSlinkPassword slink={slink} />}
+        {unsuccess && initData?.withSignature && (
+          <FormPartOfSlinkSignature slink={slink} />
         )}
         {!!urlInfo && <CountDown disabled={data?.signature} url={urlInfo} />}
       </div>
@@ -76,4 +83,4 @@ const SlinkInner = () => {
   );
 };
 
-export { SlinkInner };
+export default SlinkInner;

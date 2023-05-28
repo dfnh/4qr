@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { memo, useEffect, useRef, useState, type DragEvent } from 'react';
 import { type ValueOf } from '~/typescript';
@@ -7,6 +8,7 @@ type OnChange = ValueOf<Pick<InputProps, 'onChange'>>;
 export type DragAndDropProps = { onSuccess?: (file: File) => void };
 
 const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
+  const t = useTranslations('ScanPage.DragAndDrop');
   const [isDragging, setIsDragging] = useState(false);
   const [image, setImage] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +69,7 @@ const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
   return (
     <div onClick={handleDivClick}>
       <input ref={inputRef} hidden type="file" accept="image/*" onChange={handleChange} />
-      <div className="flex h-44 max-h-80 w-full cursor-pointer appearance-none flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 px-4 transition hover:border-gray-400 focus:outline-none">
+      <div className="flex h-44 max-h-80 w-full cursor-pointer appearance-none flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-0 transition hover:border-gray-400 focus:outline-none">
         <div
           className="flex h-full w-full flex-col"
           onDragEnter={handleDragEnter}
@@ -77,9 +79,9 @@ const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
         >
           <div className="pointer-events-none flex h-full w-full select-none flex-col items-center justify-center">
             <p className="text-sm text-muted-foreground">
-              {isDragging ? 'Drop the image file here' : 'Drag and drop image file here'}
+              {isDragging ? t('isDragging') : t('isNotDragging')}
             </p>
-            <p className="text-sm text-muted-foreground">or click to select</p>
+            <p className="text-sm text-muted-foreground">{t('or click to select')}</p>
             {image && (
               <Image
                 className="mt-2 h-20 w-fit"

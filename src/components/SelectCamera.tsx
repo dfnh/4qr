@@ -5,12 +5,13 @@ import { SelectItem, SelectWrapper } from './SelectWrapper';
 export type SelectCameraProps = {
   cameras: QrScanner.Camera[];
   onSelected: (id: string) => void;
+  placeholder?: string;
 };
 
-const SelectCamera = memo(({ cameras, onSelected }: SelectCameraProps) => {
+const SelectCamera = memo(({ cameras, placeholder, onSelected }: SelectCameraProps) => {
   return (
     <SelectWrapper
-      placeholder="Select camera"
+      placeholder={placeholder || 'Select Camera'}
       disabled={cameras.length === 0}
       onSelected={onSelected}
       className="w-72 max-w-md"

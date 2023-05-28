@@ -11,9 +11,8 @@ import { api } from '~/utils/api';
 
 // import PieChart, { createDataForPie } from '~/components/PieChart';
 import { createDataForPie } from '~/helpers/createDataForPie';
-const PieChart = dynamic(() => import('~/components/PieChart'), {
-  ssr: false,
-});
+import { useTranslations } from 'next-intl';
+const PieChart = dynamic(() => import('~/components/PieChart'), { ssr: false });
 
 // type ProfileCodeSlinkPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 const ProfileCodeSlinkPage = () => {
@@ -29,8 +28,10 @@ const ProfileCodeSlinkPage = () => {
 export default ProfileCodeSlinkPage;
 
 const ProfileCodeSlinkView = () => {
+  const t = useTranslations('ProfileCodePage');
   const {
     replace,
+    locale,
     query: { slink },
   } = useRouter();
   const { data: code } = api.user.getQrStats.useQuery(
@@ -45,7 +46,7 @@ const ProfileCodeSlinkView = () => {
       console.error(error);
     },
     onSuccess() {
-      void replace('/profile');
+      void replace(`${locale ? `/${locale}` : ''}/profile`);
     },
   });
 
@@ -76,16 +77,22 @@ const ProfileCodeSlinkView = () => {
   return (
     <>
       <Head>
-        <title>Code statistics - {code?.shorturl}</title>
+        <title>{t('head.title', { code: code?.shorturl ?? '' })}</title>
       </Head>
       <div className="container flex max-w-md flex-col gap-2">
-        <p>slink: {code?.shorturl}</p>
-        <p>data: {code?.info}</p>
+        <p>
+          {t('slink')}: {code?.shorturl}
+        </p>
+        <p>
+          {t('data')}: {code?.info}
+        </p>
         <Button variant="destructive" size="sm" onClick={onDelete} disabled={isLoading}>
-          delete this code
+          {t('delete this code')}
         </Button>
         <Separator className="my-2" />
-        <p>visited total: {code?.CodeStatistic.length}</p>
+        <p>
+          {t('visited total')}: {code?.CodeStatistic.length}
+        </p>
         {data && (
           <div className="container">
             <PieChart data={data} />
@@ -98,13 +105,17 @@ const ProfileCodeSlinkView = () => {
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(context);
+  const locale = context.locale ? `/${context.locale}` : '';
   if (!session) {
     return {
       redirect: {
-        destination: `/auth/signin?callbackUrl=${getBaseUrl('/profile')}`,
+        destination: `${locale}/auth/signin?callbackUrl=${getBaseUrl(
+          `${locale}/profile`
+        )}`,
         permanent: false,
       },
     };
   }
-  return { props: { user: session.user } };
+  const messages = await (await import('~/utils/nextIntl')).default(context);
+  return { props: { user: session.user, messages: messages } };
 };

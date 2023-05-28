@@ -1,30 +1,27 @@
-import { useAtom, useAtomValue } from 'jotai';
-import React, { useEffect, useRef, useState } from 'react';
-import { da } from '~/store/atoms';
-
+import { useAtomValue } from 'jotai';
+import { Download } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { type FileExtension } from 'qr-code-styling';
+import { useEffect, useRef, useState } from 'react';
+import { Info } from '~/components/icons';
 import { copyToClipboard } from '~/helpers/copyToClipboard';
 import { exportJson } from '~/helpers/exportJson';
 import { useToast } from '~/hooks/useToast';
+import { da } from '~/store/atoms';
 import { useKeysAtomValue, useSlinkNewAtomValue } from '~/store/hooks';
 import { qrCodeAtom } from '~/store/qrAtom';
+import { Button } from '~/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/card';
 import { Label } from '~/ui/label';
-import HoverCardWrapper from './HoverCardWrapper';
-import { Info } from '~/components/icons';
-import { CopyButton } from './CopyButton';
-
-import { Button } from '~/ui/button';
-
 import { Separator } from '~/ui/separator';
-import { Download } from 'lucide-react';
-import { type OnSelectType, SelectItem, SelectWrapper } from './SelectWrapper';
+import { CopyButton } from './CopyButton';
+import HoverCardWrapper from './HoverCardWrapper';
+import { SelectItem, SelectWrapper, type OnSelectType } from './SelectWrapper';
 
 const DisplayQrCode = () => {
   const qrCode = useAtomValue(qrCodeAtom);
   const { toast } = useToast();
   const daAtom = useAtomValue(da);
-
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,10 +62,7 @@ const DisplayQrCode = () => {
           />
         </div>
       </div>
-      <div>
-        <SelectExtension onDownload={onDownloadClick} />
-      </div>
-
+      <SelectExtension onDownload={onDownloadClick} />
       <DisplayKeys />
     </>
   );
@@ -76,14 +70,13 @@ const DisplayQrCode = () => {
 
 const fileExtensions = ['svg', 'png', 'jpeg', 'webp'] as const;
 type SelectExtensionProps = { onDownload: (ext: FileExtension) => void };
-
 const SelectExtension = ({ onDownload }: SelectExtensionProps) => {
+  const t = useTranslations('CreateQrPage.DisplayQrCode');
   const [fileExt, setFileExt] = useState<FileExtension>('webp');
 
   const onClick = () => {
     onDownload(fileExt);
   };
-
   const onSelected: OnSelectType = (v) => {
     setFileExt(v as FileExtension);
   };
@@ -91,9 +84,13 @@ const SelectExtension = ({ onDownload }: SelectExtensionProps) => {
   return (
     <>
       <div className="flex items-center rounded-md border bg-secondary text-secondary-foreground">
-        <Button variant="secondary" className="px-3" onClick={onClick}>
+        <Button
+          variant="secondary"
+          className="px-3 text-sm tracking-tight"
+          onClick={onClick}
+        >
           <Download className="mr-2 h-4 w-4" />
-          Download
+          {t('Download')}
         </Button>
         <Separator orientation="vertical" className="h-[20px]" />
         <SelectWrapper
@@ -114,10 +111,12 @@ const SelectExtension = ({ onDownload }: SelectExtensionProps) => {
 };
 
 const DisplayQrNew = () => {
+  const t = useTranslations('CreateQrPage.DisplayQrCode');
+
   return (
     <Card className="top-0 border-ring bg-slate-500/5 text-foreground dark:bg-foreground/5 md:sticky">
       <CardHeader>
-        <CardTitle>Your qr code</CardTitle>
+        <CardTitle>{t('Your qr code')}</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center px-2">
         <div className="flex flex-col items-center gap-2">
@@ -128,12 +127,8 @@ const DisplayQrNew = () => {
   );
 };
 
-const displayKeysHoverCardText = `
-These keys are your public and private keys, they are like your secret code that only you should know.
-Your private key is used to sign the data that you inputted into the QR code. This means that the data is secure and can only be verified by someone who has the corresponding public key. If someone tries to tamper with the data or create a fake QR code, the signature will not match, and it will be clear that the data has been modified
-`;
-
 const DisplayKeys = () => {
+  const t = useTranslations('CreateQrPage.DisplayQrCode.DisplayKeys');
   const keysAtom = useKeysAtomValue();
   const slink = useSlinkNewAtomValue();
 
@@ -152,11 +147,11 @@ const DisplayKeys = () => {
       <Card className="w-full border-inherit bg-inherit text-inherit ">
         <CardHeader>
           <CardTitle className="flex items-center justify-center gap-2">
-            Your keys
+            {t('Your keys')}
             <HoverCardWrapper
               className="text-sm"
               openDelay={300}
-              hoverCardText={displayKeysHoverCardText}
+              hoverCardText={t('displayKeysHoverCardText')}
             >
               <Info />
             </HoverCardWrapper>
@@ -164,12 +159,12 @@ const DisplayKeys = () => {
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-2 px-2">
           <div className="flex items-center gap-2">
-            <Label>Public key: </Label>
+            <Label>{t('Public key')}: </Label>
             <Label>***</Label>
             <CopyButton onClick={handleCopy(keysAtom.publicKey)} />
           </div>
           <div className="flex items-center gap-2">
-            <Label>Private key: </Label>
+            <Label>{t('Private key')}: </Label>
             <Label>***</Label>
             <CopyButton onClick={handleCopy(keysAtom.privateKey)} />
           </div>
@@ -179,7 +174,7 @@ const DisplayKeys = () => {
             download={`key-pair-${slink}.json`}
             className="hover:animate-hue-rotation hover:text-emerald-500 dark:hover:text-emerald-200"
           >
-            Download Json
+            {t('Download Json')}
           </a>
         </CardContent>
       </Card>

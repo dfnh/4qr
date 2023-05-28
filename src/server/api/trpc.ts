@@ -4,17 +4,19 @@ import { type Session } from 'next-auth';
 import { getServerAuthSession } from '~/server/auth';
 import { prisma } from '~/server/db';
 
-type CreateContextOptions = {
+// type CreateContextOptions = { session: Session | null };
+export interface CreateInnerContextOptions extends Partial<CreateNextContextOptions> {
   session: Session | null;
-};
+}
 
 /**
  * This helper generates the "internals" for a tRPC context
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-export const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (opts: CreateInnerContextOptions) => {
   return {
-    session: opts.session,
+    ...opts,
+    // session: opts.session,
     prisma,
   };
 };
@@ -23,16 +25,17 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * actual context for router
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
+export const createTRPCContext = async (opts?: CreateNextContextOptions) => {
+  if (!opts?.req || !opts?.res) throw new Error('createTRPCContext not req or res');
 
-  const session = await getServerAuthSession({ req, res });
+  const session = await getServerAuthSession({ req: opts.req, res: opts.res });
+  const context = createInnerTRPCContext({
+    session,
+    req: opts?.req,
+  });
 
   return {
-    ...createInnerTRPCContext({
-      session,
-    }),
-    req,
+    ...context,
   };
 };
 
@@ -88,7 +91,10 @@ import { getIp } from '~/helpers/getIp';
 
 const withIpFromReq = t.middleware(({ ctx, next }) => {
   if (!ctx.req) {
-    throw new Error('You are missing `req` in your call');
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'You are missing `req` in your call',
+    });
   }
   const ip = getIp(ctx.req);
   return next({

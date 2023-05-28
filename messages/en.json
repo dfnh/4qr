@@ -1,0 +1,257 @@
+{
+  "UserNav": {
+    "MainNav": {
+      "Create": "Create",
+      "Scan/file": "Scan/file",
+      "Scan/camera": "Scan/camera"
+    },
+    "ThemeDropdown": {
+      "Change theme": "Change theme",
+      "Light": "Light",
+      "Dark": "Dark",
+      "System": "System"
+    },
+    "Auth": {
+      "UserDropdown": {
+        "Profile": "Profile",
+        "Log out": "Log out"
+      },
+      "LoginButton": {
+        "Sign in": "Sign in"
+      }
+    }
+  },
+  "404": {
+    "head": {
+      "title": "Page not found"
+    },
+    "title": "You found a secret page",
+    "text": "You probably made an error while typing URL address or something went wrong.",
+    "link": "Go to main page"
+  },
+  "HomePage": {
+    "yo": "yo"
+  },
+  "ScanPage": {
+    "title": "scan qrcode",
+    "DragAndDrop": {
+      "isDragging": "Drop the image file here",
+      "isNotDragging": "Drag and drop image file here",
+      "or click to select": "or click to select file"
+    }
+  },
+  "CamPage": {
+    "title": "scan with webcam",
+    "SelectCamera": "select camera",
+    "WebCamButtons": {
+      "give access": "give access",
+      "active": {
+        "stop": "stop",
+        "start": "start"
+      }
+    },
+    "toast": {
+      "no webcam": {
+        "title": "Unable to access webcam",
+        "description": "Please check your browser settings to make sure webcam access is enabled"
+      }
+    }
+  },
+  "SignInPage": {
+    "title": "Sign in",
+    "SignIn": {
+      "to signup": "Don't have an account?",
+      "SeparatorWithText": "or",
+      "SignInForm": {
+        "Email": "Email",
+        "Password": "Password",
+        "Sign in": "Sign in"
+      },
+      "ProviderButton": {
+        "Sign in with": "Sign in with {name}"
+      },
+      "toast": {
+        "onError": {
+          "title": "Error",
+          "description": "{error, select, NotFound {User account does not exist} WrongProvider {Try to sign in with different provider:} WrongPassword {Password is wrong} NotValidEmail {Email is not a valid email address} other {Something went wrong}}"
+        }
+      },
+      "authErrors": "{error, select, OAuthAccountNotLinked {Email on the account is already linked, but not with this Provider} other {Something went wrong}}"
+    }
+  },
+  "SignUpPage": {
+    "title": "Sign up",
+    "SignUp": {
+      "to signin": "Already have an account?",
+      "SignUpForm": {
+        "Name": "Name",
+        "Email": "Email",
+        "Password": "Password",
+        "Confirm password": "Confirm password",
+        "Sign up": "Sign up",
+        "toast": {
+          "onError": {
+            "title": "Error",
+            "description": "{code, select, FORBIDDEN {User already logged in} CONFLICT {User with this email is already registered} other {Something went wrong}}"
+          },
+          "Sign in error": {
+            "title": "Sign in error"
+          }
+        }
+      }
+    }
+  },
+  "CreateQrPage": {
+    "head": {
+      "title": "Create qrcode"
+    },
+    "title": "create qrcode",
+    "CardCreate": {
+      "CardTitle": "Create qrcode",
+      "Submit": "Create",
+      "Preview": "Preview",
+      "FormCreate": {
+        "Data": {
+          "label": "Data",
+          "placeholder": "data for qrcode"
+        },
+        "FormSwitchSlink": {
+          "label": "Create short link",
+          "hoverCardText": "{isAuthed, select, true {This feature creates a short URL that represents the data provided in your QR code} false {To create qr code with short URL you need to sign in} other {Error}}"
+        },
+        "FormSwitchSign": {
+          "label": "Sign data",
+          "hoverCardText": "{isAuthed, select, true {Your data will be signed with a unique key pair that only you possess. This provides an additional layer of security and ensures that your data remains the same} false {To sign your data with unique key pair you need to sign in} other {Error}}"
+        },
+        "GeneratePassword": {
+          "Generate": "Generate",
+          "label": "Password",
+          "placeholder": "set or generate password",
+          "toast": {
+            "sign": {
+              "title": "You've chosen `Sign data`",
+              "description": "You can only choose 1 option"
+            },
+            "disabled": {
+              "title": "You are not authenticated",
+              "description": "To create qr code with password you need to sign in"
+            }
+          }
+        },
+        "Options": {
+          "Main options": "Main options",
+          "Dots options": "Dots options",
+          "Corners square options": "Corners square options",
+          "Corners dot options": "Corners dot options",
+          "Background options": "Background options",
+          "Image options": "Image options",
+          "Qr options": "Qr options",
+          "Width": {
+            "label": "Width",
+            "placeholder": "width"
+          },
+          "Height": {
+            "label": "Height",
+            "placeholder": "height"
+          },
+          "Margin": {
+            "label": "Margin",
+            "placeholder": "margin"
+          },
+          "InputFile": {
+            "label": "Logo",
+            "Cancel": "Cancel"
+          },
+          "ErrorLevel": {
+            "label": "Correction",
+            "placeholder": "level"
+          },
+          "QrMode": {
+            "label": "Mode",
+            "placeholder": "mode"
+          },
+          "CornerSquare": {
+            "label": "Corner square style",
+            "placeholder": "corner square style"
+          },
+          "CornerDots": {
+            "label": "Corner dot style",
+            "placeholder": "corner dot style"
+          },
+          "Dots": {
+            "label": "Dots style",
+            "placeholder": "dot style"
+          },
+          "ColorChange": {
+            "label": "Color Type",
+            "single": "Single",
+            "gradient": "Gradient"
+          },
+          "Gradient": {
+            "radio": {
+              "label": "Gradient type",
+              "linear": "linear",
+              "radial": "radial"
+            },
+            "Rotation": "Rotation",
+            "Colors": "Colors",
+            "clear": "clear"
+          },
+          "Single": {
+            "Color": "Color",
+            "Clear": "Clear"
+          }
+        }
+      }
+    },
+    "DisplayQrCode": {
+      "Download": "Download",
+      "Your qr code": "Your qr code",
+      "DisplayKeys": {
+        "Your keys": "Your keys",
+        "Public key": "Public key",
+        "Private key": "Private key",
+        "Download Json": "Download Json",
+        "displayKeysHoverCardText": "These keys are your public and private keys, they are like your secret code that only you should know. Your private key is used to sign the data that you inputted into the QR code. This means that the data is secure and can only be verified by someone who has the corresponding public key. If someone tries to tamper with the data or create a fake QR code, the signature will not match, and it will be clear that the data has been modified"
+      }
+    }
+  },
+  "ProfilePage": {
+    "title": "{user, select, user {your} other {{user}}} qrcodes"
+  },
+  "ProfileCodePage": {
+    "head": {
+      "title": "Code statistics - {code}"
+    },
+    "slink": "slink",
+    "data": "data",
+    "delete this code": "delete this code",
+    "visited total": "visited total"
+  },
+  "SSlinkPage": {
+    "SlinkInner": {
+      "data": "data",
+      "error": {
+        "title": "nothing here. error: {error}"
+      }
+    },
+    "CountDown": {
+      "Go now": "Go now",
+      "You will be redirected in": "You will be redirected in {count, number}"
+    },
+    "WithPassword": {
+      "Password": "Password",
+      "Send": "Send",
+      "error": {
+        "Wrong password": "Wrong password"
+      }
+    },
+    "WithSignature": {
+      "Public key": "Public key",
+      "Send": "Send",
+      "error": {
+        "Wrong public key": "Wrong public key"
+      }
+    }
+  }
+}
