@@ -1,9 +1,11 @@
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import Auth from './Auth';
 import LanguageSwitch from './LanguageSwitch';
 import MainNavbar from './MainNavbar';
-import ThemeButton from './ThemeButton';
-// import ThemeDropdown from './ThemeDropdown';
+// import ThemeButton from './ThemeButton';
+
+const ThemeButton = dynamic(() => import('./ThemeButton'), { ssr: false });
 
 const UserNav = memo(() => {
   return (

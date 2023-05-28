@@ -24,7 +24,7 @@ const MainNavbar = memo(({ className, ...props }: HTMLAttributes<HTMLElement>) =
         <Link
           key={l.href}
           href={l.href}
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          className="text-sm font-medium tracking-tight text-muted-foreground transition-colors hover:text-primary"
         >
           {t(l.title)}
         </Link>

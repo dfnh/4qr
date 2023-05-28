@@ -130,13 +130,14 @@ const ProviderButtons = memo(({ providers, callbackUrl }: ProviderButtonsProps) 
 
   const onClick = useCallback(
     (p: ClientSafeProvider) => {
-      setLoading(true);
+      // setLoading(true);
       //todo huh??
       void signIn(p.id, {
         callbackUrl: `${callbackUrl ?? window.location.origin}`,
       });
     },
-    [callbackUrl, setLoading]
+    [callbackUrl]
+    // [callbackUrl, setLoading]
   );
   const handleClick = useCallback(
     (p: ClientSafeProvider) => {

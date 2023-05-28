@@ -24,35 +24,46 @@ const GeneratePassword = memo(
     } = useFormContext<CreateQrSchema>();
     const { toast } = useToast();
     const sign = watch('sign');
+    const slink = watch('slink');
 
     useEffect(() => {
-      if (sign) {
+      if (sign || !slink) {
         setValue('password', undefined);
       }
-    }, [setValue, sign]);
+    }, [setValue, sign, slink]);
 
-    const disabled = !isAuthed || dis || sign;
+    const disabled = !isAuthed || dis || !!sign || !slink;
 
     const generatePassword = async () => {
+      if (!isAuthed) {
+        toast({
+          title: t('toast.notAuthed.title'),
+          description: t('toast.notAuthed.description'),
+        });
+        setValue('password', undefined);
+        return;
+      }
+      if (!slink) {
+        toast({
+          title: t('toast.notSlink.title'),
+          description: t('toast.notSlink.description'),
+        });
+        setValue('password', undefined);
+        return;
+      }
       if (sign) {
-        // setValue('password', undefined);
         toast({
           title: t('toast.sign.title'),
           description: t('toast.sign.description'),
         });
-        return;
-      }
-      if (disabled) {
-        toast({
-          title: t('toast.disabled.title'),
-          description: t('toast.disabled.description'),
-        });
         setValue('password', undefined);
         return;
       }
+
       const password = await generate();
       setValue('password', password);
       setValue('sign', false);
+      setValue('slink', true);
     };
 
     return (

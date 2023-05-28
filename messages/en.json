@@ -132,9 +132,13 @@
               "title": "You've chosen `Sign data`",
               "description": "You can only choose 1 option"
             },
-            "disabled": {
+            "notAuthed": {
               "title": "You are not authenticated",
               "description": "To create qr code with password you need to sign in"
+            },
+            "notSlink": {
+              "title": "You need to use slink",
+              "description": "To create qr code with password you set `Create slink` true"
             }
           }
         },

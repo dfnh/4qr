@@ -35,11 +35,11 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
   const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
     onSuccess(data) {
       // console.log(data);
-      if (data.privateKey) {
-        // console.log(data);
+      // if (data.privateKey) {
+      // console.log(data);
 
-        setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
-      }
+      setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
+      // }
     },
     onError(error) {
       console.error(error);
@@ -52,6 +52,7 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
 
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
+      console.log(values);
       if (status === 'authenticated' && values.createCode) {
         let slink: string | undefined = undefined; // const link: string | undefined = undefined;
         const initData = values.data;
