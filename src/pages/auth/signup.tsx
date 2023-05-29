@@ -3,8 +3,8 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import SignUp from '~/components/SignUp';
 import { LoadingSpinner2 } from '~/components/Spinner';
+import SignUp from '~/modules/SignUp';
 
 const SignUpPage = () => {
   const t = useTranslations('SignUpPage');

@@ -1,31 +1,13 @@
 import { signIn } from 'next-auth/react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
+import InputWithLabel from '~/components/InputWithLabel';
 import { useToast } from '~/hooks/useToast';
 import { useZodForm } from '~/hooks/useZodForm';
 import { signUpSchema, type SignUpSchema } from '~/schemas/authSchema';
 import { useSignInLoadingAtom } from '~/store/auth';
 import { Button } from '~/ui/button';
 import { api } from '~/utils/api';
-import InputWithLabel from './InputWithLabel';
-import { useTranslations } from 'next-intl';
-
-const SignUp = () => {
-  const t = useTranslations('SignUpPage.SignUp');
-  const {
-    query: { callbackUrl },
-  } = useRouter();
-
-  return (
-    <div className="container flex max-w-md flex-col gap-4">
-      <SignUpForm callbackUrl={callbackUrl as string} />
-
-      <Link href="/auth/signin" className="text-center text-sm font-medium leading-none">
-        {t('to signin')}
-      </Link>
-    </div>
-  );
-};
 
 const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const t = useTranslations('SignUpPage.SignUp.SignUpForm');
@@ -44,7 +26,6 @@ const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         variant: 'destructive',
         title: t('toast.onError.title'),
         description: t(`toast.onError.description`, { code: error.data?.code }),
-        // description: error.message,
       });
     },
     onMutate() {
@@ -114,4 +95,4 @@ const SignUpForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   );
 };
 
-export default SignUp;
+export default SignUpForm;

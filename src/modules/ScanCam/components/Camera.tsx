@@ -15,4 +15,4 @@ const Camera = forwardRef<HTMLVideoElement | null, CameraProps>(({ ...props }, r
 });
 Camera.displayName = 'Camera';
 
-export { Camera };
+export default Camera;

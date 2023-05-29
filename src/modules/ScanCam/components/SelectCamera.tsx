@@ -1,6 +1,6 @@
 import type QrScanner from 'qr-scanner';
 import { memo } from 'react';
-import { SelectItem, SelectWrapper } from './SelectWrapper';
+import { SelectItem, SelectWrapper } from '~/components/SelectWrapper';
 
 export type SelectCameraProps = {
   cameras: QrScanner.Camera[];
@@ -27,4 +27,4 @@ const SelectCamera = memo(({ cameras, placeholder, onSelected }: SelectCameraPro
 });
 SelectCamera.displayName = 'SelectCamera';
 
-export { SelectCamera };
+export default SelectCamera;

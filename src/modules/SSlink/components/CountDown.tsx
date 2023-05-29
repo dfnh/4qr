@@ -44,4 +44,4 @@ const CountDown = ({ url, disabled = false }: { url: string; disabled?: boolean 
   );
 };
 
-export { CountDown };
+export default CountDown;

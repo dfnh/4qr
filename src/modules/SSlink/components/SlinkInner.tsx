@@ -6,18 +6,9 @@ import { LoadingSpinner2 } from '~/components/Spinner';
 import { useSlinkAtomValue } from '~/store/hooks';
 import { api } from '~/utils/api';
 
-const FormPartOfSlinkPassword = dynamic(
-  () => import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkPassword),
-  { ssr: false }
-);
-const FormPartOfSlinkSignature = dynamic(
-  () => import('~/components/FormPartOfSlink').then((c) => c.FormPartOfSlinkSignature),
-  { ssr: false }
-);
-const CountDown = dynamic(
-  () => import('~/components/CountDown').then((c) => c.CountDown),
-  { ssr: false }
-);
+const WithPassword = dynamic(() => import('./WithPassword'), { ssr: false });
+const WithSignature = dynamic(() => import('./WithSignature'), { ssr: false });
+const CountDown = dynamic(() => import('./CountDown'), { ssr: false });
 
 const disableQuery = {
   retry: false,
@@ -26,6 +17,7 @@ const disableQuery = {
   refetchOnMount: false,
   refetchOnReconnect: false,
 };
+
 type SlinkInnerProps = { slink: string };
 const SlinkInner = ({ slink }: SlinkInnerProps) => {
   const t = useTranslations('SSlinkPage.SlinkInner');
@@ -76,10 +68,8 @@ const SlinkInner = ({ slink }: SlinkInnerProps) => {
           {t('data')}: {newInfo || '***'}
         </p>
 
-        {unsuccess && initData?.withPassword && <FormPartOfSlinkPassword slink={slink} />}
-        {unsuccess && initData?.withSignature && (
-          <FormPartOfSlinkSignature slink={slink} />
-        )}
+        {unsuccess && initData?.withPassword && <WithPassword slink={slink} />}
+        {unsuccess && initData?.withSignature && <WithSignature slink={slink} />}
         {!!urlInfo && <CountDown disabled={data?.signature} url={urlInfo} />}
       </div>
     </>

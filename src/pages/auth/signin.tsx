@@ -1,13 +1,10 @@
 import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next';
 import { getProviders, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { LoadingSpinner2 } from '~/components/Spinner';
-// import dynamic from 'next/dynamic';
-
-import SignIn from '~/components/SignIn';
-import { useTranslations } from 'next-intl';
-// const SignIn = dynamic(() => import('~/components/SignIn'), { ssr: false, loading: () => <LoadingSpinner2 /> });
+import SignIn from '~/modules/SignIn';
 
 type SignInPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 const SignInPage = ({ providers }: SignInPageProps) => {

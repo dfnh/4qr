@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { ssgHelper } from '~/server/api/helpers/ssgHelper';
 
 // import SlinkInner from '~/components/SlinkInner';
-const SlinkInner = dynamic(() => import('~/components/SlinkInner')); //????
+const SlinkInner = dynamic(() => import('~/modules/SSlink')); //????
 
 type SSlinkPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 const SSlinkPage = ({ slink }: SSlinkPageProps) => {

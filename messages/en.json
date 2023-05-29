@@ -32,6 +32,7 @@
   "HomePage": {
     "yo": "yo"
   },
+  "ScanTabs": { "webcam": "webcam", "file": "file" },
   "ScanPage": {
     "title": "scan qrcode",
     "DragAndDrop": {
