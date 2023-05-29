@@ -52,6 +52,7 @@ export const getStaticProps = async (
       messages: messages,
       locale: locale,
     },
+    revalidate: 10,
   };
 };
 
