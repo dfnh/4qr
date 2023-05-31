@@ -7,7 +7,7 @@ import { type AppType } from 'next/app';
 import { Inter } from 'next/font/google';
 import ThemeProvider from '~/components/ThemeProvider';
 import { Toaster } from '~/components/Toaster';
-import Layout from '~/modules/Layout';
+import { Layout } from '~/modules/LayoutNav';
 import { api } from '~/utils/api';
 
 import '~/styles/globals.css';
