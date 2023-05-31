@@ -51,6 +51,6 @@ const WithPassword = memo(({ slink }: { slink: string }) => {
     </form>
   );
 });
-WithPassword.displayName = 'WithPassword'
+WithPassword.displayName = 'WithPassword';
 
 export default WithPassword;
