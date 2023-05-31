@@ -23,8 +23,6 @@ const SlinkInner = ({ slink }: SlinkInnerProps) => {
   const t = useTranslations('SSlinkPage.SlinkInner');
   const { query } = useRouter();
 
-  console.log({ query });
-
   const { data: initData, isLoading } = api.qr.getById.useQuery(
     { slink: slink },
     { ...disableQuery } // { enabled: !!slink, ...disableQuery }
