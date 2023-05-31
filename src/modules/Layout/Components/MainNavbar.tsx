@@ -5,8 +5,7 @@ import { cn } from '~/utils/cn';
 
 const Links = [
   { href: '/create', title: 'Create' },
-  { href: '/scan', title: 'Scan/file' },
-  { href: '/scan/cam', title: 'Scan/camera' },
+  { href: '/scan', title: 'Scan' },
 ] as const;
 
 const MainNavbar = memo(({ className, ...props }: HTMLAttributes<HTMLElement>) => {

@@ -2,8 +2,7 @@
   "UserNav": {
     "MainNav": {
       "Create": "Create",
-      "Scan/file": "Scan/file",
-      "Scan/camera": "Scan/camera"
+      "Scan": "Scan"
     },
     "ThemeDropdown": {
       "Change theme": "Change theme",
@@ -25,12 +24,16 @@
     "head": {
       "title": "Page not found"
     },
-    "title": "You found a secret page",
+    "title": "You found a broken page",
     "text": "You probably made an error while typing URL address or something went wrong.",
     "link": "Go to main page"
   },
   "HomePage": {
-    "yo": "yo"
+    "description": "Create and Scan qrcode",
+    "Create": "Create",
+    "Create and customize qrcode": "Create and customize qrcode",
+    "Scan": "Scan",
+    "Scan qrcode using webcam or image file": "Scan qrcode using webcam or image file"
   },
   "ScanTabs": { "webcam": "webcam", "file": "file" },
   "ScanPage": {

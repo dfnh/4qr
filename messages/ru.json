@@ -2,8 +2,7 @@
   "UserNav": {
     "MainNav": {
       "Create": "Создать",
-      "Scan/file": "Скан/файл",
-      "Scan/camera": "Скан/камера"
+      "Scan": "Сканировать"
     },
     "ThemeDropdown": {
       "Change theme": "Изменить тему",
@@ -30,7 +29,11 @@
     "link": "Перейти на главную страницу"
   },
   "HomePage": {
-    "yo": "ку"
+    "description": "Создать и сканировать QR-код",
+    "Create": "Создать",
+    "Create and customize qrcode": "Создавайте и изменяйте вид QR-кодов",
+    "Scan": "Сканировать",
+    "Scan qrcode using webcam or image file": "Сканируйте QR-коды с помощью веб-камеры или файла изображения"
   },
   "ScanTabs": { "webcam": "веб-камера", "file": "файл" },
   "ScanPage": {
