@@ -5,6 +5,7 @@ import { useToast } from '~/hooks/useToast';
 import { da } from '~/store/atoms';
 import { qrCodeAtom } from '~/store/qrAtom';
 import DisplayKeys from './DisplayKeys';
+import DisplaySlink from './DisplaySlink';
 import SelectExtension from './SelectExtension';
 
 const DisplayQrCode = () => {
@@ -51,6 +52,7 @@ const DisplayQrCode = () => {
         </div>
       </div>
       <SelectExtension onDownload={onDownloadClick} />
+      <DisplaySlink />
       <DisplayKeys />
     </>
   );
