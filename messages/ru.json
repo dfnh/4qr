@@ -205,6 +205,21 @@
           "Single": {
             "Color": "Цвет",
             "Clear": "Очистить"
+          },
+          "Image": {
+            "SwitchLabel": "Спрятать точки позади",
+            "Size": {
+              "label": "Размер",
+              "placeholder": "размер"
+            },
+            "Margin": {
+              "label": "Отступ",
+              "placeholder": "отступ"
+            }
+          },
+          "Version": {
+            "label": "Версия",
+            "placeholder": "версия"
           }
         }
       }
@@ -222,7 +237,12 @@
     }
   },
   "ProfilePage": {
-    "title": "{user, select, user {ваши} other {{user}}} qr-коды"
+    "head": { "title": "Профиль" },
+    "title": "{user, select, user {ваши} other {{user}}} qr-коды",
+    "Empty": {
+      "NotCreatedYet": "Вы не создали ни одного QR-кода.",
+      "ToCreateGoTo": "Чтобы создать QR-код перейдите "
+    }
   },
   "ProfileCodePage": {
     "head": {
@@ -231,7 +251,9 @@
     "slink": "slink",
     "data": "данные",
     "delete this code": "удалить код",
-    "visited total": "всего посещений"
+    "visited total": "всего посещений",
+    "#visited": "кол-во посещений",
+    "error": "ошибка: код не найден"
   },
   "SSlinkPage": {
     "SlinkInner": {

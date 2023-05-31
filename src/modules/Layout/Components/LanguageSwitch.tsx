@@ -6,12 +6,12 @@ import { buttonVariants } from '~/ui/button';
 import { cn } from '~/utils/cn';
 
 const LanguageSwitch = memo(() => {
-  const { locale, locales, route } = useRouter();
-  const diffLocale = locales?.find((cur) => cur !== locale);
+  const { locale, locales, asPath } = useRouter();
+  const diffLocale = locales?.find((l) => l !== locale);
 
   return (
     <Link
-      href={route}
+      href={asPath}
       locale={diffLocale}
       className={cn(
         buttonVariants({

@@ -1,25 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useSetAtom } from 'jotai';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { convertToBase64 } from '~/helpers/convertToBase64';
-import { getSlinkUrl } from '~/helpers/getBaseUrl';
 import { qrFullSchema, type QrFullSchema } from '~/schemas/QRCodeStyling';
 import { da } from '~/store/atoms';
 import { useSetKeysAtom, useSetSlinkNewAtom } from '~/store/hooks';
 import { qrCodeAtom } from '~/store/qrAtom';
 import { Button } from '~/ui/button';
-import { CardContent, CardFooter } from '~/ui/card';
+import { CardContent as CC, CardFooter } from '~/ui/card';
 import { api } from '~/utils/api';
-import { nanoid } from '~/utils/nanoid';
-import FormCreate from './FormCreate';
-import { useTranslations } from 'next-intl';
+import { generateSlink } from '../helpers/generateSlink';
+import CreateForm from './CreateForm';
 
 const schema = qrFullSchema;
 // type ZodFormData = z.infer<typeof schema>;
 
-const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
+const CardContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
   const t = useTranslations('CreateQrPage.CardCreate');
   const { status } = useSession();
   const methods = useForm<QrFullSchema>({
@@ -34,12 +33,7 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
 
   const { mutate: mutateNew } = api.qr.createQrNew.useMutation({
     onSuccess(data) {
-      // console.log(data);
-      // if (data.privateKey) {
-      // console.log(data);
-
       setKeys({ privateKey: data.privateKey, publicKey: data.publicKey });
-      // }
     },
     onError(error) {
       console.error(error);
@@ -113,9 +107,9 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
   return (
     <>
       <FormProvider {...methods}>
-        <CardContent className="grid gap-6">
-          <FormCreate />
-        </CardContent>
+        <CC className="grid gap-6">
+          <CreateForm />
+        </CC>
         <CardFooter className="">
           <span className="flex w-full space-x-2">
             <Button
@@ -135,11 +129,4 @@ const CardCreateContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) 
   );
 };
 
-const generateSlink = async () => {
-  const slink = await nanoid();
-  const link = getSlinkUrl(slink);
-
-  return { slink, link };
-};
-
-export { CardCreateContent };
+export default CardContent;

@@ -4,7 +4,7 @@ import { Label } from '~/ui/label';
 interface InputFileProps extends InputProps {
   labelTitle?: string;
 }
-
+//todo delete
 const InputFile = ({ labelTitle, ...props }: InputFileProps) => {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">

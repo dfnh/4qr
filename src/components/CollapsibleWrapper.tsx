@@ -1,9 +1,8 @@
-import { type ReactNode, useState } from 'react';
 import { Plus } from 'lucide-react';
-
+import { useState, type ReactNode } from 'react';
 import { Button } from '~/ui/button';
-import { cn } from '~/utils/cn';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/ui/collapsible';
+import { cn } from '~/utils/cn';
 
 type CollapsibleWrapperProps = {
   title: string;
@@ -12,12 +11,12 @@ type CollapsibleWrapperProps = {
   defaultIsOpen?: boolean;
 };
 
-export function CollapsibleWrapper({
+const CollapsibleWrapper = ({
   title,
   children,
   className,
   defaultIsOpen = false,
-}: CollapsibleWrapperProps) {
+}: CollapsibleWrapperProps) => {
   const [isOpen, setIsOpen] = useState(defaultIsOpen);
 
   return (
@@ -45,4 +44,6 @@ export function CollapsibleWrapper({
       </CollapsibleContent>
     </Collapsible>
   );
-}
+};
+
+export { CollapsibleWrapper };

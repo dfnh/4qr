@@ -32,17 +32,19 @@ const ScanCam = () => {
 
   return (
     <>
-      <WebCamButtons
-        cameras={cameras}
-        active={active}
-        toggle={toggle}
-        checkCamFn={checkCamFn}
-      />
-      <SelectCamera
-        placeholder={t('SelectCamera')}
-        cameras={cameras}
-        onSelected={onSelected}
-      />
+      <div className="flex flex-col items-center gap-3">
+        <WebCamButtons
+          cameras={cameras}
+          active={active}
+          toggle={toggle}
+          checkCamFn={checkCamFn}
+        />
+        <SelectCamera
+          placeholder={t('SelectCamera')}
+          cameras={cameras}
+          onSelected={onSelected}
+        />
+      </div>
       <Camera ref={camRef} />
       <div className="text-base">{data}</div>
     </>

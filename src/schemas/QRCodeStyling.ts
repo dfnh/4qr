@@ -45,7 +45,7 @@ const qrSchema = z.object({
   type: z.enum(['canvas', 'svg']).optional().default('canvas'),
   data: z.string().trim().min(1, 'Field must be not empty'),
   image: z.string().optional(),
-  margin: z.number().default(0).optional(),
+  margin: z.number().default(1).optional(),
   qrOptions: z
     .object({
       typeNumber: z.number().min(0).max(40).default(0),

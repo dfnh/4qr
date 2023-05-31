@@ -1,13 +1,13 @@
-import Head from 'next/head';
+// import Head from 'next/head';
 import { type ReactNode } from 'react';
 import UserNav from './UserNav';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <Head>
+      {/* <Head>
         <link rel="icon" href="/favicon.ico" />
-      </Head>
+      </Head> */}
       <div className="flex min-h-screen w-full grow flex-col bg-background text-foreground">
         <UserNav />
         <div>{children}</div>

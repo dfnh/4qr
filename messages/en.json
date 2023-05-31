@@ -205,6 +205,21 @@
           "Single": {
             "Color": "Color",
             "Clear": "Clear"
+          },
+          "Image": {
+            "SwitchLabel": "Hide background dots",
+            "Size": {
+              "label": "Image size",
+              "placeholder": "image size"
+            },
+            "Margin": {
+              "label": "Image margin",
+              "placeholder": "image margin"
+            }
+          },
+          "Version": {
+            "label": "Version",
+            "placeholder": "version"
           }
         }
       }
@@ -222,7 +237,12 @@
     }
   },
   "ProfilePage": {
-    "title": "{user, select, user {your} other {{user}}} qrcodes"
+    "head": { "title": "Profile" },
+    "title": "{user, select, user {your} other {{user}}} qrcodes",
+    "Empty": {
+      "NotCreatedYet": "You haven't created any QR codes yet.",
+      "ToCreateGoTo": "To create new Qr code go to "
+    }
   },
   "ProfileCodePage": {
     "head": {
@@ -231,7 +251,9 @@
     "slink": "slink",
     "data": "data",
     "delete this code": "delete this code",
-    "visited total": "visited total"
+    "visited total": "visited total",
+    "#visited": "# of visitors",
+    "error": "error: code not found"
   },
   "SSlinkPage": {
     "SlinkInner": {

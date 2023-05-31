@@ -14,7 +14,7 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'underline-offset-4 hover:underline text-primary',
-        start: 'bg-emerald-700 text-primary-foreground hover:bg-emerald-700/80',
+        start: 'bg-emerald-700 text-slate-100 hover:bg-emerald-700/80',
         login:
           'rounded-full bg-white/10 font-semibold text-white no-underline transition hover:bg-white/20',
       },

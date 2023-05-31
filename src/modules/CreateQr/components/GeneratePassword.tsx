@@ -1,18 +1,18 @@
+import { useTranslations } from 'next-intl';
 import { memo, useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { ErrorSpan } from '~/components/ErrorSpan';
 import { generate } from '~/helpers/generate';
 import { useToast } from '~/hooks/useToast';
-import { type CreateQrSchema } from '~/schemas/createQr';
 import { Button } from '~/ui/button';
 import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
-import { ErrorSpan } from './ErrorSpan';
-import { useTranslations } from 'next-intl';
+import { useFormContextQr } from '../helpers/useFormContextQr';
 
 type GeneratePasswordProps = {
   isAuthed: boolean;
   disabled?: boolean;
 };
+
 const GeneratePassword = memo(
   ({ isAuthed = true, disabled: dis = false }: GeneratePasswordProps) => {
     const t = useTranslations('CreateQrPage.CardCreate.FormCreate.GeneratePassword');
@@ -21,7 +21,7 @@ const GeneratePassword = memo(
       setValue,
       watch,
       formState: { errors },
-    } = useFormContext<CreateQrSchema>();
+    } = useFormContextQr();
     const { toast } = useToast();
     const sign = watch('sign');
     const slink = watch('slink');
@@ -88,4 +88,4 @@ const GeneratePassword = memo(
 );
 GeneratePassword.displayName = 'GeneratePassword';
 
-export { GeneratePassword };
+export default GeneratePassword;

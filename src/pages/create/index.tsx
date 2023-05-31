@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { LoadingSpinner2 } from '~/components/Spinner';
 
-const LazyCreateQrInner = dynamic(() => import('~/components/CreateQrInner'), {
+const CreateQr = dynamic(() => import('~/modules/CreateQr'), {
   ssr: false,
   loading: () => <LoadingSpinner2 />,
 });
@@ -20,7 +20,7 @@ const CreateQrPage: NextPage = () => {
       <div className="container flex flex-col items-center justify-center gap-10 px-2 py-14 md:px-8">
         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{t('title')}</h1>
         <div className="container flex flex-col justify-evenly gap-1 md:flex-row md:gap-0">
-          <LazyCreateQrInner />
+          <CreateQr />
         </div>
       </div>
     </>

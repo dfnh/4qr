@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle } from '~/ui/card';
-import { CardCreateContent } from './CardCreateContent';
 import { useTranslations } from 'next-intl';
+import { Card, CardHeader, CardTitle } from '~/ui/card';
+import CardContent from './CardContent';
 
 const CardCreate = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
   const t = useTranslations('CreateQrPage.CardCreate');
@@ -10,9 +10,9 @@ const CardCreate = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
       <CardHeader>
         <CardTitle>{t('CardTitle')}</CardTitle>
       </CardHeader>
-      <CardCreateContent scrollIntoView={scrollIntoView} />
+      <CardContent scrollIntoView={scrollIntoView} />
     </Card>
   );
 };
 
-export { CardCreate };
+export default CardCreate;

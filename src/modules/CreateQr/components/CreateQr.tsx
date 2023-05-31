@@ -1,14 +1,8 @@
-import dynamic from 'next/dynamic';
-import { LoadingSpinner2 } from './Spinner';
-import { CardCreate } from './CardCreate';
 import { useCallback, useRef } from 'react';
+import CardCreate from './CreateCard';
+import DisplayQr from './DisplayQr';
 
-const LazyDisplayQr = dynamic(() => import('~/components/DisplayQrNew'), {
-  ssr: false,
-  loading: () => <LoadingSpinner2 />,
-});
-
-const CreateQrInner = () => {
+const CreateQr = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollIntoView = useCallback(() => {
     if (!scrollRef.current) return;
@@ -22,7 +16,7 @@ const CreateQrInner = () => {
   return (
     <>
       <div ref={scrollRef} className="flex flex-col gap-2 md:order-2 md:w-2/6">
-        <LazyDisplayQr />
+        <DisplayQr />
       </div>
       <div className="md:w-3/6 ">
         <CardCreate scrollIntoView={scrollIntoView} />
@@ -31,4 +25,4 @@ const CreateQrInner = () => {
   );
 };
 
-export default CreateQrInner;
+export default CreateQr;

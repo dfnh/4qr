@@ -9,11 +9,9 @@ export const tabVariants = cva('inline-block rounded-t-lg border-b-2 ', {
     variant: {
       default: 'border-transparent hover:border-gray-300 hover:text-foreground',
       active:
-        'active border-cyan-600 text-cyan-500 dark:border-cyan-500 dark:text-cyan-500',
+        'active border-cyan-600 text-cyan-600 dark:border-cyan-500 dark:text-cyan-500',
     },
-    size: {
-      default: 'p-2',
-    },
+    size: { default: 'p-2' },
   },
   defaultVariants: {
     variant: 'default',

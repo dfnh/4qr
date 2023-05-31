@@ -37,9 +37,7 @@ export const getStaticProps = async (
   const locale = context.locale ? `/${context.locale}` : '';
 
   if (slink == null) {
-    return {
-      redirect: { destination: `${locale}/`, permanent: false },
-    };
+    return { redirect: { destination: `${locale}/`, permanent: false } };
   }
   const ssg = ssgHelper();
   await ssg.qr.getById.prefetch({ slink: slink });

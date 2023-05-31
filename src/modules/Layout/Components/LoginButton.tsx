@@ -16,6 +16,7 @@ const LoginButton = () => {
           callbackUrl: `${router.basePath}/${router.locale || ''}${router.asPath}`,
         },
       }}
+      as={'/auth/signin'}
       className={cn(buttonVariants({ variant: 'outline' }))}
       type="button"
     >

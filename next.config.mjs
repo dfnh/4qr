@@ -9,7 +9,7 @@ const config = {
     defaultLocale: 'en',
   },
   images: {
-    domains: ['authjs.dev', 'cdn.7tv.app'],
+    domains: ['authjs.dev'],
   },
 };
 
