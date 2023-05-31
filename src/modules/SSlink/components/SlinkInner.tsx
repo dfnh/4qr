@@ -21,16 +21,16 @@ const disableQuery = {
 type SlinkInnerProps = { slink: string };
 const SlinkInner = ({ slink }: SlinkInnerProps) => {
   const t = useTranslations('SSlinkPage.SlinkInner');
-  const {
-    query: { p }, //? password as query
-  } = useRouter();
+  const { query } = useRouter();
+
+  console.log({ query });
 
   const { data: initData, isLoading } = api.qr.getById.useQuery(
     { slink: slink },
     { ...disableQuery } // { enabled: !!slink, ...disableQuery }
   );
   const { data, error } = api.qr.visitSlink.useQuery(
-    { slink: slink, password: p as string | undefined },
+    { slink: slink, password: query.p as string | undefined },
     { enabled: !initData?.withInput, ...disableQuery }
   );
   const slinkAtom = useSlinkAtomValue();
