@@ -42,9 +42,9 @@ export const userRouter = createTRPCRouter({
   getQrList: protectedProcedure.query(async ({ ctx }) => {
     const codes = await ctx.prisma.code.findMany({
       where: { userId: ctx.session.user.id },
+      orderBy: { createdAt: 'desc' },
       select: { info: true, shorturl: true, createdAt: true, id: true },
     });
-    // if (codes.length !== 0) throw new TRPCError({ code: 'BAD_REQUEST' });
 
     return codes;
   }),

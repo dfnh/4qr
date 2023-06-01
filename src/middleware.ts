@@ -8,8 +8,8 @@ export function middleware(req: NextRequest) {
   const { nextUrl: url, geo } = req;
 
   const country = geo?.country || 'RU';
-  const city = geo?.city || 'Moscow';
-  const region = geo?.region || 'MOS';
+  const city = geo?.city || '';
+  const region = geo?.region || '';
   const latitude = geo?.latitude || '';
   const longitude = geo?.longitude || '';
 

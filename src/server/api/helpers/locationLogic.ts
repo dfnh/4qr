@@ -14,11 +14,13 @@ const handleLocation = async ({ geo, prisma, codeId }: handleLocationProps) => {
     //? should i throw here
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Location error' });
   }
+  const countryName = new Intl.DisplayNames(['en'], { type: 'region' });
+  const country = countryName.of(location.country ?? 'RU') ?? location.country;
 
   const stat = await prisma.codeStatistic.create({
     data: {
       codeId: codeId,
-      country: location.country,
+      country: country,
       region: location.region,
       city: location.city,
       latitude: location.latitude || undefined,
