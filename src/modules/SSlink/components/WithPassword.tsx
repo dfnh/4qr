@@ -11,8 +11,9 @@ import { Button } from '~/ui/button';
 import { Input } from '~/ui/input';
 import { Label } from '~/ui/label';
 import { api } from '~/utils/api';
+import { type CommonProps } from '../types';
 
-const WithPassword = memo(({ slink }: { slink: string }) => {
+const WithPassword = memo(({ slink, geo }: CommonProps) => {
   const t = useTranslations('SSlinkPage.WithPassword');
   const {
     register,
@@ -35,7 +36,7 @@ const WithPassword = memo(({ slink }: { slink: string }) => {
   });
 
   const onSubmit = (p: SchemaForFormPassword) => {
-    mutate({ slink, ...p });
+    mutate({ slink, geo, ...p });
   };
 
   return (

@@ -256,7 +256,8 @@
     "delete this code": "удалить код",
     "visited total": "всего посещений",
     "#visited": "кол-во посещений",
-    "error": "ошибка: код не найден"
+    "error": "ошибка: код не найден",
+    "createdAt": "создано"
   },
   "SSlinkPage": {
     "SlinkInner": {

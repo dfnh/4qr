@@ -1,17 +1,12 @@
-import {
-  type GetStaticPropsContext,
-  type GetStaticPaths,
-  type InferGetStaticPropsType,
-} from 'next';
+import { type GetServerSidePropsContext, type InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import { ssgHelper } from '~/server/api/helpers/ssgHelper';
+import { omit } from '~/helpers/omit';
 
-// import SlinkInner from '~/components/SlinkInner';
 const SlinkInner = dynamic(() => import('~/modules/SSlink')); //????
 
-type SSlinkPageProps = InferGetStaticPropsType<typeof getStaticProps>;
-const SSlinkPage = ({ slink }: SSlinkPageProps) => {
+type SSlinkPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+const SSlinkPage = ({ slink, geo }: SSlinkPageProps) => {
   return (
     <>
       <Head>
@@ -19,19 +14,15 @@ const SSlinkPage = ({ slink }: SSlinkPageProps) => {
       </Head>
       <div>
         <div className="relative flex flex-col items-center justify-center">
-          <SlinkInner slink={slink} />
+          <SlinkInner slink={slink} geo={geo} />
         </div>
       </div>
     </>
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return { paths: [], fallback: 'blocking' };
-};
-
-export const getStaticProps = async (
-  context: GetStaticPropsContext<{ slink: string }>
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{ slink: string }>
 ) => {
   const slink = context.params?.slink;
   const locale = context.locale ? `/${context.locale}` : '';
@@ -39,18 +30,11 @@ export const getStaticProps = async (
   if (slink == null) {
     return { redirect: { destination: `${locale}/`, permanent: false } };
   }
-  const ssg = ssgHelper();
-  await ssg.qr.getById.prefetch({ slink: slink });
 
+  const geo = omit(context.query, 'slink');
   const messages = await (await import('~/utils/nextIntl')).default(context);
   return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      slink: slink,
-      messages: messages,
-      locale: locale,
-    },
-    revalidate: 10,
+    props: { messages, slink, geo: geo },
   };
 };
 

@@ -7,36 +7,11 @@ import { schemaForFormPassword, schemaForFormPublicKey } from '~/schemas/codePro
 import { handleLocation } from '../helpers/locationLogic';
 import { codeProcedure } from '../procedures/codeProcedure';
 import { createTRPCRouter, publicProcedure } from '../trpc';
-import { isUrl } from '~/helpers/validation/isUrl';
-// import { generateQR } from '~/helpers/generateQr';
-// import { getBaseUrl, getSlinkUrl } from '~/helpers/getBaseUrl';
-// import { createQrBusinessPartSchema, createQrSchema } from '~/schemas/createQr';
-// import { nanoid } from '~/utils/nanoid';
 
 export const qrRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.code.findMany();
   }),
-  getById: publicProcedure
-    .input(z.object({ slink: z.string().min(1) }))
-    .query(async ({ ctx, input }) => {
-      const code = await ctx.prisma.code.findFirst({ where: { shorturl: input.slink } });
-      if (!code) return;
-      // if (!code) throw new TRPCError({ code: 'NOT_FOUND' });
-
-      const isurl = isUrl(code.info);
-      const withInput = code.password || code.signature;
-      const info = withInput ? undefined : code.info;
-
-      return {
-        image: code.image,
-        isUrl: !!isurl,
-        info: info,
-        withInput: !!withInput,
-        withSignature: !!code.signature,
-        withPassword: !!code.password,
-      };
-    }),
 
   createQrNew: publicProcedure
     .input(
@@ -82,20 +57,20 @@ export const qrRouter = createTRPCRouter({
     }),
 
   visitSlink: codeProcedure.query(async ({ ctx, input }) => {
-    const { code, isUrl } = ctx;
+    const { code, isUrl, withInput, geo } = ctx;
 
     const responseObj = {
       info: undefined as string | undefined,
       image: code.image,
       slink: code.shorturl,
       isUrl: isUrl,
+      withInput: withInput,
+      withSignature: !!code.signature,
+      withPassword: !!code.password,
       success: false,
-      signature: false,
-      password: false,
     };
 
     if (code.password) {
-      responseObj.password = true;
       if (!input.password) return { ...responseObj };
 
       const success = await verifyPassword(input.password, code.password);
@@ -103,13 +78,11 @@ export const qrRouter = createTRPCRouter({
     }
 
     if (!!code.signature) {
-      responseObj.signature = true;
       return { ...responseObj };
     }
 
-    // const stat =
     await handleLocation({
-      ip: ctx.ip,
+      geo: geo,
       prisma: ctx.prisma,
       codeId: code.id,
     });
@@ -124,7 +97,7 @@ export const qrRouter = createTRPCRouter({
   getSlinkWithPass: codeProcedure
     .input(schemaForFormPassword)
     .mutation(async ({ ctx, input }) => {
-      const { code } = ctx;
+      const { code, geo } = ctx;
 
       //! cause it only for password ones
       if (!code.password) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -134,9 +107,8 @@ export const qrRouter = createTRPCRouter({
       if (!success)
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Wrong password' });
 
-      // const stat =
       await handleLocation({
-        ip: ctx.ip,
+        geo: geo,
         prisma: ctx.prisma,
         codeId: code.id,
       });
@@ -146,7 +118,7 @@ export const qrRouter = createTRPCRouter({
   getSlinkWithSignature: codeProcedure
     .input(schemaForFormPublicKey)
     .mutation(async ({ ctx, input }) => {
-      const { code } = ctx;
+      const { code, geo } = ctx;
 
       if (!code.signature || !code.image)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
@@ -162,9 +134,8 @@ export const qrRouter = createTRPCRouter({
       );
       if (!isVerified) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Wrong key' });
 
-      // const stat =
       await handleLocation({
-        ip: ctx.ip,
+        geo: geo,
         prisma: ctx.prisma,
         codeId: code.id,
       });

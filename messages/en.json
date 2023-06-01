@@ -256,7 +256,8 @@
     "delete this code": "delete this code",
     "visited total": "visited total",
     "#visited": "# of visitors",
-    "error": "error: code not found"
+    "error": "error: code not found",
+    "createdAt": "created at"
   },
   "SSlinkPage": {
     "SlinkInner": {

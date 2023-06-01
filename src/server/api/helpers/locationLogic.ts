@@ -1,22 +1,15 @@
 import { type PrismaClient } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { env } from '~/env.mjs';
-import { getLocation } from '~/helpers/getLocation';
+import { type NextRequest } from 'next/server';
+// import { getLocation } from '~/helpers/getLocation';
 
-//! im dumb as bricks 
-
-// todo do smth with this - fat
-const handleLocation = async ({
-  ip,
-  prisma,
-  codeId,
-}: {
-  ip: string | null;
+type handleLocationProps = {
+  geo: NextRequest['geo'];
   prisma: PrismaClient;
   codeId: string;
-}) => {
-  const IP = getIpDev() ?? ip ?? '';
-  const location = await getLocation(IP);
+};
+const handleLocation = async ({ geo, prisma, codeId }: handleLocationProps) => {
+  const location = geo;
   if (!location) {
     //? should i throw here
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Location error' });
@@ -27,24 +20,17 @@ const handleLocation = async ({
       codeId: codeId,
       country: location.country,
       region: location.region,
-      timezone: location.timezone,
       city: location.city,
-      latitude: location.lat,
-      longitude: location.lon,
+      latitude: location.latitude || undefined,
+      longitude: location.longitude || undefined,
+      // timezone: location.timezone,
     },
   });
-
-  // console.log(stat);
 
   if (!stat) {
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Statistic error' });
   }
   return stat;
-};
-
-const getIpDev = () => {
-  const isDev = env.NODE_ENV === 'development';
-  return isDev ? '89.254.243.183' : undefined;
 };
 
 export { handleLocation };

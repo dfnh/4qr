@@ -11,8 +11,9 @@ import { Button } from '~/ui/button';
 import { Label } from '~/ui/label';
 import { Textarea } from '~/ui/textarea';
 import { api } from '~/utils/api';
+import { type CommonProps } from '../types';
 
-const WithSignature = memo(({ slink }: { slink: string }) => {
+const WithSignature = memo(({ slink, geo }: CommonProps) => {
   const t = useTranslations('SSlinkPage.WithSignature');
   const {
     handleSubmit,
@@ -35,7 +36,7 @@ const WithSignature = memo(({ slink }: { slink: string }) => {
   });
 
   const onSubmit = (p: SchemaForFormPublicKey) => {
-    mutate({ slink, publicKey: p.publicKey });
+    mutate({ slink, geo, publicKey: p.publicKey });
   };
 
   return (

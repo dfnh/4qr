@@ -1,16 +1,18 @@
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import { createDataForPie } from '../helpers/createDataForPie';
 import { Button } from '~/ui/button';
 import { Separator } from '~/ui/separator';
 import { api } from '~/utils/api';
+import { codeStatisticReduce } from '../helpers/codeStatisticReducer';
+import { createDataForPie } from '../helpers/createDataForPie';
 
 const PieChart = dynamic(() => import('./PieChart'), { ssr: false });
 
 const ProfileCode = ({ slink }: { slink: string }) => {
+  const format = useFormatter();
   const t = useTranslations('ProfileCodePage');
   const { replace, locale } = useRouter();
 
@@ -29,13 +31,10 @@ const ProfileCode = ({ slink }: { slink: string }) => {
 
   const data = useMemo(() => {
     if (!code) return;
-    const cityCountMap = code?.CodeStatistic.reduce((map, c) => {
-      const city = c.city || '-';
-      // if (!city) return map;
-      const count = map.get(city) ?? 0;
-      map.set(city, count + 1);
-      return map;
-    }, new Map<string, number>());
+    const cityCountMap = code?.CodeStatistic.reduce(
+      codeStatisticReduce,
+      new Map<string, number>()
+    );
 
     if (!cityCountMap) {
       console.error('cityCountMap error');
@@ -66,6 +65,11 @@ const ProfileCode = ({ slink }: { slink: string }) => {
         <p>
           {t('data')}: {code?.info}
         </p>
+        {code?.createdAt && (
+          <p>
+            {t('createdAt')}: {format.dateTime(code.createdAt)}
+          </p>
+        )}
         <Button variant="destructive" size="sm" onClick={onDelete} disabled={isLoading}>
           {t('delete this code')}
         </Button>
