@@ -21,14 +21,14 @@ const HomePage: NextPage = () => {
             href="/create"
             className="flex max-w-xs flex-col gap-4 rounded-xl bg-cyan-500 bg-opacity-90 p-4 text-foreground transition-all hover:bg-cyan-500/80 hover:shadow-inner hover:shadow-cyan-500 dark:text-secondary"
           >
-            <h3 className="text-2xl font-bold">{t('Create')}</h3>
+            <h2 className="text-2xl font-bold">{t('Create')}</h2>
             <div className="text-lg">{t('Create and customize qrcode')}</div>
           </Link>
           <Link
             href="/scan"
             className="flex max-w-xs flex-col gap-4 rounded-xl bg-cyan-500 bg-opacity-90 p-4 text-foreground transition-all hover:bg-cyan-500/80 hover:shadow-inner hover:shadow-cyan-500 dark:text-secondary"
           >
-            <h3 className="text-2xl font-bold">{t('Scan')}</h3>
+            <h2 className="text-2xl font-bold">{t('Scan')}</h2>
             <div className="text-lg">{t('Scan qrcode using webcam or image file')}</div>
           </Link>
         </div>

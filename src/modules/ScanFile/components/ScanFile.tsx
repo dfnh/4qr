@@ -16,7 +16,7 @@ const ScanFile = () => {
       <div className="w-full max-w-md">
         <DragAndDrop onSuccess={onSuccess} />
       </div>
-      {data && <p className="break-all">{data}</p>}
+      {data && <p className="select-all text-base">{data}</p>}
     </div>
   );
 };

@@ -77,7 +77,7 @@ const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <div className="pointer-events-none flex h-full w-full select-none flex-col items-center justify-center">
+          <div className="pointer-events-none flex h-full w-full select-none flex-col items-center justify-center text-center">
             <p className="text-sm text-muted-foreground">
               {isDragging ? t('isDragging') : t('isNotDragging')}
             </p>
