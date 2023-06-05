@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { memo, useEffect, useRef, useState, type DragEvent } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { type ValueOf } from '~/typescript';
 import { type InputProps } from '~/ui/input';
+import { withPreventDefault } from '../helpers/withPreventDefault';
 
 type OnChange = ValueOf<Pick<InputProps, 'onChange'>>;
 type DragAndDropProps = { onSuccess?: (file: File) => void };
@@ -13,22 +14,19 @@ const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
   const [image, setImage] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const handleDragEnter = withPreventDefault(() => {
     setIsDragging(true);
-  };
+  });
 
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const handleDragLeave = withPreventDefault(() => {
     setIsDragging(false);
-  };
+  });
 
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+  const handleDragOver = withPreventDefault(() => {
+    return;
+  });
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const handleDrop = withPreventDefault((e) => {
     setIsDragging(false);
 
     const droppedFiles = [...e.dataTransfer.files];
@@ -37,7 +35,12 @@ const DragAndDrop = memo(({ onSuccess }: DragAndDropProps) => {
     if (!file) return;
     setImage(URL.createObjectURL(file));
     onSuccess?.(file);
-  };
+
+    if (!inputRef.current) return;
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    inputRef.current.files = dt.files;
+  });
 
   const handleDivClick = () => {
     inputRef.current?.click();

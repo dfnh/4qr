@@ -46,7 +46,7 @@ const ScanCam = () => {
         />
       </div>
       <Camera ref={camRef} />
-      <p className="select-all text-base">{data}</p>
+      <p className="select-all break-all text-center text-base">{data}</p>
     </>
   );
 };
