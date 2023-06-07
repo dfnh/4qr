@@ -16,7 +16,6 @@ import { generateSlink } from '../helpers/generateSlink';
 import CreateForm from './CreateForm';
 
 const schema = qrFullSchema;
-// type ZodFormData = z.infer<typeof schema>;
 
 const CardContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
   const t = useTranslations('CreateQrPage.CardCreate');
@@ -46,24 +45,22 @@ const CardContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
 
   const handleSubmitData = useCallback(
     async (values: QrFullSchema) => {
-      console.log(values);
-      if (status === 'authenticated' && values.createCode) {
-        let slink: string | undefined = undefined; // const link: string | undefined = undefined;
-        const initData = values.data;
-        values.data = values.utf8;
-        if (values.slink) {
-          const slinkResult = await generateSlink();
-          slink = slinkResult.slink; // link = slinkResult.link;
-          values.data = slinkResult.link;
+      scrollIntoView?.();
 
-          setSlinkAtom(slink);
-        }
+      if (status === 'authenticated' && values.createCode) {
+        const initData = values.data;
+
+        const slinkResult = await generateSlink();
+        const slink = slinkResult.slink;
+        values.data = slinkResult.link;
+        setSlinkAtom(slink);
+
         // eslint-disable-next-line
         // @ts-ignore
         qrCode.update({ ...values });
+
         const blob = await qrCode.getRawData('webp');
         if (!blob) return;
-
         const image64 = await convertToBase64(blob);
 
         mutateNew({
@@ -73,19 +70,14 @@ const CardContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
           image64: image64,
           slink: slink,
         });
-        scrollIntoView?.();
         return;
       }
-
-      scrollIntoView?.();
 
       // fixme fix types
       // eslint-disable-next-line
       // @ts-ignore
       setDaAtom({ ...values, data: values.utf8 });
-      if (!values.slink) {
-        setSlinkAtom('');
-      }
+      setSlinkAtom('');
     },
     [mutateNew, qrCode, scrollIntoView, setDaAtom, setSlinkAtom, status]
     // [mutate]
@@ -97,7 +89,7 @@ const CardContent = ({ scrollIntoView }: { scrollIntoView?: () => void }) => {
     const parsed = schema.safeParse(values);
     if (!parsed?.success) return;
     parsed.data.data = parsed.data.utf8;
-    // console.log(parsed.data);
+
     // eslint-disable-next-line
     // @ts-ignore
     setDaAtom(parsed.data);
