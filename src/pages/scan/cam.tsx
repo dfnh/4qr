@@ -15,7 +15,7 @@ const CamPage = () => {
   return (
     <>
       <Head>
-        <title>Scan With Webcam</title>
+        <title>{t('head')}</title>
       </Head>
       <main className="flex flex-col items-center justify-center px-8 py-2">
         <ScanTabs className="mb-4" />

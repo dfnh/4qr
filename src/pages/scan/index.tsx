@@ -6,7 +6,7 @@ import ScanTabs from '~/components/ScanTabs';
 import { LoadingSpinner2 } from '~/components/Spinner';
 
 const ScanFile = dynamic(() => import('~/modules/ScanFile'), {
-  ssr: false,
+  ssr: true,
   loading: () => <LoadingSpinner2 />,
 });
 
@@ -16,7 +16,7 @@ const ScanPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Scan QR code</title>
+        <title>{t('head')}</title>
       </Head>
       <main className="flex flex-col items-center justify-center px-8 py-2">
         <ScanTabs className="mb-4" />

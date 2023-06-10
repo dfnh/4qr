@@ -16,19 +16,11 @@ const ProfilePage = () => {
   const { data: session, status } = useSession();
   if (status !== 'authenticated') {
     if (status === 'unauthenticated') {
-      router
-        .replace(
-          {
-            pathname: '/auth/signin',
-            query: {
-              callbackUrl: `${router?.locale ? `/${router?.locale}` : ''}${
-                router.asPath
-              }`,
-            },
-          },
-          '/auth/signin'
-        )
-        .catch((e) => console.error(e));
+      const cbu = `${router?.locale ? `/${router?.locale}` : ''}${router.asPath}`;
+      void router.replace(
+        { pathname: '/auth/signin', query: { callbackUrl: cbu } },
+        '/auth/signin'
+      );
     }
     return (
       <div className="absolute left-1/2 -translate-x-1/2">

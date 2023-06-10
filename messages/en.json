@@ -38,6 +38,7 @@
   "ScanTabs": { "webcam": "webcam", "file": "file" },
   "ScanPage": {
     "title": "scan qrcode",
+    "head": "Scan QRcode",
     "DragAndDrop": {
       "isDragging": "Drop the image file here",
       "isNotDragging": "Drag and drop image file here",
@@ -46,6 +47,7 @@
   },
   "CamPage": {
     "title": "scan with webcam",
+    "head": "Scan QRcode w/webcam",
     "SelectCamera": "select camera",
     "WebCamButtons": {
       "give access": "give access",

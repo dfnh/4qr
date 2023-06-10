@@ -38,6 +38,7 @@
   "ScanTabs": { "webcam": "веб-камера", "file": "файл" },
   "ScanPage": {
     "title": "сканировать qr-код",
+    "head": "Сканировать QR-код",
     "DragAndDrop": {
       "isDragging": "Отпустите файл",
       "isNotDragging": "Перетащите файл",
@@ -46,6 +47,7 @@
   },
   "CamPage": {
     "title": "сканировать с веб-камерой",
+    "head": "Сканировать QR-код веб-камерой",
     "SelectCamera": "выберите камеру",
     "WebCamButtons": {
       "give access": "дать доступ",
