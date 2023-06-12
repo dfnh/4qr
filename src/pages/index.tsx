@@ -33,6 +33,14 @@ const HomePage: NextPage = () => {
           </Link>
         </div>
       </main>
+      <footer className="container mt-auto text-center">
+        <Link
+          href="https://github.com/dfnh/4qr"
+          className="transition-all hover:text-foreground/80"
+        >
+          github
+        </Link>
+      </footer>
     </>
   );
 };
