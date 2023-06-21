@@ -1,10 +1,17 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const config = { runtime: 'edge' };
 
 export default function handler(req: NextRequest) {
-  return new Response(JSON.stringify({ ...req.geo }), {
+  const ip = req.nextUrl.searchParams.get('ip') == 'true';
+
+  const res: { [key: string]: string } = { ...req.geo };
+  if (ip) {
+    res.ip = req.ip || '';
+  }
+
+  return NextResponse.json(res, {
     status: 200,
-    headers: { 'content-type': 'application/json' },
+    headers: { 'Cache-Control': 'max-age=0, s-maxage=60' },
   });
 }
